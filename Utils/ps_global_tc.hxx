@@ -12,6 +12,7 @@
 
 #ifdef _TC_10
 #include <tc/tc.h>
+#include <sa/am.h>
 #include <tc/folder.h>
 #include <sa/user.h>
 #include <pom/pom/pom.h>
