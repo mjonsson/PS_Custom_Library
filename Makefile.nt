@@ -1,0 +1,216 @@
+#===============================================================================
+#                Copyright Siemens PLM Software 2014. 
+#                 Unpublished - All rights reserved
+#===============================================================================
+# File			: Makefile.nt
+# Description	: This file contains all variables which are 
+#				  required for compilation.
+#===============================================================================
+# Developer            Date            Description
+# Mattias Jonsson      2014-04-14      Initial Version
+#===============================================================================
+
+define NEWLINE
+
+
+endef
+
+######################################################################
+# Include all include header files 
+######################################################################
+
+INCLUDES= -I.  \
+          "-I$(TC_ROOT)/include" \
+          "-I$(TC_ROOT)/include_cpp" \
+          "-I$(MSDEV_INCLUDE)" \
+		  "-I$(USER_INCLUDE)" \
+		  "-I../Utils"
+
+######################################################################
+# Define all custom lib's for atlas copco tc implementation
+######################################################################
+PS_UTILS=libpsutils
+PS_HANDLERS=libpshandlers
+
+######################################################################
+# Include the all the variables which are used in Makefile
+######################################################################
+.SUFFIXES: .obj .cc .c .cxx
+
+NT_LINK_EXT =	*.lib \
+		*.pdb \
+		*.exp \
+		*.ilk \
+		*.dll \
+		*.manifest
+
+OBJ_EXT=obj
+LIB_EXT=lib
+DLL_EXT=dll
+PDB_EXT=pdb
+EXE_MANIFEST=exe.manifest
+EXT=c
+EXE=exe
+CC=cl
+LINK=link
+ANT=ant
+RM=rm -f
+CP=cp -R
+MV=mv
+CHMOD=chmod
+MT=mt
+		
+######################################################################
+# Definition and CFLAG variables to compile the source code
+######################################################################
+
+ifeq ($(TC_PLATFORM),x86)
+DEFINES=-DNT40 -DPOMDLL -DCRTAPI1=_cdecl -DCRTAPI2=cdecl -D_WIN32 \
+		-DWIN32 -DWIN32_LEAN_AND_MEAN -DWNT -DBYPASS_FLEX -D_INTEL= \
+		-DIPLIB=$(EXPORT/IMPORT) -D_CRT_SECURE_NO_DEPRECATE -D_$(TC_VERSION)
+else
+DEFINES=-DSTEP -DAP203 -DAP214 -DWIN32_LEAN_AND_MEAN -DWNT \
+       -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE \
+       -D_SECURE_SCL=0 -DWNT -D_WIN32 -DWIN32 \
+       -D_WIN64 -D_INTEL=1 -DCRTAPI1=_cdecl -DCRTAPI2=cdecl \
+	   -DIMAN_TAO -DBYPASS_FLEX -DPOMDLL \
+	   -DIPLIB=$(EXPORT/IMPORT) -D_$(TC_VERSION)
+endif
+
+ifeq (,$(findstring debug,$(MAKECMDGOALS)))
+CFLAGS=-c -nologo -EHsc -W1 -Ox -Oy- -MD
+DEFINES+=-DNDEBUG
+else
+CFLAGS=-c -nologo -EHsc -W1 -Od -Z7 -MDd
+DEFINES+=-D_DEBUG
+endif
+
+#####################################################################
+# Build the source code with debug mode based on TC_DEBUG env
+# variable. If env variable is FALSE then code is build with 
+# debug mode.
+#####################################################################
+
+.cc.obj:
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) $<
+
+.c.obj:
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) $<
+
+.cxx.obj:
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) $<
+
+#####################################################################
+# DLL FLAGS DEFINITION
+#####################################################################
+
+DLLFLAGS = -debug \
+			-nologo \
+			-subsystem:console
+
+ifeq ($(TC_PLATFORM),x64)
+DLLFLAGS+=-MACHINE:X64
+endif
+
+
+
+#####################################################################
+# Platform Independent libraries
+#####################################################################
+
+ifeq (,$(findstring debug,$(MAKECMDGOALS)))
+SYSLIBS = wsock32.lib \
+          advapi32.lib \
+          msvcrt.lib \
+          oldnames.lib \
+          kernel32.lib \
+          winmm.lib
+else
+SYSLIBS = wsock32.lib \
+          advapi32.lib \
+          msvcrtd.lib \
+          oldnames.lib \
+          kernel32.lib \
+          winmm.lib
+endif
+
+#####################################################################
+# Additional Library path for standalone utility
+#####################################################################
+
+TC_UTIL_LIBS=$(TC_LIBRARY)/itk_main.obj
+
+#####################################################################
+# Common TC lib path 
+#####################################################################
+
+TC_LIBS=$(TC_LIBRARY)/*.lib
+DELAYLOAD=/delayload:libuser_exits.dll \
+			/delayload:libict.dll \
+			/delayload:libae.dll \
+			/delayload:libappr.dll \
+			/delayload:libarchive.dll \
+			/delayload:libbackup.dll \
+			/delayload:libbom.dll \
+			/delayload:libcfm.dll \
+			/delayload:libdmi.dll \
+			/delayload:libecm.dll \
+			/delayload:libeint.dll \
+			/delayload:libepm.dll \
+			/delayload:libform.dll \
+			/delayload:libgrm.dll \
+			/delayload:libics.dll \
+			/delayload:libtccore.dll \
+			/delayload:libtctrushape.dll \
+			/delayload:libinternal_exits.dll \
+			/delayload:libvalidation.dll \
+			/delayload:libcondvalidation.dll \
+			/delayload:libitk.dll \
+			/delayload:liblov.dll \
+			/delayload:libme.dll \
+			/delayload:libmechatronics.dll \
+			/delayload:libmgc.dll \
+			/delayload:libobjio.dll \
+			/delayload:libpie.dll \
+			/delayload:libai.dll \
+			/delayload:libtie.dll \
+			/delayload:libproperty.dll \
+			/delayload:libps.dll \
+			/delayload:libpublication.dll \
+			/delayload:libqry.dll \
+			/delayload:libres.dll \
+			/delayload:libsub_mgr.dll \
+			/delayload:libtccoreext.dll \
+			/delayload:libnxmgr_im.dll \
+			/delayload:libfoundationbase.dll \
+			/delayload:libmld.dll
+	
+#####################################################################
+# Build custom dynamic libraries
+#####################################################################
+
+LINK_LINE= $(LINK) $(DLLFLAGS) \
+           -dll \
+           -out:$(LIB_DLL) \
+           $(ALL_LIB_OBJS) \
+           $(SYSLIBS) /ignore:4199 delayimp.lib \
+           $(TC_LIBS) \
+           $(DEP_LIBS) \
+		   $(DELAYLOAD)
+
+#####################################################################
+# Build custom stand alone utilities
+#####################################################################		   
+
+LINK_LINE_UTIL= $(LINK) $(DLLFLAGS) \
+				$(ALL_LIB_OBJS) \
+				$(SYSLIBS) /ignore:4199 delayimp.lib \
+				$(TC_UTIL_LIBS) \
+				$(TC_LIBS) \
+				$(DEP_LIBS) \
+				$(DELAYLOAD) \
+				-out:$(UTIL_NAME).$(EXE)
+
+#####################################################################
+# Add manifest information
+#####################################################################		   
