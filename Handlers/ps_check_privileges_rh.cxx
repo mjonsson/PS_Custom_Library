@@ -35,8 +35,7 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 			// Get privilege string
 			if (tc_strcasecmp(pszArgFlag, "privilege") == 0)
 			{
-				tc_strupr(pszArgValue, &pszArgValueUpr);
-				privileges = pszArgValueUpr;
+				privileges = pszArgValue;
 			}
 		}
 		if (!ps_null_or_empty(privileges))
@@ -70,21 +69,34 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 				// Check if target object has valid status
 				if (ps_null_or_empty(statuses))
 				{
-					statusOk = true;
+					int numStatus;
+
+					itkex(AOM_ask_num_elements(tTarget, "release_status_list", &numStatus));
+
+					if (numStatus == 0)
+						statusOk = true;
 				}
 				else
 				{
 					itkex(AOM_ask_value_tags(tTarget, "release_status_list", targetStatuses.get_len_ptr(), targetStatuses.get_ptr()));
-					for (int j = 0; j < targetStatuses.get_len(); j++)
+
+					if (targetStatuses.get_len() == 0 && tc_strstr(statuses, "Working") != NULL)
 					{
-						c_ptr<char>		statusName;
-
-						itkex(AOM_ask_value_string(targetStatuses.get(j), "object_name", statusName.get_ptr()));
-
-						if (tc_strstr(statuses, statusName.get()) != NULL)
+						statusOk = true;
+					}
+					else
+					{
+						for (int j = 0; j < targetStatuses.get_len(); j++)
 						{
-								statusOk = true;
-								break;
+							c_ptr<char>		statusName;
+
+							itkex(AOM_ask_value_string(targetStatuses.get(j), "object_name", statusName.get_ptr()));
+
+							if (tc_strstr(statuses, statusName.get()) != NULL)
+							{
+									statusOk = true;
+									break;
+							}
 						}
 					}
 				}
