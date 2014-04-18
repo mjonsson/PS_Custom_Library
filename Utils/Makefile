@@ -19,7 +19,8 @@ include ../Makefile.nt
 # Include source code files which needs to be compiled
 #
 OBJS = ps_hrtimer.$(OBJ_EXT) \
-		ps_write_syslog.$(OBJ_EXT)
+		ps_write_syslog.$(OBJ_EXT) \
+		ps_misc.$(OBJ_EXT)
 		
 #
 # Define the DIBLIP option, lib name will be defined in Makefile.nt

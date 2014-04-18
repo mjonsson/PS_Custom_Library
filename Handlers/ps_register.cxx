@@ -9,6 +9,7 @@ int libps_register(int *decision, va_list args)
 	{
 		itkex(EPM_register_rule_handler("PS-check-in-process-RH", "Verify that no targets are in other processes.", (EPM_rule_handler_t) ps_check_in_process_rh));
 		itkex(EPM_register_rule_handler("PS-check-initiator-RH", "Verify that initiating user is valid.", (EPM_rule_handler_t) ps_check_initiator_rh));
+		itkex(EPM_register_rule_handler("PS-check-privileges-RH", "Verify that initiating has correct privileges.", (EPM_rule_handler_t) ps_check_privileges_rh));
 	}
 	catch (tcexception& e)
 	{

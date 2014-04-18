@@ -26,6 +26,7 @@
   <ItemGroup>
     <ClCompile Include="ps_check_initiator_rh.cxx" />
     <ClCompile Include="ps_check_in_process_rh.cxx" />
+    <ClCompile Include="ps_check_privileges_rh.cxx" />
     <ClCompile Include="ps_register.cxx" />
   </ItemGroup>
   <ItemGroup>
