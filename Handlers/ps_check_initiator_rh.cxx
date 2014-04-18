@@ -32,10 +32,10 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 				
 				for (int i = 0; i < tTargetAttach.get_len(); i++)
 				{
-					c_ptr<char>	pszArgValueUpr;
+					char	*pszArgValueUpr;
 
-					tc_strupr(pszArgValue, pszArgValueUpr.get_ptr());
-					itkex(AM_check_privilege(tTargetAttach.get(i), pszArgValueUpr.get(), &hasAccess));
+					tc_strupr(pszArgValue, &pszArgValueUpr);
+					itkex(AM_check_privilege(tTargetAttach.get(i), pszArgValueUpr, &hasAccess));
 
 					if (!hasAccess)
 					{
@@ -44,7 +44,7 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 						decision = EPM_nogo;
 						itkex(AOM_ask_value_string(tTargetAttach.get(i), "object_string", targetDispName.get_ptr()));
 						itkex(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_NOGO_IFAIL,
-							string("Not required privilege(s) to object '" + string(targetDispName.get()) + "' (" + string(pszArgValue) + ").").c_str()));
+							string("Required privilege(s) not met on object '" + string(targetDispName.get()) + "' (" + string(pszArgValue) + ").").c_str()));
 					}
 				}
 			}
