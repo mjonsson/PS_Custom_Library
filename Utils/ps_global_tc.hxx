@@ -39,4 +39,6 @@
 #include <tccore/custom.h>
 #include <schmgt/schmgt_itk.h>
 #include <user_exits/epm_toolkit_utils.h>
+#include <dispatcher/dispatcher.h>
+#include <dispatcher/dispatcher_itk.h>
 #endif

@@ -21,8 +21,8 @@ set TC_USER_BIN=%TC_ROOT%\bin
 set TC_USER_LIB=%TC_ROOT%\lib
 
 :: Do not edit below this line!
-set GNU_BIN=%~dp0\gnu
-if not exist "%GNU_BIN%\make.exe" goto nognubin
+set BINARIES=%~dp0\Binaries
+if not exist "%BINARIES%\make.exe" goto nognubin
 if not exist "%MSDEV_HOME%\vcvarsall.bat" goto nomsdev
 if not exist "%TC_ROOT%\bin\tcserver.exe" goto notcroot
 if not exist "%TC_DATA%\tc_profilevars.bat" goto +notcdata
@@ -30,7 +30,7 @@ if not exist "%TC_DATA%\tc_profilevars.bat" goto +notcdata
 echo Build Environment is OK!
 echo.
 
-set PATH=%GNU_BIN%;%PATH%
+set PATH=%BINARIES%;%PATH%
 call "%MSDEV_HOME%\vcvarsall" %TC_PLATFORM% >NUL
 call "%TC_DATA%\tc_profilevars" >NUL
 :: set INCLUDE=%INCLUDE%;%TC_INCLUDE%
@@ -40,7 +40,7 @@ goto end
 :nognubin
 echo Build Environment is NOT OK!
 echo.
-echo Could not find make environment at "%GNU_BIN%".
+echo Could not find make environment at "%BINARIES%".
 echo.
 goto error_end
 
@@ -67,12 +67,12 @@ goto error_end
 
 :error_end
 cd /d %~dp0
-set GNU_BIN=
+set BINARIES=
 cmd
 
 :end
 cd /d %~dp0
-set GNU_BIN=
+set BINARIES=
 if [%1]==[] cmd
 if [%1]==[dev] devenv
 if [%1]==[all] make all

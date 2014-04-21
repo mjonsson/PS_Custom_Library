@@ -2,7 +2,7 @@
 
 #include "ps_global.hxx"
 
-#define RULE_HANDLER_NOGO_IFAIL 919100
+#define RULE_HANDLER_DEFAULT_IFAIL 919100
 
 // Name		: libori_remove_objects
 // Purpose	: Action handler that will remove objects from a process.
