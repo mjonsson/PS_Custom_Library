@@ -4,13 +4,12 @@
 int ps_check_privileges_rh(EPM_rule_message_t msg)
 {
 	const char		*debug_name = "PS-check-privileges-RH";
-	char			*pszArg = NULL,
-					*pszArgFlag = NULL,
-					*pszArgValue = NULL,
-					*pszArgValueUpr = NULL,
-					*types = NULL,
-					*statuses = NULL,
-					*privileges = NULL;
+	char			*pszArg = NULL;
+	string			types,
+					statuses,
+					privileges;
+	logical			owning_user = false,
+					owning_group = false;
 	EPM_decision_t  decision = EPM_go;
 
 	ps_write_debug("[START] %s", debug_name);
@@ -20,99 +19,154 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 	{
 		while ((pszArg = TC_next_argument(msg.arguments)) != NULL )
 		{
-			itkex(ITK_ask_argument_named_value(pszArg, &pszArgFlag, &pszArgValue));
+			c_ptr<char>		flag, value;
+
+			itk(ITK_ask_argument_named_value(pszArg, flag.get_ptr(), value.get_ptr()));
 
 			// Get types to include
-			if (tc_strcasecmp(pszArgFlag, "types") == 0)
+			if (tc_strcasecmp(flag.get(), "types") == 0)
 			{
-				types = pszArgValue;
+				types = value.get();
 			}
 			// Get statuses to include
-			if (tc_strcasecmp(pszArgFlag, "statuses") == 0)
+			else if (tc_strcasecmp(flag.get(), "statuses") == 0)
 			{
-				statuses = pszArgValue;
+				statuses = value.get();
 			}
 			// Get privilege string
-			if (tc_strcasecmp(pszArgFlag, "privilege") == 0)
+			else if (tc_strcasecmp(flag.get(), "privileges") == 0)
 			{
-				privileges = pszArgValue;
+				privileges = value.get();
+			}
+			// Get owning_user string
+			else if (tc_strcasecmp(flag.get(), "owning_user") == 0)
+			{
+				owning_user = true;
+			}
+			// Get owning_group string
+			else if (tc_strcasecmp(flag.get(), "owning_group") == 0)
+			{
+				owning_group = true;
 			}
 		}
-		if (!ps_null_or_empty(privileges))
-		{
-			tag_t			tRootTask;
-			c_ptr<tag_t>	tTargetAttach;
-			char			*pszUserId = NULL;
-			logical			hasAccess,
-							typeOk = true,
-							statusOk = false;
+
+		if (privileges.empty() && !owning_user && !owning_group)
+			throw psexception("Missing mandatory parameters.");
+
+		tag_t			tRootTask;
+		c_ptr<tag_t>	tTargetAttach;
+		char			*pszUserId = NULL;
+		logical			hasAccess,
+						typeOk = true,
+						statusOk = false;
 			
-
-			itkex(EPM_ask_root_task(msg.task, &tRootTask));
-			itkex(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargetAttach.get_len_ptr(), tTargetAttach.get_ptr()));
+		itk(EPM_ask_root_task(msg.task, &tRootTask));
+		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargetAttach.get_len_ptr(), tTargetAttach.get_ptr()));
 				
-			for (int i = 0; i < tTargetAttach.get_len(); i++)
+		for (int i = 0; i < tTargetAttach.get_len(); i++)
+		{
+			c_ptr<char>		targetType;
+			tag_t			tTarget = tTargetAttach.get(i);
+			c_ptr<tag_t>	targetStatuses;
+
+			itk(AOM_ask_value_string(tTarget, "object_type", targetType.get_ptr()));
+
+			// Check if target object is valid type
+			if (!types.empty())
 			{
-				c_ptr<char>		targetType;
-				tag_t			tTarget = tTargetAttach.get(i);
-				c_ptr<tag_t>	targetStatuses;
+				if (tc_strstr(types.c_str(), targetType.get()) == NULL)
+					typeOk = false;
+			}
 
-				itkex(AOM_ask_value_string(tTarget, "object_type", targetType.get_ptr()));
+			// Check if target object has valid status
+			if (!statuses.empty())
+			{
+				int numStatus;
 
-				// Check if target object is valid type
-				if (!ps_null_or_empty(types))
+				itk(AOM_ask_num_elements(tTarget, "release_status_list", &numStatus));
+
+				if (numStatus == 0)
+					statusOk = true;
+			}
+			else
+			{
+				itk(AOM_ask_value_tags(tTarget, "release_status_list", targetStatuses.get_len_ptr(), targetStatuses.get_ptr()));
+
+				if (targetStatuses.get_len() == 0 && tc_strstr(statuses.c_str(), "Working") != NULL)
 				{
-					if (tc_strstr(types, targetType.get()) == NULL)
-						typeOk = false;
-				}
-
-				// Check if target object has valid status
-				if (ps_null_or_empty(statuses))
-				{
-					int numStatus;
-
-					itkex(AOM_ask_num_elements(tTarget, "release_status_list", &numStatus));
-
-					if (numStatus == 0)
-						statusOk = true;
+					statusOk = true;
 				}
 				else
 				{
-					itkex(AOM_ask_value_tags(tTarget, "release_status_list", targetStatuses.get_len_ptr(), targetStatuses.get_ptr()));
+					for (int j = 0; j < targetStatuses.get_len(); j++)
+					{
+						c_ptr<char>		statusName;
 
-					if (targetStatuses.get_len() == 0 && tc_strstr(statuses, "Working") != NULL)
-					{
-						statusOk = true;
-					}
-					else
-					{
-						for (int j = 0; j < targetStatuses.get_len(); j++)
+						itk(AOM_ask_value_string(targetStatuses.get(j), "object_name", statusName.get_ptr()));
+
+						if (tc_strstr(statuses.c_str(), statusName.get()) != NULL)
 						{
-							c_ptr<char>		statusName;
-
-							itkex(AOM_ask_value_string(targetStatuses.get(j), "object_name", statusName.get_ptr()));
-
-							if (tc_strstr(statuses, statusName.get()) != NULL)
-							{
-									statusOk = true;
-									break;
-							}
+								statusOk = true;
+								break;
 						}
 					}
 				}
-				// Check privileges
-				if (typeOk && statusOk)
+			}
+			// Check privileges
+			if (typeOk && statusOk)
+			{
+				if (!privileges.empty())
 				{
-					itkex(AM_check_privilege(tTarget, pszArgValueUpr, &hasAccess));
+					itk(AM_check_privilege(tTarget, privileges.c_str(), &hasAccess));
 
 					if (!hasAccess)
 					{
 						c_ptr<char>		targetDispName;
 
 						decision = EPM_nogo;
-						itkex(AOM_ask_value_string(tTargetAttach.get(i), "object_string", targetDispName.get_ptr()));
-						itkex(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_NOGO_IFAIL,
-							string("Required privilege(s) not met on object '" + string(targetDispName.get()) + "' (" + string(pszArgValue) + ").").c_str()));
+						itk(AOM_ask_value_string(tTargetAttach.get(i), "object_string", targetDispName.get_ptr()));
+						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL,
+							string("Required privilege(s) not met on object '" + string(targetDispName.get()) + "' (" + privileges + ").").c_str()));
+					}
+				}
+				if (owning_user)
+				{
+					tag_t		tOwningUser,
+								tGroupMember,
+								tCurrentUser;
+
+					itk(AOM_ask_owner(tTarget, &tOwningUser));
+					itk(SA_ask_current_groupmember(&tGroupMember));
+					itk(SA_ask_groupmember_user(tGroupMember, &tCurrentUser));
+
+					if (tCurrentUser != tOwningUser)
+					{
+						c_ptr<char>		targetDispName;
+
+						decision = EPM_nogo;
+						itk(AOM_ask_value_string(tTargetAttach.get(i), "object_string", targetDispName.get_ptr()));
+						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL,
+							string("Current user is not the owner of object '" + string(targetDispName.get()) + "'.").c_str()));
+					}
+				}
+				if (owning_group)
+				{
+					tag_t		tOwningGroup,
+								tGroupMember,
+								tCurrentGroup;
+
+					itk(AOM_ask_group(tTarget, &tOwningGroup));
+					itk(SA_ask_current_groupmember(&tGroupMember));
+					itk(SA_ask_groupmember_group(tGroupMember, &tCurrentGroup));
+
+					if (tCurrentGroup != tOwningGroup)
+					{
+						c_ptr<char>		targetDispName;
+
+						decision = EPM_nogo;
+						itk(AOM_ask_value_string(tTargetAttach.get(i), "object_string", targetDispName.get_ptr()));
+						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL,
+							string("Current group is not the owning group of object '" + string(targetDispName.get()) + "'.").c_str()));
 					}
 				}
 			}
@@ -120,10 +174,14 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 	}
 	catch (tcexception& e)
 	{
+		decision = EPM_nogo;
+		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
 		ps_write_error(e.what());
 	}
 	catch (psexception& e)
 	{
+		decision = EPM_nogo;
+		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
 		ps_write_error(e.what());
 	}
 

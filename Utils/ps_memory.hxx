@@ -167,6 +167,7 @@ public:
 	{
 		if (m_ptr[pos] != NULL)
 		{
+			//ps_write_debug("Clear ptr @ %p", m_ptr);
 			MEM_free(m_ptr[pos]);
 			m_ptr[pos] = NULL;
 		}

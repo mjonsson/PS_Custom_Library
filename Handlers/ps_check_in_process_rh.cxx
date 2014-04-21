@@ -14,8 +14,8 @@ int ps_check_in_process_rh(EPM_rule_message_t msg)
 
 	try
 	{
-		itkex(EPM_ask_root_task(msg.task, &tRootTask));
-		itkex(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargets.get_len_ptr(), tTargets.get_ptr()));
+		itk(EPM_ask_root_task(msg.task, &tRootTask));
+		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargets.get_len_ptr(), tTargets.get_ptr()));
 
 		// Loop over all target attachments
 		for (int i = 0; i < tTargets.get_len(); i++)
@@ -24,14 +24,14 @@ int ps_check_in_process_rh(EPM_rule_message_t msg)
 			tag_t			tTarget = tTargets.get(i);
 			int				counter = 0;
 
-			itkex(AOM_ask_value_tags(tTarget, "process_stage_list", processTags.get_len_ptr(), processTags.get_ptr()));
+			itk(AOM_ask_value_tags(tTarget, "process_stage_list", processTags.get_len_ptr(), processTags.get_ptr()));
 
 			// Iterate over all the tasks that relates to this process target
 			for (int j = 0; j < processTags.get_len(); j++)
 			{
 				tag_t	tParentTag;
 
-				itkex(AOM_ask_value_tag(processTags.get(j), "parent_task", &tParentTag));
+				itk(AOM_ask_value_tag(processTags.get(j), "parent_task", &tParentTag));
 
 				// If parent tag is not set, this means we have a root task
 				if (tParentTag == NULLTAG)
@@ -57,18 +57,22 @@ int ps_check_in_process_rh(EPM_rule_message_t msg)
 			{
 				c_ptr<char>		targetDispName;
 
-				itkex(AOM_ask_value_string(*ptTarget, "object_string", targetDispName.get_ptr()));
-				itkex(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_NOGO_IFAIL,
+				itk(AOM_ask_value_string(*ptTarget, "object_string", targetDispName.get_ptr()));
+				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL,
 					string("Process target '" + string(targetDispName.get()) + "' is already within another process.").c_str()));
 			}
 		}
 	}
 	catch (tcexception& e)
 	{
+		decision = EPM_nogo;
+		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
 		ps_write_error(e.what());
 	}
 	catch (psexception& e)
 	{
+		decision = EPM_nogo;
+		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
 		ps_write_error(e.what());
 	}
 

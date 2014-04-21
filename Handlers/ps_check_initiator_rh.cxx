@@ -4,9 +4,7 @@
 int ps_check_initiator_rh(EPM_rule_message_t msg)
 {
 	const char		*debug_name = "PS-check-initiator-RH";
-	char			*pszArg = NULL,
-					*pszArgFlag = NULL,
-					*pszArgValue = NULL;
+	char			*pszArg = NULL;
 	unordered_map<string, string> mArguments;
 	EPM_decision_t  decision = EPM_go;
 
@@ -17,78 +15,80 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 	{
 		while ((pszArg = TC_next_argument(msg.arguments)) != NULL)
 		{
-			itkex(ITK_ask_argument_named_value(pszArg, &pszArgFlag, &pszArgValue));
+			c_ptr<char>		flag, value;
+
+			itk(ITK_ask_argument_named_value(pszArg, flag.get_ptr(), value.get_ptr()));
 
 			// Check if allowed user
-			if (tc_strcasecmp(pszArgFlag, "user") == 0)
+			if (tc_strcasecmp(flag.get(), "user") == 0)
 			{
 				char	*userId = NULL;
 
-				itkex(POM_get_user_id(&userId));
+				itk(POM_get_user_id(&userId));
 
-				if (tc_strstr(pszArgValue, userId) == NULL)
+				if (tc_strstr(value.get(), userId) == NULL)
 				{
 					decision = EPM_nogo;
-					itkex(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_NOGO_IFAIL,
-						string("Process can only be initiated by user(s) '" + string(pszArgValue) + "'.").c_str()));
+					itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL,
+						string("Process can only be initiated by user(s) '" + string(value.get()) + "'.").c_str()));
 				}
 			}
 			// Check if allowed group
-			else if (tc_strcasecmp(pszArgFlag, "current_group") == 0)
+			else if (tc_strcasecmp(flag.get(), "current_group") == 0)
 			{
 				tag_t		tGroupMember,
 							tGroup;
 				c_ptr<char>	groupName;
 							
-				itkex(SA_ask_current_groupmember(&tGroupMember));
-				itkex(SA_ask_groupmember_group(tGroupMember, &tGroup));
-				itkex(SA_ask_group_name2(tGroup, groupName.get_ptr()));
+				itk(SA_ask_current_groupmember(&tGroupMember));
+				itk(SA_ask_groupmember_group(tGroupMember, &tGroup));
+				itk(SA_ask_group_name2(tGroup, groupName.get_ptr()));
 
-				if (tc_strstr(pszArgValue, groupName.get()) == NULL)
+				if (tc_strstr(value.get(), groupName.get()) == NULL)
 				{
 					decision = EPM_nogo;
-					itkex(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_NOGO_IFAIL,
-						string("Process can only be initiated by group(s) '" + string(pszArgValue) + "'.").c_str()));
+					itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL,
+						string("Process can only be initiated by group(s) '" + string(value.get()) + "'.").c_str()));
 				}
 			}
 			// Check if allowed role
-			else if (tc_strcasecmp(pszArgFlag, "current_role") == 0)
+			else if (tc_strcasecmp(flag.get(), "current_role") == 0)
 			{
 				tag_t		tGroupMember,
 							tRole;
 				c_ptr<char>	roleName;
 							
-				itkex(SA_ask_current_groupmember(&tGroupMember));
-				itkex(SA_ask_groupmember_role(tGroupMember, &tRole));
-				itkex(SA_ask_role_name2(tRole, roleName.get_ptr()));
+				itk(SA_ask_current_groupmember(&tGroupMember));
+				itk(SA_ask_groupmember_role(tGroupMember, &tRole));
+				itk(SA_ask_role_name2(tRole, roleName.get_ptr()));
 
-				if (tc_strstr(pszArgValue, roleName.get()) == NULL)
+				if (tc_strstr(value.get(), roleName.get()) == NULL)
 				{
 					decision = EPM_nogo;
-					itkex(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_NOGO_IFAIL,
-						string("Process can only be initiated by role(s) '" + string(pszArgValue) + "'.").c_str()));
+					itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL,
+						string("Process can only be initiated by role(s) '" + string(value.get()) + "'.").c_str()));
 				}
 			}
 			// Check if allowed full group
-			else if (tc_strcasecmp(pszArgFlag, "current_full_group") == 0)
+			else if (tc_strcasecmp(flag.get(), "current_full_group") == 0)
 			{
 				tag_t		tGroupMember,
 							tGroup;
 				c_ptr<char>	groupName;
 							
-				itkex(SA_ask_current_groupmember(&tGroupMember));
-				itkex(SA_ask_groupmember_group(tGroupMember, &tGroup));
-				itkex(SA_ask_group_full_name(tGroup, groupName.get_ptr()));
+				itk(SA_ask_current_groupmember(&tGroupMember));
+				itk(SA_ask_groupmember_group(tGroupMember, &tGroup));
+				itk(SA_ask_group_full_name(tGroup, groupName.get_ptr()));
 
-				if (tc_strstr(pszArgValue, groupName.get()) == NULL)
+				if (tc_strstr(value.get(), groupName.get()) == NULL)
 				{
 					decision = EPM_nogo;
-					itkex(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_NOGO_IFAIL,
-						string("Process can only be initiated by full group(s) '" + string(pszArgValue) + "'.").c_str()));
+					itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL,
+						string("Process can only be initiated by full group(s) '" + string(value.get()) + "'.").c_str()));
 				}
 			}
 			// Check if allowed effective role
-			else if (tc_strcasecmp(pszArgFlag, "effective_role") == 0)
+			else if (tc_strcasecmp(flag.get(), "effective_role") == 0)
 			{
 				char		*userId = NULL;
 				tag_t		tUser,
@@ -97,16 +97,16 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 				c_ptr<tag_t>	groupMembers;
 				logical		roleFound = false;
 							
-				itkex(POM_get_user_id(&userId));
-				itkex(SA_find_user2(userId, &tUser));
-				itkex(SA_find_all_groupmember_by_user(tUser, false, groupMembers.get_len_ptr(), groupMembers.get_ptr()));
+				itk(POM_get_user_id(&userId));
+				itk(SA_find_user2(userId, &tUser));
+				itk(SA_find_all_groupmember_by_user(tUser, false, groupMembers.get_len_ptr(), groupMembers.get_ptr()));
 
 				for (int i = 0; i < groupMembers.get_len(); i++)
 				{
-					itkex(SA_ask_groupmember_role(groupMembers.get(i), &tRole));
-					itkex(SA_ask_role_name2(tRole, roleName.get_ptr()));
+					itk(SA_ask_groupmember_role(groupMembers.get(i), &tRole));
+					itk(SA_ask_role_name2(tRole, roleName.get_ptr()));
 
-					if (tc_strstr(pszArgValue, roleName.get()) != NULL)
+					if (tc_strstr(value.get(), roleName.get()) != NULL)
 					{
 						roleFound = true;
 						break;
@@ -116,18 +116,22 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 				if (!roleFound)
 				{
 					decision = EPM_nogo;
-					itkex(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_NOGO_IFAIL,
-						string("Process can only be initiated by role(s) '" + string(pszArgValue) + "'.").c_str()));
+					itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL,
+						string("Process can only be initiated by role(s) '" + string(value.get()) + "'.").c_str()));
 				}
 			}
 		}
 	}
 	catch (tcexception& e)
 	{
+		decision = EPM_nogo;
+		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
 		ps_write_error(e.what());
 	}
 	catch (psexception& e)
 	{
+		decision = EPM_nogo;
+		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
 		ps_write_error(e.what());
 	}
 

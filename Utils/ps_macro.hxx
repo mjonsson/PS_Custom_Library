@@ -27,26 +27,24 @@
 }
 
 // General macro for embedding itk functions that throws exception when error occurs
-#define itkex(x) {																													\
-	int		stat,																													\
-			n_iFails;																												\
-	const int *iSeverities = NULL,																									\
-			*iFails = NULL;																											\
-	char	tmp_str[2000],																											\
-			*err_str = NULL;																										\
-	string	error_string; \
+#define itk(x) {																													\
+	int			stat,																												\
+				n_iFails;																											\
+	const int	*iSeverities = NULL,																								\
+				*iFails = NULL;																										\
 	const char	**pszErrorTexts = NULL;																								\
+	char		buf[10000];																											\
+	string		error_msg;																											\
 	if((stat = (x)) != ITK_ok)																										\
 	{																																\
 		EMH_ask_errors(&n_iFails, &iSeverities, &iFails, &pszErrorTexts);															\
-		sprintf(tmp_str, "\nTeamcenter exception detected:\n\n  FUNCTION: %s FILE: %s LINE: %d\n\nError stack:\n\n", #x, __FILE__, __LINE__);	\
-		error_string = ""; \
-		error_string += tmp_str; \
+		sprintf(buf, "\nTeamcenter exception detected:\n\n  FUNCTION: %s FILE: %s LINE: %d\n\nError stack:\n\n", #x, __FILE__, __LINE__); \
+		error_msg = string(buf);																									\
 		for (int i = 0; i < n_iFails; i++) {																						\
-			sprintf(tmp_str, "  Code: %d Severity: %d Message: %s\n", iFails[i], iSeverities[i], pszErrorTexts[i]);					\
-			error_string += tmp_str; \
+			sprintf(buf, "  Code: %d Severity: %d Message: %s\n", iFails[i], iSeverities[i], pszErrorTexts[i]);						\
+			error_msg += string(buf);																								\
 		}																															\
-		throw tcexception(stat, error_string);																							\
+		throw tcexception(stat, error_msg);																							\
     }																																\
 }
 #define sm_alloc(x,y) ((x*) MEM_alloc((y) * sizeof(x)))

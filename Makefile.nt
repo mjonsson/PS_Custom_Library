@@ -27,7 +27,7 @@ INCLUDES= -I.  \
 		  "-I../Utils"
 
 ######################################################################
-# Define all custom lib's for atlas copco tc implementation
+# Define custom libs
 ######################################################################
 PS_UTILS=libpsutils
 PS_HANDLERS=libpshandlers
