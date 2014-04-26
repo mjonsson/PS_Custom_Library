@@ -18,6 +18,8 @@ Change History
 ******************************************************************************/
 
 bool ps_null_or_empty(const char *str);
+tag_t ps_id_of_attr(const char *attrName, const char *className);
+tag_t *ps_id_of_attrs(int numAttrs, const char **attrName, const char **className);
 
 #ifdef __cplusplus
 }

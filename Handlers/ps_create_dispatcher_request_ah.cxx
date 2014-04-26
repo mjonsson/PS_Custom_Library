@@ -1,16 +1,13 @@
 #include "ps_global.hxx"
 #include "ps_action_handlers.hxx"
 
-///
-/// Test
-///
 int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 {
 	const char		*debug_name = "PS-create-dispatcher-request-AH";
 	char			*pszArg = NULL;
 	string			provider,
 					service,
-					primary_type, //!< Detailed description after the member
+					primary_type,
 					secondary_type,
 					argument,
 					request_type = "ON_DEMAND";

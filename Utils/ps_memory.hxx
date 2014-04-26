@@ -26,7 +26,7 @@ public:
 	c_ptr()
 	{
 		m_ptr = NULL;
-		m_size = NULL;
+		m_size = 0;
 		m_free = true;
 	}
 	c_ptr(const T* ptr)
@@ -69,6 +69,7 @@ public:
 	}
 	T get(const int i) { return m_ptr[i]; }
 	T* get() { return m_ptr; }
+	T* get_ptr(const int i) { return &(m_ptr[i]); }
 	void set(const int i, const T value) { m_ptr[i] = value; }
 	void set(const T* value) { m_ptr = value; }
 	T** get_ptr() { return &m_ptr; }
@@ -102,7 +103,7 @@ public:
 	c_pptr()
 	{
 		m_ptr = NULL;
-		m_size = NULL;
+		m_size = 0;
 		m_free = true;
 		m_free_container_only = false;
 	}
