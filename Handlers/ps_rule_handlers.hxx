@@ -30,3 +30,4 @@ int ps_check_initiator_rh(EPM_rule_message_t msg);
 // IN	EPM_action_message_t msg	Process task message
 
 int ps_check_privileges_rh(EPM_rule_message_t msg);
+int ps_check_child_structure_rh(EPM_rule_message_t msg);

@@ -5,9 +5,9 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 {
 	const char		*debug_name = "PS-check-privileges-RH";
 	char			*pszArg = NULL;
-	string			types,
-					statuses,
-					privileges;
+	vector<string>	privileges;
+	vector<string>	objectTypes;
+	vector<string>	statuses;
 	logical			owning_user = false,
 					owning_group = false;
 	EPM_decision_t  decision = EPM_go;
@@ -24,19 +24,19 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 			itk(ITK_ask_argument_named_value(pszArg, flag.get_ptr(), value.get_ptr()));
 
 			// Get types to include
-			if (tc_strcasecmp(flag.get(), "types") == 0)
+			if (tc_strcasecmp(flag.get(), "include_types") == 0)
 			{
-				types = value.get();
+				objectTypes = ps_split_str(value.get(), ",;:", true);
 			}
 			// Get statuses to include
-			else if (tc_strcasecmp(flag.get(), "statuses") == 0)
+			else if (tc_strcasecmp(flag.get(), "include_statuses") == 0)
 			{
-				statuses = value.get();
+				statuses = ps_split_str(value.get(), ",;:", true);
 			}
 			// Get privilege string
 			else if (tc_strcasecmp(flag.get(), "privileges") == 0)
 			{
-				privileges = value.get();
+				privileges = ps_split_str(value.get(), ",;:", true);
 			}
 			// Get owning_user string
 			else if (tc_strcasecmp(flag.get(), "owning_user") == 0)
@@ -72,9 +72,9 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 			itk(AOM_ask_value_string(tTarget, "object_type", targetType.get_ptr()));
 
 			// Check if target object is valid type
-			if (!types.empty())
+			if (!objectTypes.empty())
 			{
-				if (tc_strstr(types.c_str(), targetType.get()) == NULL)
+				if (!ps_find_str(targetType.get(), objectTypes))
 					typeOk = false;
 			}
 
@@ -92,7 +92,7 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 			{
 				itk(AOM_ask_value_tags(tTarget, "release_status_list", targetStatuses.get_len_ptr(), targetStatuses.get_ptr()));
 
-				if (targetStatuses.get_len() == 0 && tc_strstr(statuses.c_str(), "Working") != NULL)
+				if (targetStatuses.get_len() == 0 && ps_find_str("Working", statuses))
 				{
 					statusOk = true;
 				}
@@ -104,7 +104,7 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 
 						itk(AOM_ask_value_string(targetStatuses.get(j), "object_name", statusName.get_ptr()));
 
-						if (tc_strstr(statuses.c_str(), statusName.get()) != NULL)
+						if (ps_find_str(statusName.get(), statuses))
 						{
 								statusOk = true;
 								break;
@@ -117,7 +117,9 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 			{
 				if (!privileges.empty())
 				{
-					itk(AM_check_privilege(tTarget, privileges.c_str(), &hasAccess));
+					const char		*concat_privs = ps_concat_str(privileges, ',', false);
+
+					itk(AM_check_privilege(tTarget, concat_privs, &hasAccess));
 
 					if (!hasAccess)
 					{
@@ -125,8 +127,7 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 
 						decision = EPM_nogo;
 						itk(AOM_ask_value_string(tTargetAttach.get(i), "object_string", targetDispName.get_ptr()));
-						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL,
-							string("Required privilege(s) not met on object '" + string(targetDispName.get()) + "' (" + privileges + ").").c_str()));
+						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, str_format("Required privilege(s) not met on object '%s' (%s).", targetDispName.get(), concat_privs).get()));
 					}
 				}
 				if (owning_user)
@@ -145,8 +146,7 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 
 						decision = EPM_nogo;
 						itk(AOM_ask_value_string(tTargetAttach.get(i), "object_string", targetDispName.get_ptr()));
-						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL,
-							string("Current user is not the owner of object '" + string(targetDispName.get()) + "'.").c_str()));
+						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, str_format("Current user is not the owner of object '%s'.", targetDispName.get()).get()));
 					}
 				}
 				if (owning_group)
@@ -165,8 +165,7 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 
 						decision = EPM_nogo;
 						itk(AOM_ask_value_string(tTargetAttach.get(i), "object_string", targetDispName.get_ptr()));
-						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL,
-							string("Current group is not the owning group of object '" + string(targetDispName.get()) + "'.").c_str()));
+						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, str_format("Current group is not the owner of object '%s'.", targetDispName.get()).get()));
 					}
 				}
 			}

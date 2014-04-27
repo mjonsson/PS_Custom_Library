@@ -7,6 +7,8 @@ int ps_copy_task_properties_ah(EPM_action_message_t msg)
 	logical				isEmpty;
 	logical				isNull;
 	logical				isDescendant;
+	logical				isArray;
+	int					attrType;
 	tag_t				sourceClassId;
 	static tag_t		classIdOfTask;
 	char				*pszArg = NULL;
@@ -88,10 +90,16 @@ int ps_copy_task_properties_ah(EPM_action_message_t msg)
 			srcAttrMaxStrLen.get_ptr(), srcRefClass.get_ptr(), srcAttrLen.get_ptr(), srcAttrDesc.get_ptr(), srcAttrFail.get_ptr()));
 		itk(POM_length_of_attr(msg.task, attrId, &numElements));
 
+		attrType = srcAttrTypes.get(0);
+		if (srcAttrLen.get(0) == 1)
+			isArray = false;
+		else
+			isArray = true;
+
 		// Fetch source attribute data
-		if (srcAttrTypes.get(0) == POM_int)
+		if (attrType == POM_int)
 		{
-			if (srcAttrLen.get(0) == 1)
+			if (!isArray)
 			{
 				itk(POM_ask_attr_int(msg.task, attrId, &intVal, &isNull, &isEmpty));
 			}
@@ -100,9 +108,9 @@ int ps_copy_task_properties_ah(EPM_action_message_t msg)
 				itk(POM_ask_attr_ints(msg.task, attrId, 0, numElements, intValArr.get_ptr(), isNullArr.get_ptr(), isEmptyArr.get_ptr()));
 			}
 		}
-		else if (srcAttrTypes.get(0) == POM_string)
+		else if (attrType == POM_string)
 		{
-			if (srcAttrLen.get(0) == 1)
+			if (!isArray)
 			{
 				itk(POM_ask_attr_string(msg.task, attrId, stringVal.get_ptr(), &isNull, &isEmpty));
 			}
@@ -111,9 +119,9 @@ int ps_copy_task_properties_ah(EPM_action_message_t msg)
 				itk(POM_ask_attr_strings(msg.task, attrId, 0, numElements, stringValArr.get_pptr(), isNullArr.get_ptr(), isEmptyArr.get_ptr()));
 			}
 		}
-		else if (srcAttrTypes.get(0) == POM_typed_reference || srcAttrTypes.get(0) == POM_untyped_reference)
+		else if (attrType == POM_typed_reference || attrType == POM_untyped_reference)
 		{
-			if (srcAttrLen.get(0) == 1)
+			if (!isArray)
 			{
 				itk(POM_ask_attr_tag(msg.task, attrId, &tagVal, &isNull, &isEmpty));
 			}
@@ -153,7 +161,7 @@ int ps_copy_task_properties_ah(EPM_action_message_t msg)
 					trgAttrMaxStrLen.get_ptr(), trgRefClass.get_ptr(), trgAttrLen.get_ptr(), trgAttrDesc.get_ptr(), trgAttrFail.get_ptr()));
 
 				// Verify that source and target attribute metadata match
-				if (srcAttrTypes.get(0) != trgAttrTypes.get(0))
+				if (attrType != trgAttrTypes.get(0))
 					throw psexception("Source and target attributes are of different type.");
 				else if (srcAttrLen.get(0) != trgAttrLen.get(0))
 					throw psexception("Source and target attributes have different length declaration.");
@@ -170,9 +178,9 @@ int ps_copy_task_properties_ah(EPM_action_message_t msg)
 		{
 			begin_trans(x);
 			itk(POM_refresh_instances_any_class(instancesToUpdate.size(), &instancesToUpdate[0], POM_modify_lock));
-			if (srcAttrTypes.get(0) == POM_int)
+			if (attrType == POM_int)
 			{
-				if (srcAttrLen.get(0) == 1)
+				if (!isArray)
 				{
 					itk(POM_set_attr_int(instancesToUpdate.size(), &instancesToUpdate[0], attrId, intVal));
 				}
@@ -181,9 +189,9 @@ int ps_copy_task_properties_ah(EPM_action_message_t msg)
 					itk(POM_set_attr_ints(instancesToUpdate.size(), &instancesToUpdate[0], attrId, 0, numElements, intValArr.get()));
 				}
 			}
-			else if (srcAttrTypes.get(0) == POM_string)
+			else if (attrType == POM_string)
 			{
-				if (srcAttrLen.get(0) == 1)
+				if (!isArray)
 				{
 					itk(POM_set_attr_string(instancesToUpdate.size(), &instancesToUpdate[0], attrId, stringVal.get()));
 				}
@@ -192,9 +200,9 @@ int ps_copy_task_properties_ah(EPM_action_message_t msg)
 					itk(POM_set_attr_strings(instancesToUpdate.size(), &instancesToUpdate[0], attrId, 0, numElements, stringValArr.get()));
 				}
 			}
-			else if (srcAttrTypes.get(0) == POM_typed_reference || srcAttrTypes.get(0) == POM_untyped_reference)
+			else if (attrType == POM_typed_reference || attrType == POM_untyped_reference)
 			{
-				if (srcAttrLen.get(0) == 1)
+				if (!isArray)
 				{
 					itk(POM_set_attr_tag(instancesToUpdate.size(), &instancesToUpdate[0], attrId, tagVal));
 				}

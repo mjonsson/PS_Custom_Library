@@ -28,10 +28,6 @@ Change History
 
 static void ps_initialize_logging();
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*******************************************************************************
 Function Name		: ps_write_err
 Input Parameters	: char **, variable arg
@@ -91,7 +87,3 @@ Change History
 ******************************************************************************/
 
 void ps_write_debug(const char *fmt, ...);
-
-#ifdef __cplusplus
-}
-#endif

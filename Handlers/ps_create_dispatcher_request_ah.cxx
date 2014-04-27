@@ -3,24 +3,24 @@
 
 int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 {
-	const char		*debug_name = "PS-create-dispatcher-request-AH";
-	char			*pszArg = NULL;
-	string			provider,
-					service,
-					primary_type,
-					secondary_type,
-					argument,
-					request_type = "ON_DEMAND";
-	logical			owning_user = false,
-					owning_group = false;
-	vector<const char*>	arguments;
-	vector<tag_t>	primaryObjects,
-					secondaryObjects;
-	tag_t			tRootTask,
-					tRequest;
-	c_ptr<tag_t>	tTargets;
-	int				priority = 3,
-					result = ITK_ok;
+	const char			*debug_name = "PS-create-dispatcher-request-AH";
+	char				*pszArg = NULL;
+	string				provider,
+						service,
+						primary_type,
+						secondary_type,
+						argument,
+						request_type = "ON_DEMAND";
+	logical				owning_user = false,
+						owning_group = false;
+	c_pptr<char>		arguments(5);
+	vector<tag_t>		primaryObjects,
+						secondaryObjects;
+	tag_t				tRootTask,
+						tRequest;
+	c_ptr<tag_t>		tTargets;
+	int					priority = 3,
+						result = ITK_ok;
 
 	ps_write_debug("[START] %s", debug_name);
 	hr_start(debug_name);
@@ -61,8 +61,7 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 			// Get user arguments
 			else if (tc_strcasecmp(flag.get(), "argument") == 0)
 			{
-				argument = value.get();
-				arguments.push_back(argument.c_str());
+				arguments.append(value.get());
 			}
 			// Get the request type
 			else if (tc_strcasecmp(flag.get(), "request_type") == 0)
@@ -114,12 +113,12 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 				// If primary type is not set or it was not found push NULLTAG into vector
 				if (primary_type.empty() || objFound == false)
 				{
-					secondaryObjects.push_back(0);
+					primaryObjects.push_back(NULLTAG);
 				}
 			}
 		}
 
-		itk(DISPATCHER_create_request(provider.c_str(), service.c_str(), priority, NULL, NULL, 0, secondaryObjects.size(), &primaryObjects[0], &secondaryObjects[0], arguments.size(), &arguments[0], request_type.c_str(), 0, NULL, NULL, &tRequest));
+		DISPATCHER_create_request(provider.c_str(), service.c_str(), priority, NULL, NULL, 0, secondaryObjects.size(), &primaryObjects[0], &secondaryObjects[0], arguments.get_len(),(const char**) arguments.get_ptr(), request_type.c_str(), 0, NULL, NULL, &tRequest);
 	}
 	catch (tcexception& e)
 	{

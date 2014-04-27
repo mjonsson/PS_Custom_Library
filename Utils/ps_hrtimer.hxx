@@ -56,18 +56,9 @@ public:
 
 #endif
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 // C-wrapper implementation
 void hr_start(const char *marker_name);
 void hr_stop(const char *marker_name);
 void hr_reset();
 void hr_print_all(void);
 void hr_print(const char *marker_name);
-
-#ifdef __cplusplus
-}
-#endif

@@ -24,6 +24,7 @@
     <ClInclude Include="ps_rule_handlers.hxx" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ps_check_child_structure_rh.cxx" />
     <ClCompile Include="ps_check_initiator_rh.cxx" />
     <ClCompile Include="ps_check_in_process_rh.cxx" />
     <ClCompile Include="ps_check_privileges_rh.cxx" />
