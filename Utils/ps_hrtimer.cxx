@@ -1,13 +1,14 @@
 #include "ps_global.hxx"
 
 using namespace std;
+using namespace ps;
 
-bool HRTimer::initialized = false;
-logical HRTimer::enabled = false;
-LONGLONG HRTimer::frequency = 0;
-PerfMap HRTimer::perfMap;
+bool ps::HRTimer::initialized = false;
+logical ps::HRTimer::enabled = false;
+LONGLONG ps::HRTimer::frequency = 0;
+PerfMap ps::HRTimer::perfMap;
 
-void HRTimer::getFrequency(void)
+void ps::HRTimer::getFrequency(void)
 {
 	LARGE_INTEGER proc_freq;
 
@@ -17,7 +18,7 @@ void HRTimer::getFrequency(void)
 	frequency = proc_freq.QuadPart;
 }
 
-void HRTimer::start(const char *marker_name)
+void ps::HRTimer::start(const char *marker_name)
 {
 	if (!initialized)
 	{
@@ -48,7 +49,7 @@ void HRTimer::start(const char *marker_name)
 	SetThreadAffinityMask(GetCurrentThread(), oldmask);
 }
 	
-void HRTimer::stop(const char *marker_name)
+void ps::HRTimer::stop(const char *marker_name)
 {
 	if (!enabled) return;
 
@@ -72,65 +73,65 @@ void HRTimer::stop(const char *marker_name)
 	}
 }
 
-void HRTimer::reset()
+void ps::HRTimer::reset()
 {
 	if (!enabled) return;
 
 	perfMap.clear();
 }
 
-void HRTimer::print()
+void ps::HRTimer::print()
 {
 	if (!enabled) return;
 
-	ps_write_info("|Marker                             |Iters. |Acc. (s)|Avg. (s)|Min. (s)|Max. (s)|");
-	ps_write_info("|===================================|=======|========|========|========|========|");
+	log_info("|Marker                             |Iters. |Acc. (s)|Avg. (s)|Min. (s)|Max. (s)|");
+	log_info("|===================================|=======|========|========|========|========|");
 
 	for (PerfMap::iterator iter = perfMap.begin(); iter != perfMap.end(); ++iter)
 	{
 		PerfData *perfData = &(iter->second);
-		ps_write_info("|%-35s|%7d|%8.2f|%8.4f|%8.4f|%8.4f|", iter->first.c_str(), perfData->iterations,
+		log_info("|%-35s|%7d|%8.2f|%8.4f|%8.4f|%8.4f|", iter->first.c_str(), perfData->iterations,
 			perfData->accumulated, perfData->accumulated / (double)perfData->iterations,
 			perfData->min, perfData->max);
 	}
 }
 
-void HRTimer::print(const char *marker_name)
+void ps::HRTimer::print(const char *marker_name)
 {
 	if (!enabled) return;
 
-	ps_write_info("|Marker                             |Iters. |Acc. (s)|Avg. (s)|Min. (s)|Max. (s)|");
-	ps_write_info("|===================================|=======|========|========|========|========|");
+	log_info("|Marker                             |Iters. |Acc. (s)|Avg. (s)|Min. (s)|Max. (s)|");
+	log_info("|===================================|=======|========|========|========|========|");
 	
 	PerfMap::iterator iter;
 	string str_marker_name(marker_name);
 	if ((iter = perfMap.find(str_marker_name)) != perfMap.end())
 	{
 		PerfData *perfData = &(iter->second);
-		ps_write_info("|%-35s|%7d|%8.2f|%8.4f|%8.4f|%8.4f|", iter->first.c_str(), perfData->iterations,
+		log_info("|%-35s|%7d|%8.2f|%8.4f|%8.4f|%8.4f|", iter->first.c_str(), perfData->iterations,
 			perfData->accumulated, perfData->accumulated / (double)perfData->iterations,
 			perfData->min, perfData->max);
 	}
 }
 
 // C-wrapper implementation
-void hr_start(const char *marker_name)
+void ps::hr_start(const char *marker_name)
 {
 	HRTimer::start(marker_name);
 }
-void hr_stop(const char *marker_name)
+void ps::hr_stop(const char *marker_name)
 {
 	HRTimer::stop(marker_name);
 }
-void hr_reset()
+void ps::hr_reset()
 {
 	HRTimer::reset();
 }
-void hr_print_all(void)
+void ps::hr_print_all(void)
 {
 	HRTimer::print();
 }
-void hr_print(const char *marker_name)
+void ps::hr_print(const char *marker_name)
 {
 	HRTimer::print(marker_name);
 }

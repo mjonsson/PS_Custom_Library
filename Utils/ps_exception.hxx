@@ -3,12 +3,12 @@ File Name  : ps_tcexception.h
 Type       : Teamcenter exception type class.
 
 Author     : Mattias Jonsson
-             
+
 Change History
 
-  Who  | Date       | Description
+Who  | Date       | Description
 =======|============|=========================================================
-  MJ   | 22/01/2013 | Initial
+MJ   | 22/01/2013 | Initial
 ******************************************************************************/
 
 #pragma once
@@ -18,28 +18,33 @@ Change History
 
 using namespace std;
 
-class tcexception: public exception
+namespace ps
 {
-private:
-	int			_stat;
-	string		_what;
 
-public:
-	tcexception(const string& what) { _what = what; }
-	tcexception(int stat, const string& what) { _stat = stat; _what = what; }
-	~tcexception() { }
-	virtual const char* what() const throw() { return _what.c_str(); }
-	bool ifstat(int stat) {	if (_stat == stat) return true;	return false; }
-	int getstat() { return _stat; }
-};
+	class tcexception: public exception
+	{
+	private:
+		int			_stat;
+		string		_what;
 
-class psexception: public exception
-{
-private:
-	string		_what;
+	public:
+		tcexception(const string& what) { _what = what; }
+		tcexception(int stat, const string& what) { _stat = stat; _what = what; }
+		~tcexception() { }
+		virtual const char* what() const throw() { return _what.c_str(); }
+		bool ifstat(int stat) {	if (_stat == stat) return true;	return false; }
+		int getstat() { return _stat; }
+	};
 
-public:
-	psexception(const string& what) { _what = what; }
-	~psexception() { }
-	virtual const char* what() const throw() { return _what.c_str(); }
-};
+	class psexception: public exception
+	{
+	private:
+		string		_what;
+
+	public:
+		psexception(const string& what) { _what = what; }
+		~psexception() { }
+		virtual const char* what() const throw() { return _what.c_str(); }
+	};
+
+}

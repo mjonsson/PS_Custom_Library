@@ -1,6 +1,8 @@
 #include "ps_global.hxx"
 #include "ps_action_handlers.hxx"
 
+using namespace ps;
+
 int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 {
 	const char			*debug_name = "PS-create-dispatcher-request-AH";
@@ -22,11 +24,14 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 	int					priority = 3,
 						result = ITK_ok;
 
-	ps_write_debug("[START] %s", debug_name);
+	log_debug("[START] %s", debug_name);
 	hr_start(debug_name);
 
 	try
 	{
+		if (msg.arguments->number_of_arguments == 0)
+			throw psexception("Missing mandatory arguments.");
+
 		while ((pszArg = TC_next_argument(msg.arguments)) != NULL )
 		{
 			c_ptr<char>		flag, value;
@@ -68,10 +73,14 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 			{
 				request_type = value.get();
 			}
+			else
+			{
+				throw psexception("Illegal argument.");
+			}
 		}
 
 		if (provider.empty() || service.empty() || secondary_type.empty())
-			throw psexception("Missing mandatory parameters.");
+			throw psexception("Missing mandatory arguments.");
 
 		itk(EPM_ask_root_task(msg.task, &tRootTask));
 		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargets.get_len_ptr(), tTargets.get_ptr()));
@@ -124,18 +133,18 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 	{
 		result = e.getstat();
 		EMH_store_error_s1(EMH_severity_error, ACTION_HANDLER_DEFAULT_IFAIL, e.what());
-		ps_write_error(e.what());
+		log_error(e.what());
 	}
 	catch (psexception& e)
 	{
 		result = ACTION_HANDLER_DEFAULT_IFAIL;
 		EMH_store_error_s1(EMH_severity_error, ACTION_HANDLER_DEFAULT_IFAIL, e.what());
-		ps_write_error(e.what());
+		log_error(e.what());
 	}
 
 	hr_stop(debug_name);
 	hr_print(debug_name);
-	ps_write_debug("[STOP] %s", debug_name);
+	log_debug("[STOP] %s", debug_name);
 
 	return result;
 }

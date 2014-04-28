@@ -1,6 +1,8 @@
 #include "ps_global.hxx"
 #include "ps_action_handlers.hxx"
 
+using namespace ps;
+
 int ps_copy_task_properties_ah(EPM_action_message_t msg)
 {
 	const char			*debug_name = "PS-copy-task-properties-AH";
@@ -39,11 +41,14 @@ int ps_copy_task_properties_ah(EPM_action_message_t msg)
 	vector<tag_t>		instancesToUpdate;
 
 
-	ps_write_debug("[START] %s", debug_name);
+	log_debug("[START] %s", debug_name);
 	hr_start(debug_name);
 
 	try
 	{
+		if (msg.arguments->number_of_arguments == 0)
+			throw psexception("Missing mandatory arguments.");
+
 		while ((pszArg = TC_next_argument(msg.arguments)) != NULL )
 		{
 			c_ptr<char>		flag, value;
@@ -65,11 +70,15 @@ int ps_copy_task_properties_ah(EPM_action_message_t msg)
 			{
 				includeType = value.get();
 			}
+			else
+			{
+				throw psexception("Illegal argument.");
+			}
 		}
 
 		// Verify that we have all mandatory parameters required
 		if (taskProperty.empty() || targetProperty.empty())
-			throw psexception("Missing mandatory parameters.");
+			throw psexception("Missing mandatory arguments.");
 
 		// Fetch class id of EPMTask class if not already done previously
 		if (classIdOfTask == 0)
@@ -221,19 +230,19 @@ int ps_copy_task_properties_ah(EPM_action_message_t msg)
 		rollback_trans(x);
 		result = e.getstat();
 		EMH_store_error_s1(EMH_severity_error, ACTION_HANDLER_DEFAULT_IFAIL, e.what());
-		ps_write_error(e.what());
+		log_error(e.what());
 	}
 	catch (psexception& e)
 	{
 		rollback_trans(x);
 		result = ACTION_HANDLER_DEFAULT_IFAIL;
 		EMH_store_error_s1(EMH_severity_error, ACTION_HANDLER_DEFAULT_IFAIL, e.what());
-		ps_write_error(e.what());
+		log_error(e.what());
 	}
 
 	hr_stop(debug_name);
 	hr_print(debug_name);
-	ps_write_debug("[STOP] %s", debug_name);
+	log_debug("[STOP] %s", debug_name);
 
 	return result;
 }

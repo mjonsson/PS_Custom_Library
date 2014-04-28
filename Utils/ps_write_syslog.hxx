@@ -1,15 +1,15 @@
 /*******************************************************************************
 File Name  : ps_write_syslog.h
 Type       : Custom wrapper function over Teamcenter to write to System log.
-			 Functions written here ensures uniform output in log.
+Functions written here ensures uniform output in log.
 
 Author     : Mattias Jonsson
-             
+
 Change History
 
-  Who  | Date       | Description
+Who  | Date       | Description
 =======|============|=========================================================
-  MJ   | 18/02/2013 | Initial
+MJ   | 18/02/2013 | Initial
 ******************************************************************************/
 
 #pragma once
@@ -26,64 +26,67 @@ Change History
 #define	LOGMASK_PREFERENCE		"PS_LogMask"
 #define LOGSTREAMS_PREFERENCE	"PS_LogStreams"
 
-static void ps_initialize_logging();
+namespace ps
+{
+	static void initialize_logging();
 
-/*******************************************************************************
-Function Name		: ps_write_err
-Input Parameters	: char **, variable arg
-Output paramters	: 
-Description			: Writes error information to Teamcenter System log
-Author				: Mattias Jonsson
-Change History
+	/*******************************************************************************
+	Function Name		: ps_write_err
+	Input Parameters	: char **, variable arg
+	Output paramters	: 
+	Description			: Writes error information to Teamcenter System log
+	Author				: Mattias Jonsson
+	Change History
 
-  Who  | Date       | Description
-=======|============|=========================================================
-  MJ   | 18/02/2013 | Initial Creation
-******************************************************************************/
+	Who  | Date       | Description
+	=======|============|=========================================================
+	MJ   | 18/02/2013 | Initial Creation
+	******************************************************************************/
 
-void ps_write_error(const char *fmt, ...);
+	void log_error(const char *fmt, ...);
 
-/*******************************************************************************
-Function Name		: ps_write_warn
-Input Parameters	: char **, variable arg
-Output paramters	: 
-Description			: Writes WARN processing message information to Teamcenter System log
-Author				: Mattias Jonsson
-Change History
+	/*******************************************************************************
+	Function Name		: write_warn
+	Input Parameters	: char **, variable arg
+	Output paramters	: 
+	Description			: Writes WARN processing message information to Teamcenter System log
+	Author				: Mattias Jonsson
+	Change History
 
-  Who  | Date       | Description
-=======|============|=========================================================
-  MJ   | 18/02/2013 | Initial Creation
-******************************************************************************/
+	Who  | Date       | Description
+	=======|============|=========================================================
+	MJ   | 18/02/2013 | Initial Creation
+	******************************************************************************/
 
-void ps_write_warn(const char *fmt, ...);
+	void log_warn(const char *fmt, ...);
 
-/*******************************************************************************
-Function Name		: ps_write_info
-Input Parameters	: char **, variable arg
-Output paramters	: 
-Description			: Writes INFO processing message information to Teamcenter System log
-Author				: Mattias Jonsson
-Change History
+	/*******************************************************************************
+	Function Name		: write_info
+	Input Parameters	: char **, variable arg
+	Output paramters	: 
+	Description			: Writes INFO processing message information to Teamcenter System log
+	Author				: Mattias Jonsson
+	Change History
 
-  Who  | Date       | Description
-=======|============|=========================================================
-  MJ   | 18/02/2013 | Initial Creation
-******************************************************************************/
+	Who  | Date       | Description
+	=======|============|=========================================================
+	MJ   | 18/02/2013 | Initial Creation
+	******************************************************************************/
 
-void ps_write_info(const char *fmt, ...);
+	void log_info(const char *fmt, ...);
 
-/*******************************************************************************
-Function Name		: ps_write_debug
-Input Parameters	: char **, variable arg
-Output paramters	: 
-Description			: Writes DEBUG processing message information to Teamcenter System log
-Author				: Mattias Jonsson
-Change History
+	/*******************************************************************************
+	Function Name		: write_debug
+	Input Parameters	: char **, variable arg
+	Output paramters	: 
+	Description			: Writes DEBUG processing message information to Teamcenter System log
+	Author				: Mattias Jonsson
+	Change History
 
-  Who  | Date       | Description
-=======|============|=========================================================
-  MJ   | 18/02/2013 | Initial Creation
-******************************************************************************/
+	Who  | Date       | Description
+	=======|============|=========================================================
+	MJ   | 18/02/2013 | Initial Creation
+	******************************************************************************/
 
-void ps_write_debug(const char *fmt, ...);
+	void log_debug(const char *fmt, ...);
+}

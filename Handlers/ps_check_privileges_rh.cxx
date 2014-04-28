@@ -1,6 +1,8 @@
 #include "ps_global.hxx"
 #include "ps_rule_handlers.hxx"
 
+using namespace ps;
+
 int ps_check_privileges_rh(EPM_rule_message_t msg)
 {
 	const char		*debug_name = "PS-check-privileges-RH";
@@ -12,11 +14,14 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 					owning_group = false;
 	EPM_decision_t  decision = EPM_go;
 
-	ps_write_debug("[START] %s", debug_name);
+	log_debug("[START] %s", debug_name);
 	hr_start(debug_name);
 
 	try
 	{
+		if (msg.arguments->number_of_arguments == 0)
+			throw psexception("Missing mandatory arguments.");
+
 		while ((pszArg = TC_next_argument(msg.arguments)) != NULL )
 		{
 			c_ptr<char>		flag, value;
@@ -26,17 +31,17 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 			// Get types to include
 			if (tc_strcasecmp(flag.get(), "include_types") == 0)
 			{
-				objectTypes = ps_split_str(value.get(), ",;:", true);
+				objectTypes = split_str(value.get(), ",;:", true);
 			}
 			// Get statuses to include
 			else if (tc_strcasecmp(flag.get(), "include_statuses") == 0)
 			{
-				statuses = ps_split_str(value.get(), ",;:", true);
+				statuses = split_str(value.get(), ",;:", true);
 			}
 			// Get privilege string
 			else if (tc_strcasecmp(flag.get(), "privileges") == 0)
 			{
-				privileges = ps_split_str(value.get(), ",;:", true);
+				privileges = split_str(value.get(), ",;:", true);
 			}
 			// Get owning_user string
 			else if (tc_strcasecmp(flag.get(), "owning_user") == 0)
@@ -48,10 +53,14 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 			{
 				owning_group = true;
 			}
+			else
+			{
+				throw psexception("Illegal argument.");
+			}
 		}
 
 		if (privileges.empty() && !owning_user && !owning_group)
-			throw psexception("Missing mandatory parameters.");
+			throw psexception("Missing mandatory arguments.");
 
 		tag_t			tRootTask;
 		c_ptr<tag_t>	tTargetAttach;
@@ -74,7 +83,7 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 			// Check if target object is valid type
 			if (!objectTypes.empty())
 			{
-				if (!ps_find_str(targetType.get(), objectTypes))
+				if (!find_str(targetType.get(), objectTypes))
 					typeOk = false;
 			}
 
@@ -88,11 +97,11 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 				if (numStatus == 0)
 					statusOk = true;
 			}
-			else
+			if (!statusOk)
 			{
 				itk(AOM_ask_value_tags(tTarget, "release_status_list", targetStatuses.get_len_ptr(), targetStatuses.get_ptr()));
 
-				if (targetStatuses.get_len() == 0 && ps_find_str("Working", statuses))
+				if (targetStatuses.get_len() == 0 && find_str("Working", statuses))
 				{
 					statusOk = true;
 				}
@@ -104,7 +113,7 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 
 						itk(AOM_ask_value_string(targetStatuses.get(j), "object_name", statusName.get_ptr()));
 
-						if (ps_find_str(statusName.get(), statuses))
+						if (find_str(statusName.get(), statuses))
 						{
 								statusOk = true;
 								break;
@@ -117,9 +126,14 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 			{
 				if (!privileges.empty())
 				{
-					const char		*concat_privs = ps_concat_str(privileges, ',', false);
-
-					itk(AM_check_privilege(tTarget, concat_privs, &hasAccess));
+					// Check privileges, concatenate the privileges vector
+					for (vector<string>::iterator it = privileges.begin(); it != privileges.end(); ++it)
+					{
+						itk(AM_check_privilege(tTarget, it->c_str(), &hasAccess));
+						
+						if (!hasAccess)
+							break;
+					}
 
 					if (!hasAccess)
 					{
@@ -127,7 +141,7 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 
 						decision = EPM_nogo;
 						itk(AOM_ask_value_string(tTargetAttach.get(i), "object_string", targetDispName.get_ptr()));
-						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, str_format("Required privilege(s) not met on object '%s' (%s).", targetDispName.get(), concat_privs).get()));
+						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, str_format("Required privilege(s) not met on object '%s' (%s).", targetDispName.get(), concat_str(privileges, ',', false).c_str()).get()));
 					}
 				}
 				if (owning_user)
@@ -175,18 +189,18 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 	{
 		decision = EPM_nogo;
 		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
-		ps_write_error(e.what());
+		log_error(e.what());
 	}
 	catch (psexception& e)
 	{
 		decision = EPM_nogo;
 		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
-		ps_write_error(e.what());
+		log_error(e.what());
 	}
 
 	hr_stop(debug_name);
 	hr_print(debug_name);
-	ps_write_debug("[STOP] %s", debug_name);
+	log_debug("[STOP] %s", debug_name);
 
 	return decision;
 }

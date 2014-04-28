@@ -1,18 +1,22 @@
 #include "ps_global.hxx"
 #include "ps_rule_handlers.hxx"
 
+using namespace ps;
+
 int ps_check_initiator_rh(EPM_rule_message_t msg)
 {
 	const char		*debug_name = "PS-check-initiator-RH";
 	char			*pszArg = NULL;
-	unordered_map<string, string> mArguments;
 	EPM_decision_t  decision = EPM_go;
 
-	ps_write_debug("[START] %s", debug_name);
+	log_debug("[START] %s", debug_name);
 	hr_start(debug_name);
 
 	try
 	{
+		if (msg.arguments->number_of_arguments == 0)
+			throw psexception("Missing mandatory arguments.");
+
 		while ((pszArg = TC_next_argument(msg.arguments)) != NULL)
 		{
 			c_ptr<char>		flag, value;
@@ -115,24 +119,28 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 					itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, str_format("Process can only be initiated by role(s) '%s'.", value.get()).get()));
 				}
 			}
+			else
+			{
+				throw psexception("Illegal argument.");
+			}
 		}
 	}
 	catch (tcexception& e)
 	{
 		decision = EPM_nogo;
 		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
-		ps_write_error(e.what());
+		log_error(e.what());
 	}
 	catch (psexception& e)
 	{
 		decision = EPM_nogo;
 		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
-		ps_write_error(e.what());
+		log_error(e.what());
 	}
 
 	hr_stop(debug_name);
 	hr_print(debug_name);
-	ps_write_debug("[STOP] %s", debug_name);
+	log_debug("[STOP] %s", debug_name);
 
 	return decision;
 }

@@ -1,6 +1,8 @@
 #include "ps_global.hxx"
 #include "ps_rule_handlers.hxx"
 
+using namespace ps;
+
 int ps_check_in_process_rh(EPM_rule_message_t msg)
 {
 	const char *debug_name = "PS-check-in-process-RH";
@@ -9,7 +11,7 @@ int ps_check_in_process_rh(EPM_rule_message_t msg)
 	vector<tag_t>	tObjInProcess;
 	EPM_decision_t  decision = EPM_go;
 
-	ps_write_debug("[START] %s", debug_name);
+	log_debug("[START] %s", debug_name);
 	hr_start(debug_name);
 
 	try
@@ -66,18 +68,18 @@ int ps_check_in_process_rh(EPM_rule_message_t msg)
 	{
 		decision = EPM_nogo;
 		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
-		ps_write_error(e.what());
+		log_error(e.what());
 	}
 	catch (psexception& e)
 	{
 		decision = EPM_nogo;
 		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
-		ps_write_error(e.what());
+		log_error(e.what());
 	}
 
 	hr_stop(debug_name);
 	hr_print(debug_name);
-	ps_write_debug("[STOP] %s", debug_name);
+	log_debug("[STOP] %s", debug_name);
 
 	return decision;
 }

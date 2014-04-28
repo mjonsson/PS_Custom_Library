@@ -1,5 +1,7 @@
 #include "ps_global.hxx"
 
+using namespace ps;
+
 /******************************************************************************
 Global variables to control the logging
 ******************************************************************************/
@@ -7,7 +9,7 @@ static int g_logMasksInitialized = false;
 static int g_logMask = LOGMASK_ERROR;
 static int g_logStreams = LOGSTREAMS_ERR;
 
-static void ps_initialize_logging()
+static void ps::initialize_logging()
 {
 	if (!g_logMasksInitialized) {
 		TC_preference_search_scope_t	oldScope;
@@ -42,9 +44,9 @@ Change History
   MJ   | 18/02/2013 | Initial Creation
 ******************************************************************************/
 
-void ps_write_error(const char *fmt, ...)
+void ps::log_error(const char *fmt, ...)
 {
-	ps_initialize_logging();
+	initialize_logging();
 
 	if ((g_logMask & LOGMASK_ERROR) == LOGMASK_ERROR) {
 		va_list ap;
@@ -81,7 +83,7 @@ void ps_write_error(const char *fmt, ...)
 
 
 /*******************************************************************************
-Function Name		: ps_write_warn
+Function Name		: write_warn
 Input Parameters	: char **, variable arg
 Output paramters	: 
 Description			: Writes WARN processing message information to Teamcenter System log
@@ -93,9 +95,9 @@ Change History
   MJ   | 18/02/2013 | Initial Creation
 ******************************************************************************/
 
-void ps_write_warn(const char *fmt, ...)
+void ps::log_warn(const char *fmt, ...)
 {
-	ps_initialize_logging();
+	initialize_logging();
 
 	if ((g_logMask & LOGMASK_WARNING) == LOGMASK_WARNING) {
 
@@ -128,7 +130,7 @@ void ps_write_warn(const char *fmt, ...)
 
 
 /*******************************************************************************
-Function Name		: ps_write_info
+Function Name		: write_info
 Input Parameters	: char **, variable arg
 Output paramters	: 
 Description			: Writes INFO processing message information to Teamcenter System log
@@ -140,9 +142,9 @@ Change History
   MJ   | 18/02/2013 | Initial Creation
 ******************************************************************************/
 
-void ps_write_info(const char *fmt, ...)
+void ps::log_info(const char *fmt, ...)
 {
-	ps_initialize_logging();
+	initialize_logging();
 
 	if ((g_logMask & LOGMASK_INFO) == LOGMASK_INFO) {
 
@@ -174,7 +176,7 @@ void ps_write_info(const char *fmt, ...)
 }
 
 /*******************************************************************************
-Function Name		: ps_write_debug
+Function Name		: write_debug
 Input Parameters	: char **, variable arg
 Output paramters	: 
 Description			: Writes DEBUG processing message information to Teamcenter System log
@@ -186,9 +188,9 @@ Change History
   MJ   | 18/02/2013 | Initial Creation
 ******************************************************************************/
 
-void ps_write_debug(const char *fmt, ...)
+void ps::log_debug(const char *fmt, ...)
 {
-	ps_initialize_logging();
+	initialize_logging();
 
 	if ((g_logMask & LOGMASK_DEBUG) == LOGMASK_DEBUG) {
 

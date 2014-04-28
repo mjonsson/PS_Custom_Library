@@ -1,6 +1,8 @@
 #include "ps_global.hxx"
 #include "ps_rule_handlers.hxx"
 
+using namespace ps;
+
 int ps_check_child_structure_rh(EPM_rule_message_t msg)
 {
 	const char		*debug_name = "PS-check-child-structure-RH";
@@ -19,11 +21,14 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 	tag_t			tBomWindow = 0;
 	EPM_decision_t  decision = EPM_go;
 
-	ps_write_debug("[START] %s", debug_name);
+	log_debug("[START] %s", debug_name);
 	hr_start(debug_name);
 
 	try
 	{
+		if (msg.arguments->number_of_arguments == 0)
+			throw psexception("Missing mandatory arguments.");
+
 		while ((pszArg = TC_next_argument(msg.arguments)) != NULL )
 		{
 			c_ptr<char>		flag, value;
@@ -43,19 +48,26 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 			// Get included types value
 			else if (tc_strcasecmp(flag.get(), "include_target_types") == 0)
 			{
-				includeTargetTypes = ps_split_str(value.get(), ",;:", true);
+				includeTargetTypes = split_str(value.get(), ",;:", true);
 			}
 			// Get included structure types value
 			else if (tc_strcasecmp(flag.get(), "include_structure_types") == 0)
 			{
-				includeStructureTypes = ps_split_str(value.get(), ",;:", true);
+				includeStructureTypes = split_str(value.get(), ",;:", true);
 			}
 			// Get included structure types value
 			else if (tc_strcasecmp(flag.get(), "bomview_type") == 0)
 			{
 				bomViewType = value.get();
 			}
+			else
+			{
+				throw psexception("Illegal argument.");
+			}
 		}
+
+		if (revRule.empty() || bomViewType.empty())
+			throw psexception("Missing mandatory arguments.");
 
 		if (tRevRule == 0)
 		{
@@ -90,7 +102,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 				itk(AOM_ask_value_string(tTarget, "object_type", objectType.get_ptr()));
 
 				// Skip target if not of valid type
-				if (!ps_find_str(objectType.get(), includeTargetTypes))
+				if (!find_str(objectType.get(), includeTargetTypes))
 					continue;
 
 				itk(AOM_ask_value_tag(tTarget, "items_tag", &tItem));
@@ -152,7 +164,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 				itk(AOM_ask_value_string(tChild, "bl_item_object_type", lineObjectType.get_ptr()));
 
 				// If not valid structure type, jump to next target
-				if (!ps_find_str(lineObjectType.get(), includeStructureTypes))
+				if (!find_str(lineObjectType.get(), includeStructureTypes))
 					continue;
 
 				itk(AOM_ask_value_string(tChild, "bl_config_string", lineConfigured.get_ptr()));
@@ -166,7 +178,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 					{
 						itk(AOM_ask_value_string(tChild, "bl_item_item_id", lineItemId.get_ptr()));
 
-						if (ps_find_str(lineItemId.get(), targetItemIds))
+						if (find_str(lineItemId.get(), targetItemIds))
 							allowed = true;
 					}
 
@@ -191,7 +203,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 			BOM_close_window(tBomWindow);
 		decision = EPM_nogo;
 		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
-		ps_write_error(e.what());
+		log_error(e.what());
 	}
 	catch (psexception& e)
 	{
@@ -199,12 +211,12 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 			BOM_close_window(tBomWindow);
 		decision = EPM_nogo;
 		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
-		ps_write_error(e.what());
+		log_error(e.what());
 	}
 
 	hr_stop(debug_name);
 	hr_print(debug_name);
-	ps_write_debug("[STOP] %s", debug_name);
+	log_debug("[STOP] %s", debug_name);
 
 	return decision;
 }

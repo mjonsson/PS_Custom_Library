@@ -1,6 +1,8 @@
 #include "ps_global.hxx"
 
-bool ps_null_or_empty(const char *str)
+using namespace ps;
+
+bool ps::null_or_empty(const char *str)
 {
 	if (str == NULL) return true;
 	if (strlen(str) == 0) return true;
@@ -8,39 +10,49 @@ bool ps_null_or_empty(const char *str)
 	return false;
 }
 
-string ps_trim(string &str)
+void ps::trim_left(string &str)
 {
-	string new_str(str);
-
 	if (str.empty())
-		return new_str;
+		return;
 
-	for (string::iterator i = new_str.begin(); i != new_str.end(); ++i)
+	for (string::iterator i = str.begin(); i != str.end(); ++i)
 	{
 		if (isspace(*i))
-			new_str.erase(i);
+			str.erase(i);
 		else
 			break;
 	}
-
-	for (string::reverse_iterator i = new_str.rbegin(); i != new_str.rend(); ++i)
-	{
-		if (isspace(*i))
-			new_str.erase((++i).base());
-		else
-			break;
-	}
-
-	return new_str;
 }
 
+void ps::trim_right(string &str)
+{
+	if (str.empty())
+		return;
 
-vector<string> ps_split_str(string &split_str, const char *delims, bool remove_whitespace)
+	for (string::reverse_iterator i = str.rbegin(); i != str.rend(); ++i)
+	{
+		if (isspace(*i))
+			str.erase((++i).base());
+		else
+			break;
+	}
+}
+
+void ps::trim(string &str)
+{
+	if (str.empty())
+		return;
+
+	trim_left(str);
+	trim_right(str);
+}
+
+vector<string> ps::split_str(string &split_str, const char *delims, bool remove_whitespace)
 {
 	char			*ptr = NULL;
 	vector<string>	strVector;
 
-	if (split_str.empty() || ps_null_or_empty(delims))
+	if (split_str.empty() || null_or_empty(delims))
 		return strVector;
 
 	ptr = strtok((char*) split_str.c_str(), delims);
@@ -49,7 +61,7 @@ vector<string> ps_split_str(string &split_str, const char *delims, bool remove_w
 		string		splitted_str(ptr);
 
 		if (remove_whitespace)
-			splitted_str = ps_trim(splitted_str);
+			trim(splitted_str);
 
 		strVector.push_back(splitted_str);
 		ptr = strtok(NULL, delims);
@@ -58,12 +70,12 @@ vector<string> ps_split_str(string &split_str, const char *delims, bool remove_w
 	return strVector;
 }
 
-vector<string> ps_split_str(const char *split_str, const char *delims, bool remove_whitespace)
+vector<string> ps::split_str(const char *split_str, const char *delims, bool remove_whitespace)
 {
 	char			*ptr = NULL;
 	vector<string>	strVector;
 
-	if (ps_null_or_empty(split_str) || ps_null_or_empty(delims))
+	if (null_or_empty(split_str) || null_or_empty(delims))
 		return strVector;
 
 	ptr = strtok((char*) split_str, delims);
@@ -72,7 +84,7 @@ vector<string> ps_split_str(const char *split_str, const char *delims, bool remo
 		string		splitted_str(ptr);
 
 		if (remove_whitespace)
-			splitted_str = ps_trim(splitted_str);
+			trim(splitted_str);
 
 		strVector.push_back(splitted_str);
 		ptr = strtok(NULL, delims);
@@ -81,7 +93,7 @@ vector<string> ps_split_str(const char *split_str, const char *delims, bool remo
 	return strVector;
 }
 
-const char *ps_concat_str(vector<string> &str_vec, const char delim, bool remove_whitespace)
+string ps::concat_str(vector<string> &str_vec, const char delim, bool remove_whitespace)
 {
 	string str_ret = "";
 
@@ -90,24 +102,24 @@ const char *ps_concat_str(vector<string> &str_vec, const char delim, bool remove
 		string str = *i;
 
 		if (remove_whitespace)
-			str = ps_trim(str);
+			trim(str);
 
 		str_ret += str;
 
-		if (i != str_vec.end()) str_ret += delim;
+		if (i != --(str_vec.end())) str_ret += delim;
 	}
 
-	return str_ret.c_str();
+	return str_ret;
 }
 
-bool ps_find_str(string &find_str, string &full_str, const char *delims, bool remove_whitespace)
+bool ps::find_str(string &find_str, string &full_str, const char *delims, bool remove_whitespace)
 {
 	vector<string>		strVector;
 
-	if (find_str.empty() || full_str.empty() || ps_null_or_empty(delims))
+	if (find_str.empty() || full_str.empty() || null_or_empty(delims))
 		return false;
 
-	strVector = ps_split_str(full_str, delims, remove_whitespace);
+	strVector = split_str(full_str, delims, remove_whitespace);
 
 	for (vector<string>::iterator i = strVector.begin(); i != strVector.end(); ++i)
 	{
@@ -118,14 +130,14 @@ bool ps_find_str(string &find_str, string &full_str, const char *delims, bool re
 	return false;
 }
 
-bool ps_find_str(const char *find_str, string &full_str, const char *delims, bool remove_whitespace)
+bool ps::find_str(const char *find_str, string &full_str, const char *delims, bool remove_whitespace)
 {
 	vector<string>		strVector;
 
-	if (ps_null_or_empty(find_str) || full_str.empty() || ps_null_or_empty(delims))
+	if (null_or_empty(find_str) || full_str.empty() || null_or_empty(delims))
 		return false;
 
-	strVector = ps_split_str(full_str, delims, remove_whitespace);
+	strVector = split_str(full_str, delims, remove_whitespace);
 
 	for (vector<string>::iterator i = strVector.begin(); i != strVector.end(); ++i)
 	{
@@ -136,7 +148,7 @@ bool ps_find_str(const char *find_str, string &full_str, const char *delims, boo
 	return false;
 }
 
-bool ps_find_str(string &find_str, vector<string> &str_vec)
+bool ps::find_str(string &find_str, vector<string> &str_vec)
 {
 	if (find_str.empty() || str_vec.empty())
 		return false;
@@ -150,9 +162,9 @@ bool ps_find_str(string &find_str, vector<string> &str_vec)
 	return false;
 }
 
-bool ps_find_str(const char *find_str, vector<string> &str_vec)
+bool ps::find_str(const char *find_str, vector<string> &str_vec)
 {
-	if (ps_null_or_empty(find_str) || str_vec.empty())
+	if (null_or_empty(find_str) || str_vec.empty())
 		return false;
 
 	for (vector<string>::iterator i = str_vec.begin(); i != str_vec.end(); ++i)

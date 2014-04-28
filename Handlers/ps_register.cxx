@@ -3,6 +3,8 @@
 #include "ps_action_handlers.hxx"
 #include "ps_register.hxx"
 
+using namespace ps;
+
 int libps_register(int *decision, va_list args)
 {
 	try
@@ -18,13 +20,13 @@ int libps_register(int *decision, va_list args)
 	}
 	catch (tcexception& e)
 	{
-		ps_write_error(e.what());
+		log_error(e.what());
 
 		return e.getstat();
 	}
 	catch (exception& e)
 	{
-		ps_write_error(e.what());
+		log_error(e.what());
 
 		return 1;
 	}
@@ -34,20 +36,20 @@ int libps_register(int *decision, va_list args)
 
 extern DLLAPI int libpshandlers_register_callbacks()
 { 
-	ps_write_info("Installing PS User Exits Library - libps v1.0, "__DATE__" "__TIME__"\n");
+	log_info("Installing PS User Exits Library - libps v1.0, "__DATE__" "__TIME__"\n");
 	
 	try {
 		itk(CUSTOM_register_exit("libpshandlers", "USER_gs_shell_init_module", (CUSTOM_EXIT_ftn_t) libps_register));
 	}
 	catch (tcexception& e)
 	{
-		ps_write_error(e.what());
+		log_error(e.what());
 
 		return e.getstat();
 	}
 	catch (exception& e)
 	{
-		ps_write_error(e.what());
+		log_error(e.what());
 
 		return 1;
 	}
