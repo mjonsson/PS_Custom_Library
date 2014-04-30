@@ -48,7 +48,7 @@ all: 	build_obj_message $(OBJS)
 debug:	all
 
 clean: 	clean_message 	
-		-$(RM) $(OBJS) $(NT_LINK_EXT)
+		-$(RM) $(OBJS) $(NT_LINK_EXT) Debug obj x64 Utils.log
 
 rebuild: clean all
 

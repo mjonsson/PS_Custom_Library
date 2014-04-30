@@ -1,3 +1,16 @@
+/*!
+ * \file ps_hrtimer.hxx
+ * \date 2014/04/30 21:58
+ *
+ * \author Mattias Jonsson (jonssonm)
+ * Contact: jonsson.mattias@siemens.com
+ *
+ * \brief Implements a high resolution timer that can be used to measure time.
+ *
+ * \note To enable the high resolution timer functionality, set the Teamcenter boolean site preference
+ * "PS_PerfTimerEnabled" to true.
+*/
+
 #pragma once
 
 namespace ps
@@ -9,6 +22,10 @@ namespace ps
 
 	using namespace std;
 
+	//! Performance data node
+	/*!
+	 *  \note Used internally only
+	 */
 	class PerfData {
 	public:
 		double accumulated;
@@ -36,6 +53,7 @@ namespace ps
 	typedef map<string, PerfData> PerfMap;
 	typedef pair<string, PerfData> PerfPair;
 
+	//! High resolution timer implementation class
 	class HRTimer {
 	private:
 		static bool initialized;
@@ -46,19 +64,28 @@ namespace ps
 		static void getFrequency(void);
 
 	public:
+		//! Starts a timer instance with identity \a marker_name
 		static void start(const char *marker_name);
+		//! Stops a timer instance with identity \a marker_name
 		static void stop(const char *marker_name);
+		//! Resets all timers
 		static void reset();
+		//! Prints statistics of all timers
 		static void print(void);
+		//! Prints statistics for timer with identity \a marker_name
 		static void print(const char *marker_name);
+		//! Returns all collected performance data nodes
 		static PerfMap getPerfData(void) { return perfMap; }
 	};
 
-
-	// C-wrapper implementation
+	//! C-wrapper for HRTimer::start(const char *marker_name)
 	void hr_start(const char *marker_name);
+	//! C-wrapper fr HRTimer::stop(const char *marker_name)
 	void hr_stop(const char *marker_name);
+	//! C-wrapper fr HRTimer::reset()
 	void hr_reset();
+	//! C-wrapper fr HRTimer::print(void)
 	void hr_print_all(void);
+	//! C-wrapper fr HRTimer::print(const char *marker_name)
 	void hr_print(const char *marker_name);
 }

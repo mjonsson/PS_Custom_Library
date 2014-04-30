@@ -1,12 +1,25 @@
+/*!
+ * \file ps_macro.hxx
+ * \date 2014/04/30 20:53
+ *
+ * \author Mattias Jonsson (jonssonm)
+ * Contact: jonsson.mattias@siemens.com
+ *
+ * \brief Various utility macros mainly for use with Teamcenter.
+ *
+*/
+
 #pragma once
 
 #include "ps_global.hxx"
 
+//! Teamcenter macro to place before beginning a transaction that spans over several database updates.
 #define begin_trans(x)														\
 {																			\
 	POM_place_markpoint(&x);												\
 }
 
+//! Teamcenter macro used for rolling back a pending database transaction
 #define rollback_trans(x)													\
 {																			\
 	logical state_changed;													\
@@ -17,6 +30,7 @@
 	}																		\
 }
 
+//! Teamcenter macro used to commit a pending database transaction
 #define commit_trans(x)														\
 {																			\
 	if (x > 0)																\
@@ -26,7 +40,11 @@
 	}																		\
 }
 
-// General macro for embedding itk functions that throws exception when error occurs
+//! Macro used for wrapping Teamcenter ITK API functions
+/*!
+ *  \warning Remember to use this macro inside try-catch blocks
+ *  \throws tcexception
+ */
 #define itk(x) {																													\
 	int			stat,																												\
 				n_iFails;																											\
@@ -47,12 +65,15 @@
 		throw tcexception(stat, error_msg);																							\
     }																																\
 }
+//! Allocates \a y bytes of type \a x
 #define sm_alloc(x,y) ((x*) MEM_alloc((y) * sizeof(x)))
+//! Reallocates \a z bytes of type \a y to variable \a x
 #define sm_realloc(x,y,z) ((y*) MEM_realloc(x, (z) * sizeof(y)))
+//! Deallocates memory of \a x
 #define sm_free(x) {																												\
 	SAFE_SM_FREE(x);																												\
 }
-
+//! Deallocates memory of \a y elements of variable \a x
 #define sm_free_arr(x,y) {																											\
 	int i;																															\
 	if (x != NULL) {																												\

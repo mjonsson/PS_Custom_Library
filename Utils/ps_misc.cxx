@@ -5,16 +5,12 @@ using namespace ps;
 bool ps::null_or_empty(const char *str)
 {
 	if (str == NULL) return true;
-	if (strlen(str) == 0) return true;
-
-	return false;
+	else if (strlen(str) == 0) return true;
+	else return false;
 }
 
 void ps::trim_left(string &str)
 {
-	if (str.empty())
-		return;
-
 	for (string::iterator i = str.begin(); i != str.end(); ++i)
 	{
 		if (isspace(*i))
@@ -26,9 +22,6 @@ void ps::trim_left(string &str)
 
 void ps::trim_right(string &str)
 {
-	if (str.empty())
-		return;
-
 	for (string::reverse_iterator i = str.rbegin(); i != str.rend(); ++i)
 	{
 		if (isspace(*i))
@@ -40,20 +33,16 @@ void ps::trim_right(string &str)
 
 void ps::trim(string &str)
 {
-	if (str.empty())
-		return;
-
 	trim_left(str);
 	trim_right(str);
 }
 
-vector<string> ps::split_str(string &split_str, const char *delims, bool remove_whitespace)
+void ps::split_str(string &split_str, const char *delims, bool remove_whitespace, vector<string> &str_vector)
 {
 	char			*ptr = NULL;
-	vector<string>	strVector;
 
 	if (split_str.empty() || null_or_empty(delims))
-		return strVector;
+		return;
 
 	ptr = strtok((char*) split_str.c_str(), delims);
 	while (ptr != NULL)
@@ -63,20 +52,17 @@ vector<string> ps::split_str(string &split_str, const char *delims, bool remove_
 		if (remove_whitespace)
 			trim(splitted_str);
 
-		strVector.push_back(splitted_str);
+		str_vector.push_back(splitted_str);
 		ptr = strtok(NULL, delims);
 	}
-
-	return strVector;
 }
 
-vector<string> ps::split_str(const char *split_str, const char *delims, bool remove_whitespace)
+void ps::split_str(const char *split_str, const char *delims, bool remove_whitespace, vector<string> &str_vector)
 {
 	char			*ptr = NULL;
-	vector<string>	strVector;
 
 	if (null_or_empty(split_str) || null_or_empty(delims))
-		return strVector;
+		return;
 
 	ptr = strtok((char*) split_str, delims);
 	while (ptr != NULL)
@@ -86,16 +72,14 @@ vector<string> ps::split_str(const char *split_str, const char *delims, bool rem
 		if (remove_whitespace)
 			trim(splitted_str);
 
-		strVector.push_back(splitted_str);
+		str_vector.push_back(splitted_str);
 		ptr = strtok(NULL, delims);
 	}
-
-	return strVector;
 }
 
 string ps::concat_str(vector<string> &str_vec, const char delim, bool remove_whitespace)
 {
-	string str_ret = "";
+	string concStr;
 
 	for (vector<string>::iterator i = str_vec.begin(); i != str_vec.end(); ++i)
 	{
@@ -104,22 +88,19 @@ string ps::concat_str(vector<string> &str_vec, const char delim, bool remove_whi
 		if (remove_whitespace)
 			trim(str);
 
-		str_ret += str;
+		concStr += str;
 
-		if (i != --(str_vec.end())) str_ret += delim;
+		if (i != --(str_vec.end())) concStr += delim;
 	}
 
-	return str_ret;
+	return concStr;
 }
 
 bool ps::find_str(string &find_str, string &full_str, const char *delims, bool remove_whitespace)
 {
 	vector<string>		strVector;
 
-	if (find_str.empty() || full_str.empty() || null_or_empty(delims))
-		return false;
-
-	strVector = split_str(full_str, delims, remove_whitespace);
+	split_str(full_str, delims, remove_whitespace, strVector);
 
 	for (vector<string>::iterator i = strVector.begin(); i != strVector.end(); ++i)
 	{
@@ -134,10 +115,7 @@ bool ps::find_str(const char *find_str, string &full_str, const char *delims, bo
 {
 	vector<string>		strVector;
 
-	if (null_or_empty(find_str) || full_str.empty() || null_or_empty(delims))
-		return false;
-
-	strVector = split_str(full_str, delims, remove_whitespace);
+	split_str(full_str, delims, remove_whitespace, strVector);
 
 	for (vector<string>::iterator i = strVector.begin(); i != strVector.end(); ++i)
 	{
@@ -150,9 +128,6 @@ bool ps::find_str(const char *find_str, string &full_str, const char *delims, bo
 
 bool ps::find_str(string &find_str, vector<string> &str_vec)
 {
-	if (find_str.empty() || str_vec.empty())
-		return false;
-
 	for (vector<string>::iterator i = str_vec.begin(); i != str_vec.end(); ++i)
 	{
 		if (*i == find_str)
@@ -164,9 +139,6 @@ bool ps::find_str(string &find_str, vector<string> &str_vec)
 
 bool ps::find_str(const char *find_str, vector<string> &str_vec)
 {
-	if (null_or_empty(find_str) || str_vec.empty())
-		return false;
-
 	for (vector<string>::iterator i = str_vec.begin(); i != str_vec.end(); ++i)
 	{
 		if (*i == find_str)

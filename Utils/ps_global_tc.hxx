@@ -1,3 +1,14 @@
+/*!
+ * \file ps_global_tc.hxx
+ * \date 2014/04/30 20:52
+ *
+ * \author Mattias Jonsson (jonssonm)
+ * Contact: jonsson.mattias@siemens.com
+ *
+ * \brief Global include file that can be called from various ITK implementation headers.
+ *
+*/
+
 #pragma once
 
 #include <stdio.h>

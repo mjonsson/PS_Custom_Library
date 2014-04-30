@@ -3,7 +3,7 @@
 
 using namespace ps;
 
-int ps_copy_task_properties_ah(EPM_action_message_t msg)
+int ps_copy_task_property_ah(EPM_action_message_t msg)
 {
 	const char			*debug_name = "PS-copy-task-properties-AH";
 	logical				isEmpty;
@@ -15,13 +15,13 @@ int ps_copy_task_properties_ah(EPM_action_message_t msg)
 	static tag_t		classIdOfTask;
 	char				*pszArg = NULL;
 	string				taskProperty,
-						targetProperty,
-						includeType;
+		targetProperty,
+		includeType;
 	tag_t				tRootTask;
 	c_ptr<tag_t>		tTargets;
 	int					result = ITK_ok,
-						numElements,
-						x;
+		numElements,
+		x;
 	int					intVal;
 	tag_t				tagVal;
 	c_ptr<char>			stringVal;
@@ -95,7 +95,7 @@ int ps_copy_task_properties_ah(EPM_action_message_t msg)
 
 		// Fetch source attribute metadata
 		itk(POM_attr_id_of_attr(taskProperty.c_str(), "EPMTask", &attrId))
-		itk(POM_describe_attrs(sourceClassId, 1, &attrId, srcAttrNames.get_pptr(), srcAttrTypes.get_ptr(),
+			itk(POM_describe_attrs(sourceClassId, 1, &attrId, srcAttrNames.get_pptr(), srcAttrTypes.get_ptr(),
 			srcAttrMaxStrLen.get_ptr(), srcRefClass.get_ptr(), srcAttrLen.get_ptr(), srcAttrDesc.get_ptr(), srcAttrFail.get_ptr()));
 		itk(POM_length_of_attr(msg.task, attrId, &numElements));
 
@@ -206,7 +206,7 @@ int ps_copy_task_properties_ah(EPM_action_message_t msg)
 				}
 				else
 				{
-					itk(POM_set_attr_strings(instancesToUpdate.size(), &instancesToUpdate[0], attrId, 0, numElements, stringValArr.get()));
+					itk(POM_set_attr_strings(instancesToUpdate.size(), &instancesToUpdate[0], attrId, 0, numElements, stringValArr.get_ptr()));
 				}
 			}
 			else if (attrType == POM_typed_reference || attrType == POM_untyped_reference)

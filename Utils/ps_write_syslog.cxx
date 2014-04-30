@@ -2,9 +2,6 @@
 
 using namespace ps;
 
-/******************************************************************************
-Global variables to control the logging
-******************************************************************************/
 static int g_logMasksInitialized = false;
 static int g_logMask = LOGMASK_ERROR;
 static int g_logStreams = LOGSTREAMS_ERR;
@@ -31,36 +28,28 @@ static void ps::initialize_logging()
 	}
 }
 
-/*******************************************************************************
-Function Name		: ps_write_err
-Input Parameters	: char **, variable arg
-Output paramters	: 
-Description			: Writes error information to Teamcenter System log
-Author				: Mattias Jonsson
-Change History
-
-  Who  | Date       | Description
-=======|============|=========================================================
-  MJ   | 18/02/2013 | Initial Creation
-******************************************************************************/
-
 void ps::log_error(const char *fmt, ...)
 {
 	initialize_logging();
 
 	if ((g_logMask & LOGMASK_ERROR) == LOGMASK_ERROR) {
-		va_list ap;
 
-		int     len = 0;
-		char    *pbuff = NULL;
+		va_list		ap;
+		char		*pbuff = NULL;
 
-		len = (int)strlen(fmt) + BUFSIZ;
-		
+		int len = (int)strlen(fmt) + BUFSIZ;
 		if ((pbuff = (char *)MEM_alloc(len)) == NULL) {
 			return;
 		}
+
 		va_start(ap, fmt);
-		(void)vsprintf_s(pbuff, len, fmt, ap);
+		int need = vsnprintf(pbuff, len, fmt, ap) + 1;
+		if (need > len) {
+			if ((pbuff = (char *)MEM_realloc(pbuff, need)) == NULL) {
+				return;
+			}
+			vsnprintf(pbuff, need, fmt, ap);
+		}
 		va_end(ap);
 
 		if ((g_logStreams & LOGSTREAMS_ERR) == LOGSTREAMS_ERR) {
@@ -81,37 +70,28 @@ void ps::log_error(const char *fmt, ...)
 	}
 }
 
-
-/*******************************************************************************
-Function Name		: write_warn
-Input Parameters	: char **, variable arg
-Output paramters	: 
-Description			: Writes WARN processing message information to Teamcenter System log
-Author				: Mattias Jonsson
-Change History
-
-  Who  | Date       | Description
-=======|============|=========================================================
-  MJ   | 18/02/2013 | Initial Creation
-******************************************************************************/
-
 void ps::log_warn(const char *fmt, ...)
 {
 	initialize_logging();
 
 	if ((g_logMask & LOGMASK_WARNING) == LOGMASK_WARNING) {
 
-		va_list ap;
+		va_list		ap;
+		char		*pbuff = NULL;
 
-		int     len = 0;
-		char    *pbuff = NULL;
-
-		len = (int)strlen(fmt) + BUFSIZ;
+		int len = (int)strlen(fmt) + BUFSIZ;
 		if ((pbuff = (char *)MEM_alloc(len)) == NULL) {
 			return;
 		}
+
 		va_start(ap, fmt);
-		(void)vsprintf_s(pbuff,len, fmt, ap);
+		int need = vsnprintf(pbuff, len, fmt, ap) + 1;
+		if (need > len) {
+			if ((pbuff = (char *)MEM_realloc(pbuff, need)) == NULL) {
+				return;
+			}
+			vsnprintf(pbuff, need, fmt, ap);
+		}
 		va_end(ap);
 
 		if ((g_logStreams & LOGSTREAMS_OUT) == LOGSTREAMS_OUT) {
@@ -128,37 +108,28 @@ void ps::log_warn(const char *fmt, ...)
 	}
 }
 
-
-/*******************************************************************************
-Function Name		: write_info
-Input Parameters	: char **, variable arg
-Output paramters	: 
-Description			: Writes INFO processing message information to Teamcenter System log
-Author				: Mattias Jonsson
-Change History
-
-  Who  | Date       | Description
-=======|============|=========================================================
-  MJ   | 18/02/2013 | Initial Creation
-******************************************************************************/
-
 void ps::log_info(const char *fmt, ...)
 {
 	initialize_logging();
 
 	if ((g_logMask & LOGMASK_INFO) == LOGMASK_INFO) {
 
-		va_list ap;
+		va_list		ap;
+		char		*pbuff = NULL;
 
-		int     len = 0;
-		char    *pbuff = NULL;
-
-		len = (int)strlen(fmt) + BUFSIZ;
+		int len = (int)strlen(fmt) + BUFSIZ;
 		if ((pbuff = (char *)MEM_alloc(len)) == NULL) {
 			return;
 		}
+
 		va_start(ap, fmt);
-		(void)vsprintf_s(pbuff,len, fmt, ap);
+		int need = vsnprintf(pbuff, len, fmt, ap) + 1;
+		if (need > len) {
+			if ((pbuff = (char *)MEM_realloc(pbuff, need)) == NULL) {
+				return;
+			}
+			vsnprintf(pbuff, need, fmt, ap);
+		}
 		va_end(ap);
 
 		if ((g_logStreams & LOGSTREAMS_OUT) == LOGSTREAMS_OUT) {
@@ -175,36 +146,28 @@ void ps::log_info(const char *fmt, ...)
 	}
 }
 
-/*******************************************************************************
-Function Name		: write_debug
-Input Parameters	: char **, variable arg
-Output paramters	: 
-Description			: Writes DEBUG processing message information to Teamcenter System log
-Author				: Mattias Jonsson
-Change History
-
-  Who  | Date       | Description
-=======|============|=========================================================
-  MJ   | 18/02/2013 | Initial Creation
-******************************************************************************/
-
 void ps::log_debug(const char *fmt, ...)
 {
 	initialize_logging();
 
 	if ((g_logMask & LOGMASK_DEBUG) == LOGMASK_DEBUG) {
 
-		va_list ap;
+		va_list		ap;
+		char		*pbuff = NULL;
 
-		int     len = 0;
-		char    *pbuff = NULL;
-
-		len = (int)strlen(fmt) + BUFSIZ;
+		int len = (int)strlen(fmt) + BUFSIZ;
 		if ((pbuff = (char *)MEM_alloc(len)) == NULL) {
 			return;
 		}
+
 		va_start(ap, fmt);
-		(void)vsprintf_s(pbuff, len, fmt, ap);
+		int need = vsnprintf(pbuff, len, fmt, ap) + 1;
+		if (need > len) {
+			if ((pbuff = (char *)MEM_realloc(pbuff, need)) == NULL) {
+				return;
+			}
+			vsnprintf(pbuff, need, fmt, ap);
+		}
 		va_end(ap);
 
 		if ((g_logStreams & LOGSTREAMS_OUT) == LOGSTREAMS_OUT) {

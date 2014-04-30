@@ -31,17 +31,17 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 			// Get types to include
 			if (tc_strcasecmp(flag.get(), "include_types") == 0)
 			{
-				objectTypes = split_str(value.get(), ",;:", true);
+				split_str(value.get(), ",;:", true, objectTypes);
 			}
 			// Get statuses to include
 			else if (tc_strcasecmp(flag.get(), "include_statuses") == 0)
 			{
-				statuses = split_str(value.get(), ",;:", true);
+				split_str(value.get(), ",;:", true, statuses);
 			}
 			// Get privilege string
 			else if (tc_strcasecmp(flag.get(), "privileges") == 0)
 			{
-				privileges = split_str(value.get(), ",;:", true);
+				split_str(value.get(), ",;:", true, privileges);
 			}
 			// Get owning_user string
 			else if (tc_strcasecmp(flag.get(), "owning_user") == 0)

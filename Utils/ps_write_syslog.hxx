@@ -1,16 +1,16 @@
-/*******************************************************************************
-File Name  : ps_write_syslog.h
-Type       : Custom wrapper function over Teamcenter to write to System log.
-Functions written here ensures uniform output in log.
-
-Author     : Mattias Jonsson
-
-Change History
-
-Who  | Date       | Description
-=======|============|=========================================================
-MJ   | 18/02/2013 | Initial
-******************************************************************************/
+/*!
+ * \file ps_write_syslog.hxx
+ * \date 2014/04/30 20:20
+ *
+ * \author Mattias Jonsson (jonssonm)
+ * Contact: jonsson.mattias@siemens.com
+ *
+ * \brief A set of C-logging functions for logging to different output sources.
+ *
+ * \warning To use this logging function make sure the preferences mentioned is set
+ * to a valid value.
+ *
+*/
 
 #pragma once
 
@@ -23,70 +23,32 @@ MJ   | 18/02/2013 | Initial
 #define LOGSTREAMS_OUT			2
 #define LOGSTREAMS_SYSLOG		4
 
+//! Set Teamcenter site preference PS_LogMask to desired log level.
+/*!
+*  \note Logging errors and warnings means setting preference to a value of 3.
+ */
 #define	LOGMASK_PREFERENCE		"PS_LogMask"
+
+//! Set Teamcenter site preference PS_LogMask to desired log sources.
+/*!
+ *  \note Logging to std err and syslog means setting preference to a value of 5.
+ */
 #define LOGSTREAMS_PREFERENCE	"PS_LogStreams"
 
 namespace ps
 {
+	//! Internal function called for initalizing the logging framework.
 	static void initialize_logging();
 
-	/*******************************************************************************
-	Function Name		: ps_write_err
-	Input Parameters	: char **, variable arg
-	Output paramters	: 
-	Description			: Writes error information to Teamcenter System log
-	Author				: Mattias Jonsson
-	Change History
-
-	Who  | Date       | Description
-	=======|============|=========================================================
-	MJ   | 18/02/2013 | Initial Creation
-	******************************************************************************/
-
+	//!  Logs input string to target defined for error output.
 	void log_error(const char *fmt, ...);
 
-	/*******************************************************************************
-	Function Name		: write_warn
-	Input Parameters	: char **, variable arg
-	Output paramters	: 
-	Description			: Writes WARN processing message information to Teamcenter System log
-	Author				: Mattias Jonsson
-	Change History
-
-	Who  | Date       | Description
-	=======|============|=========================================================
-	MJ   | 18/02/2013 | Initial Creation
-	******************************************************************************/
-
+	//!  Logs input string to target defined for warn output.
 	void log_warn(const char *fmt, ...);
-
-	/*******************************************************************************
-	Function Name		: write_info
-	Input Parameters	: char **, variable arg
-	Output paramters	: 
-	Description			: Writes INFO processing message information to Teamcenter System log
-	Author				: Mattias Jonsson
-	Change History
-
-	Who  | Date       | Description
-	=======|============|=========================================================
-	MJ   | 18/02/2013 | Initial Creation
-	******************************************************************************/
-
+	
+	//!  Logs input string to target defined for info output.
 	void log_info(const char *fmt, ...);
 
-	/*******************************************************************************
-	Function Name		: write_debug
-	Input Parameters	: char **, variable arg
-	Output paramters	: 
-	Description			: Writes DEBUG processing message information to Teamcenter System log
-	Author				: Mattias Jonsson
-	Change History
-
-	Who  | Date       | Description
-	=======|============|=========================================================
-	MJ   | 18/02/2013 | Initial Creation
-	******************************************************************************/
-
+	//!  Logs input string to target defined for debug output.
 	void log_debug(const char *fmt, ...);
 }

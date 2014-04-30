@@ -127,7 +127,22 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 			}
 		}
 
-		DISPATCHER_create_request(provider.c_str(), service.c_str(), priority, NULL, NULL, 0, secondaryObjects.size(), &primaryObjects[0], &secondaryObjects[0], arguments.get_len(),(const char**) arguments.get_ptr(), request_type.c_str(), 0, NULL, NULL, &tRequest);
+		DISPATCHER_create_request(provider.c_str(),
+									service.c_str(),
+									priority,
+									NULL,
+									NULL,
+									0,
+									secondaryObjects.size(),
+									&primaryObjects[0],
+									&secondaryObjects[0],
+									arguments.get_len(),
+									(const char**) arguments.get_ptr(),
+									request_type.c_str(),
+									0,
+									NULL,
+									NULL,
+									&tRequest);
 	}
 	catch (tcexception& e)
 	{

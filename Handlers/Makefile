@@ -23,7 +23,7 @@ OBJS = ps_check_in_process_rh.$(OBJ_EXT) \
 		ps_check_privileges_rh.$(OBJ_EXT) \
 		ps_check_child_structure_rh.$(OBJ_EXT) \
 		ps_create_dispatcher_request_ah.$(OBJ_EXT) \
-		ps_copy_task_properties_ah.$(OBJ_EXT) \
+		ps_copy_task_property_ah.$(OBJ_EXT) \
 		ps_register.$(OBJ_EXT)
 		
 #
@@ -59,7 +59,7 @@ debug_rebuild: clean debug
 install: copy_message copy
 
 clean: 	clean_message
-		-$(RM) $(OBJS) $(NT_LINK_EXT)
+		-$(RM) $(OBJS) $(NT_LINK_EXT) Debug obj x64 Handlers.log
 
 copy:
 		-$(CHMOD) 777 $(LIB_DLL)

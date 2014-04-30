@@ -48,12 +48,12 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 			// Get included types value
 			else if (tc_strcasecmp(flag.get(), "include_target_types") == 0)
 			{
-				includeTargetTypes = split_str(value.get(), ",;:", true);
+				split_str(value.get(), ",;:", true, includeTargetTypes);
 			}
 			// Get included structure types value
 			else if (tc_strcasecmp(flag.get(), "include_structure_types") == 0)
 			{
-				includeStructureTypes = split_str(value.get(), ",;:", true);
+				split_str(value.get(), ",;:", true, includeStructureTypes);
 			}
 			// Get included structure types value
 			else if (tc_strcasecmp(flag.get(), "bomview_type") == 0)

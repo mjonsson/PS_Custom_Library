@@ -54,11 +54,14 @@ EXE=exe
 CC=cl
 LINK=link
 ANT=ant
-RM=rm -f
+RM=rm -rf
 CP=cp -R
 MV=mv
 CHMOD=chmod
 MT=mt
+MKDIR=mkdir
+DOXYGEN=doxygen
+DOXYGEN_CONFIG=./Doxygen
 		
 ######################################################################
 # Definition and CFLAG variables to compile the source code
