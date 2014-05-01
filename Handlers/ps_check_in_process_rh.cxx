@@ -12,7 +12,7 @@ int ps_check_in_process_rh(EPM_rule_message_t msg)
 	EPM_decision_t  decision = EPM_go;
 
 	log_debug("[START] %s", debug_name);
-	hr_start(debug_name);
+	hr_start_debug(debug_name);
 
 	try
 	{
@@ -77,8 +77,8 @@ int ps_check_in_process_rh(EPM_rule_message_t msg)
 		log_error(e.what());
 	}
 
-	hr_stop(debug_name);
-	hr_print(debug_name);
+	hr_stop_debug(debug_name);
+	hr_print_debug(debug_name);
 	log_debug("[STOP] %s", debug_name);
 
 	return decision;

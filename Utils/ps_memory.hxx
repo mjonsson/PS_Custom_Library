@@ -215,18 +215,6 @@ namespace ps
 			if ((m_ptr = (T*)MEM_realloc(m_ptr, size * sizeof(T))) == NULL)
 				throw psexception("Memory allocation error.");
 		}
-		//! Appends \a obj of type const char * to array
-		void append(const char *obj)
-		{
-			if (m_size >= m_alloc_size)
-			{
-				m_alloc_size = m_size + m_alloc_chunk;
-				realloc();
-			}
-			alloc(m_size, sizeof(char) * (strlen(obj) + 1));
-			tc_strcpy(m_ptr[m_size], obj);
-			m_size++;
-		}
 		//! Appends \a obj of type \a T to array
 		void append(T *obj)
 		{
@@ -235,7 +223,15 @@ namespace ps
 				m_alloc_size = m_size + m_alloc_chunk;
 				realloc();
 			}
-			m_ptr[m_size] = obj;
+			if (typeid(T) == typeid(char))
+			{
+				alloc(m_size, sizeof(char) * (strlen(obj) + 1));
+				tc_strcpy(m_ptr[m_size], obj);
+			}
+			else
+			{
+				m_ptr[m_size] = obj;
+			}
 			m_size++;
 		}
 		//! Appends a copy of \a obj of type \a T to array

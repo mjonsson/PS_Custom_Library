@@ -25,7 +25,7 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 						result = ITK_ok;
 
 	log_debug("[START] %s", debug_name);
-	hr_start(debug_name);
+	hr_start_debug(debug_name);
 
 	try
 	{
@@ -118,9 +118,12 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 							break;
 						}
 					}
+					// If no object of primary type found there is nothing to process, so exit
+					if (!objFound)
+						return result;
 				}
 				// If primary type is not set or it was not found push NULLTAG into vector
-				if (primary_type.empty() || objFound == false)
+				else if (primary_type.empty())
 				{
 					primaryObjects.push_back(NULLTAG);
 				}
@@ -157,8 +160,8 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 		log_error(e.what());
 	}
 
-	hr_stop(debug_name);
-	hr_print(debug_name);
+	hr_stop_debug(debug_name);
+	hr_print_debug(debug_name);
 	log_debug("[STOP] %s", debug_name);
 
 	return result;

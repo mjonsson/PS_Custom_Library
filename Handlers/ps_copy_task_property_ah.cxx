@@ -5,7 +5,7 @@ using namespace ps;
 
 int ps_copy_task_property_ah(EPM_action_message_t msg)
 {
-	const char			*debug_name = "PS-copy-task-properties-AH";
+	const char			*debug_name = "PS-copy-task-property-AH";
 	logical				isEmpty;
 	logical				isNull;
 	logical				isDescendant;
@@ -42,7 +42,7 @@ int ps_copy_task_property_ah(EPM_action_message_t msg)
 
 
 	log_debug("[START] %s", debug_name);
-	hr_start(debug_name);
+	hr_start_debug(debug_name);
 
 	try
 	{
@@ -240,8 +240,8 @@ int ps_copy_task_property_ah(EPM_action_message_t msg)
 		log_error(e.what());
 	}
 
-	hr_stop(debug_name);
-	hr_print(debug_name);
+	hr_stop_debug(debug_name);
+	hr_print_debug(debug_name);
 	log_debug("[STOP] %s", debug_name);
 
 	return result;

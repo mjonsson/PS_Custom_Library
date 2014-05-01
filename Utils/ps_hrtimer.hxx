@@ -64,28 +64,44 @@ namespace ps
 		static void getFrequency(void);
 
 	public:
+		//! Initializes the HRTimer class
+		static logical ps::HRTimer::init();
 		//! Starts a timer instance with identity \a marker_name
 		static void start(const char *marker_name);
 		//! Stops a timer instance with identity \a marker_name
 		static void stop(const char *marker_name);
+		//! Starts a debug timer instance with identity \a marker_name
+		static void start_debug(const char *marker_name);
+		//! Stops a debug timer instance with identity \a marker_name
+		static void stop_debug(const char *marker_name);
 		//! Resets all timers
 		static void reset();
 		//! Prints statistics of all timers
 		static void print(void);
 		//! Prints statistics for timer with identity \a marker_name
 		static void print(const char *marker_name);
+		//! Prints debug statistics for timer with identity \a marker_name
+		static void print_debug(const char *marker_name);
 		//! Returns all collected performance data nodes
 		static PerfMap getPerfData(void) { return perfMap; }
 	};
 
+	//! C-wrapper for HRTimer::init()
+	logical hr_init();
 	//! C-wrapper for HRTimer::start(const char *marker_name)
 	void hr_start(const char *marker_name);
 	//! C-wrapper fr HRTimer::stop(const char *marker_name)
 	void hr_stop(const char *marker_name);
+	//! C-wrapper for HRTimer::start_debug(const char *marker_name)
+	void hr_start_debug(const char *marker_name);
+	//! C-wrapper fr HRTimer::stop_debug(const char *marker_name)
+	void hr_stop_debug(const char *marker_name);
 	//! C-wrapper fr HRTimer::reset()
 	void hr_reset();
 	//! C-wrapper fr HRTimer::print(void)
 	void hr_print_all(void);
 	//! C-wrapper fr HRTimer::print(const char *marker_name)
 	void hr_print(const char *marker_name);
+	//! C-wrapper fr HRTimer::print_debug(const char *marker_name)
+	void hr_print_debug(const char *marker_name);
 }

@@ -1,6 +1,7 @@
 #pragma once
 
-int libps_register(int *decision, va_list args);
+int libps_oninit(int *decision, va_list args);
+int libps_onexit(int *decision, va_list args);
 
 #ifdef __cplusplus
 extern "C" {

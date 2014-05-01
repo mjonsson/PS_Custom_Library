@@ -28,3 +28,15 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg);
  *  \note See exernal documentation for handler usage in Teamcenter.
  */
 int ps_copy_task_property_ah(EPM_action_message_t msg);
+
+//! Starts a timer with identity.
+/*!
+ *  \note See exernal documentation for handler usage in Teamcenter.
+ */
+int ps_timer_start_ah(EPM_action_message_t msg);
+
+//! Stops a timer with identity.
+/*!
+ *  \note See exernal documentation for handler usage in Teamcenter.
+ */
+int ps_timer_stop_ah(EPM_action_message_t msg);
