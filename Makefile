@@ -3,8 +3,7 @@
 #                 Unpublished - All rights reserved
 #===============================================================================
 # File			: Makefile
-# Description	: This file contains all variables which are 
-#				  required for compilation.
+# Description	: Main Makefile 
 #===============================================================================
 # Developer            Date            Description
 # Mattias Jonsson      2014-04-14      Initial Version
@@ -35,20 +34,20 @@ debug_rebuild:
 				-$(RM) journal_file system_log
 				$(foreach dir,$(DIRS),make -C $(dir) debug_rebuild$(NEWLINE))
 
-install: 		install_message
-				$(foreach dir,$(DIRS),make -C $(dir) install$(NEWLINE))
-
-debug_install:	install_message
-				$(foreach dir,$(DIRS),make -C $(dir) debug_install$(NEWLINE))
+install: 		install_exec install_message
 
 doxy:
 				-$(RM) ./Docs
 				-$(MKDIR) ./Docs
 				-$(DOXYGEN) $(DOXYGEN_CONFIG)
-	
+
+install_exec:
+				$(foreach dir,$(DIRS),make -C $(dir) install$(NEWLINE))
+			
+				
 install_message:
 				@echo -------------------------------------------------------------
-				@echo install_message:
+				@echo !!! IMPORTANT MESSAGE !!!
 				@echo -------------------------------------------------------------
 				@echo After installing handlers make sure to add the line:
 				@echo .

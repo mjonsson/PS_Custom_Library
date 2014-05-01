@@ -3,6 +3,7 @@
 using namespace std;
 using namespace ps;
 
+// Initialize static variables
 bool ps::HRTimer::initialized = false;
 logical ps::HRTimer::enabled = false;
 LONGLONG ps::HRTimer::frequency = 0;

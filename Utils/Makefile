@@ -3,8 +3,7 @@
 #                 Unpublished - All rights reserved
 #===============================================================================
 # File			: Makefile
-# Description	: This file contains all variables which are 
-#				  required for compilation.
+# Description	: Utils Makefile
 #===============================================================================
 # Developer            Date            Description
 # Mattias Jonsson      2014-04-14      Initial Version
@@ -25,20 +24,15 @@ OBJS = ps_hrtimer.$(OBJ_EXT) \
 #
 # Define the DIBLIP option, lib name will be defined in Makefile.nt
 #
-EXPORT/IMPORT=$(PS_UTILS)
+EXPIMP = none
 
 #
-# Define the library name, dll name will be defined in Makefile.nt
-#
-LIB_DLL =
-
-#
-# Define the libraries dependent on this
+# Define additional library dependencies
 #
 DEP_LIBS= 
 
 #
-# Define the objects required for this library
+# Define the objects required for build
 #
 ALL_LIB_OBJS=*.$(OBJ_EXT)
 
@@ -48,7 +42,7 @@ all: 	build_obj_message $(OBJS)
 debug:	all
 
 clean: 	clean_message 	
-		-$(RM) $(OBJS) $(NT_LINK_EXT) Debug obj x64 Utils.log
+		-$(RM) $(OBJS) $(NT_LINK_EXT) $(GEN_OBJS)
 
 rebuild: clean all
 
@@ -56,8 +50,6 @@ debug_rebuild: clean debug
 
 install:
 
-debug_install:	
-			
 copy_message:
 			@echo -------------------------------------------------------------
 			@echo Copying lib, pdb and dll files to build directory

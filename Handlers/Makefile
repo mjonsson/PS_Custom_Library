@@ -3,8 +3,7 @@
 #                 Unpublished - All rights reserved
 #===============================================================================
 # File			: Makefile.nt
-# Description	: This file contains all variables which are 
-#				  required for compilation.
+# Description	: Handlers Makefile
 #===============================================================================
 # Developer            Date            Description
 # Mattias Jonsson      2014-04-14      Initial Version
@@ -29,26 +28,22 @@ OBJS = ps_check_in_process_rh.$(OBJ_EXT) \
 #
 # Define the DIBLIP option, lib name will be defined in Makefile.nt
 #
-EXPORT/IMPORT = $(PS_HANDLERS)
+EXPIMP = libpshandlers
 
 #
-# Define the library name, dll name will be defined in Makefile.nt
-#
-LIB_DLL = $(PS_HANDLERS).$(DLL_EXT)
-
-#
-# Define the libraries dependent on this
+# Define additional library dependencies
 #
 DEP_LIBS=
 
 #
-# Define the objects required for this library
+# Define the objects required for build
 #
 ALL_LIB_OBJS=*.$(OBJ_EXT) \
 				../Utils/*.$(OBJ_EXT)
 
 all:  	build_obj_message $(OBJS) build_dll_message
 		$(LINK_LINE)
+		$(MANIFEST_LINE)
 
 debug:	all
 
@@ -59,15 +54,15 @@ debug_rebuild: clean debug
 install: copy_message copy
 
 clean: 	clean_message
-		-$(RM) $(OBJS) $(NT_LINK_EXT) Debug obj x64 Handlers.log
+		-$(RM) $(OBJS) $(NT_LINK_EXT) $(GEN_OBJS)
 
 copy:
-		-$(CHMOD) 777 $(LIB_DLL)
-		-$(CHMOD) 777 $(PS_HANDLERS).lib
-		-$(CHMOD) 777 $(PS_HANDLERS).pdb	
-		-$(CP) *.lib $(TC_USER_LIB)
-		-$(CP) *.pdb $(TC_USER_BIN)
-		-$(CP) $(LIB_DLL) $(TC_USER_BIN)
+		-$(CHMOD) 777 $(EXPIMP).dll
+		-$(CHMOD) 777 $(EXPIMP).pdb	
+		-$(CHMOD) 777 $(EXPIMP).lib
+		-$(CP) $(EXPIMP).dll $(TC_USER_BIN)
+		-$(CP) $(EXPIMP).pdb $(TC_USER_BIN)
+		-$(CP) $(EXPIMP).lib $(TC_USER_LIB)
 
 build_obj_message:
 			@echo -------------------------------------------------------------
