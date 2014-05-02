@@ -98,6 +98,7 @@ void ps::HRTimer::reset()
 void ps::HRTimer::print()
 {
 	if (!enabled) return;
+	else if (perfMap.size() == 0) return;
 
 	log_info("|Marker                             |Iters. |Acc. (s)|Avg. (s)|Min. (s)|Max. (s)|");
 	log_info("|===================================|=======|========|========|========|========|");

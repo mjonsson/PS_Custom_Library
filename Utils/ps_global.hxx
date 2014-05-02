@@ -11,9 +11,19 @@
 
 #pragma once
 
-#include "ps_global_tc.hxx"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <windows.h>
+#include <exception>
+#include <map>
 #include <vector>
 #include <map>
+#include <string>
+#include <unidefs.h>
+
+#include "ps_global_tc.hxx"
+
 #include "ps_exception.hxx"
 #include "ps_hrtimer.hxx"
 #include "ps_macro.hxx"

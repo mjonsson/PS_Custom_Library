@@ -11,16 +11,6 @@
 
 #pragma once
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <windows.h>
-#include <exception>
-#include <map>
-#include <stack>
-#include <string>
-#include <unidefs.h>
-
 #ifdef _TC_9
 #include <tc/tc.h>
 #include <sa/am.h>

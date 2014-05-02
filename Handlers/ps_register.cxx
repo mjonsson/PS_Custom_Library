@@ -10,8 +10,7 @@ int libps_oninit(int *decision, va_list args)
 	try
 	{
 		// If enabled, initialize HRTimer class
-		logical hr_enabled = hr_init();
-		if (hr_enabled)
+		if (hr_init())
 			log_info("HRTimer class is enabled.");
 
 		// Action handlers
@@ -65,7 +64,7 @@ int libps_onexit(int *decision, va_list args)
 
 int libpshandlers_register_callbacks()
 { 
-	log_info("Installing PS User Exits Library - libps v1.0, "__DATE__" "__TIME__"\n");
+	log_info("Installing PS User Exits Library - libps v1.0, "__DATE__" "__TIME__".");
 	
 	try
 	{

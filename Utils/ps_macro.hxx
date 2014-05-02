@@ -11,8 +11,6 @@
 
 #pragma once
 
-#include "ps_global.hxx"
-
 //! Teamcenter macro to place before beginning a transaction that spans over several database updates.
 #define begin_trans(x)														\
 {																			\

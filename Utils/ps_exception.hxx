@@ -11,9 +11,6 @@
 
 #pragma once
 
-#include <exception>
-#include <string>
-
 using namespace std;
 
 namespace ps
