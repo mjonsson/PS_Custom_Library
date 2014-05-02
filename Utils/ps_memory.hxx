@@ -87,17 +87,6 @@ namespace ps
 			m_alloc_size = size;
 			realloc();
 		}
-		//! Appends \a obj of type \ T to the array
-		void append(T obj)
-		{
-			if (m_size >= m_alloc_size)
-			{
-				m_alloc_size = m_size + m_alloc_chunk;
-				realloc(m_alloc_size);
-			}
-			m_ptr[m_size] = obj;
-			m_size++;
-		}
 		//! Deallocates allocated memory
 		void dealloc()
 		{
@@ -106,6 +95,26 @@ namespace ps
 				MEM_free(m_ptr);
 				m_ptr = NULL;
 			}
+		}
+		const char *format(const char *fmt, ...)
+		{
+			va_list args;
+
+			construct();
+
+			int bufsiz = strlen(fmt) + 512;
+			alloc(bufsiz);
+
+			va_start(args, fmt);
+			int need = vsnprintf(m_ptr, bufsiz, fmt, args) + 1;
+			if (need > bufsiz)
+			{
+				realloc(need);
+				vsnprintf(m_ptr, need, fmt, args);
+			}
+			va_end(args);
+
+			return (const char*) m_ptr;
 		}
 		//! Get element \a i from array
 		T get(const int i) { return m_ptr[i]; }
@@ -214,40 +223,6 @@ namespace ps
 		{
 			if ((m_ptr = (T*)MEM_realloc(m_ptr, size * sizeof(T))) == NULL)
 				throw psexception("Memory allocation error.");
-		}
-		//! Appends \a obj of type \a T to array
-		void append(T *obj)
-		{
-			if (m_size >= m_alloc_size)
-			{
-				m_alloc_size = m_size + m_alloc_chunk;
-				realloc();
-			}
-			if (typeid(T) == typeid(char))
-			{
-				alloc(m_size, sizeof(char) * (strlen(obj) + 1));
-				tc_strcpy(m_ptr[m_size], obj);
-			}
-			else
-			{
-				m_ptr[m_size] = obj;
-			}
-			m_size++;
-		}
-		//! Appends a copy of \a obj of type \a T to array
-		/*!
-		 *  \note Make sure to input proper size of \a obj
-		 */
-		void append(const T* obj, int size)
-		{
-			if (m_size >= m_alloc_size)
-			{
-				m_alloc_size = m_size + m_alloc_chunk;
-				realloc(m_alloc_size);
-			}
-			alloc(m_size, sizeof(T) * size);
-			memcpy(m_ptr[m_size], obj, sizeof(T) * size);
-			m_size++;
 		}
 		//! Deallocate memory of all elements
 		void dealloc()

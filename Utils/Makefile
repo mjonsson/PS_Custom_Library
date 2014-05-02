@@ -19,6 +19,7 @@ include ../Makefile.nt
 #
 OBJS = ps_hrtimer.$(OBJ_EXT) \
 		ps_write_syslog.$(OBJ_EXT) \
+		ps_string.$(OBJ_EXT) \
 		ps_misc.$(OBJ_EXT)
 		
 #

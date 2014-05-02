@@ -19,4 +19,5 @@
 #include "ps_macro.hxx"
 #include "ps_memory.hxx"
 #include "ps_write_syslog.hxx"
+#include "ps_string.hxx"
 #include "ps_misc.hxx"

@@ -111,7 +111,7 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 
 						decision = EPM_nogo;
 						itk(AOM_ask_value_string(tTargetAttach.get(i), "object_string", targetDispName.get_ptr()));
-						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, str_format("Required privilege(s) not met on object '%s' (%s).", targetDispName.get(), concat_str(privileges, ',', false).c_str()).get()));
+						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Required privilege(s) not met on object '%s' (%s).", targetDispName.get(), concat_str(privileges, ',', false).c_str())));
 					}
 				}
 				if (owning_user)
@@ -130,7 +130,7 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 
 						decision = EPM_nogo;
 						itk(AOM_ask_value_string(tTargetAttach.get(i), "object_string", targetDispName.get_ptr()));
-						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, str_format("Current user is not the owner of object '%s'.", targetDispName.get()).get()));
+						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Current user is not the owner of object '%s'.", targetDispName.get())));
 					}
 				}
 				if (owning_group)
@@ -149,7 +149,7 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 
 						decision = EPM_nogo;
 						itk(AOM_ask_value_string(tTargetAttach.get(i), "object_string", targetDispName.get_ptr()));
-						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, str_format("Current group is not the owner of object '%s'.", targetDispName.get()).get()));
+						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Current group is not the owner of object '%s'.", targetDispName.get())));
 					}
 				}
 			}

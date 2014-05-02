@@ -60,7 +60,7 @@ int ps_check_in_process_rh(EPM_rule_message_t msg)
 				c_ptr<char>		targetDispName;
 
 				itk(AOM_ask_value_string(*ptTarget, "object_string", targetDispName.get_ptr()));
-				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, str_format("Process target '%s' is already within another process.", targetDispName.get()).get()));
+				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Process target '%s' is already within another process.", targetDispName.get())));
 			}
 		}
 	}

@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="ps_hrtimer.cxx" />
     <ClCompile Include="ps_misc.cxx" />
+    <ClCompile Include="ps_string.cxx" />
     <ClCompile Include="ps_write_syslog.cxx" />
   </ItemGroup>
   <ItemGroup>
@@ -31,6 +32,7 @@
     <ClInclude Include="ps_macro.hxx" />
     <ClInclude Include="ps_memory.hxx" />
     <ClInclude Include="ps_misc.hxx" />
+    <ClInclude Include="ps_string.hxx" />
     <ClInclude Include="ps_write_syslog.hxx" />
   </ItemGroup>
   <ItemGroup>

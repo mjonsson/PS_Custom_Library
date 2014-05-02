@@ -63,7 +63,7 @@ GEN_OBJS=Debug obj Win32 x64 Utils.log Handlers.log
 ## Determine x64 or x86 platform
 ifeq ($(TC_PLATFORM),x86)
 DEFINES=-DNT40 -DPOMDLL -DCRTAPI1=_cdecl -DCRTAPI2=cdecl -D_WIN32 \
-		-DWIN32 -DWIN32_LEAN_AND_MEAN -DWNT -DBYPASS_FLEX -D_INTEL= \
+		-DWIN32 -DWIN32_LEAN_AND_MEAN -DWNT -DBYPASS_FLEX -D_INTEL=1 \
 		-DIPLIB=$(EXPIMP) -D_CRT_SECURE_NO_DEPRECATE -D_$(TC_VERSION)
 else
 DEFINES=-DSTEP -DAP203 -DAP214 -DWIN32_LEAN_AND_MEAN -DWNT \
@@ -135,6 +135,48 @@ TC_UTIL_LIBS=$(TC_LIBRARY)/itk_main.obj
 # Common Teamcenter libraries
 #
 TC_LIBS=$(TC_LIBRARY)/*.lib
+
+ifeq ($(TC_VERSION),TC_9)
+DELAYLOAD=/delayload:libuser_exits.dll \
+			/delayload:libict.dll \
+			/delayload:libae.dll \
+			/delayload:libappr.dll \
+			/delayload:libarchive.dll \
+			/delayload:libbackup.dll \
+			/delayload:libbom.dll \
+			/delayload:libcfm.dll \
+			/delayload:libdmi.dll \
+			/delayload:libecm.dll \
+			/delayload:libeint.dll \
+			/delayload:libepm.dll \
+			/delayload:libform.dll \
+			/delayload:libgrm.dll \
+			/delayload:libics.dll \
+			/delayload:libtccore.dll \
+			/delayload:libtctrushape.dll \
+			/delayload:libinternal_exits.dll \
+			/delayload:libvalidation.dll \
+			/delayload:libitk.dll \
+			/delayload:liblov.dll \
+			/delayload:libme.dll \
+			/delayload:libmechatronics.dll \
+			/delayload:libmgc.dll \
+			/delayload:libobjio.dll \
+			/delayload:libpie.dll \
+			/delayload:libai.dll \
+			/delayload:libtie.dll \
+			/delayload:libproperty.dll \
+			/delayload:libps.dll \
+			/delayload:libpublication.dll \
+			/delayload:libqry.dll \
+			/delayload:libres.dll \
+			/delayload:libsub_mgr.dll \
+			/delayload:libtccoreext.dll \
+			/delayload:libnxmgr_im.dll \
+			/delayload:libmld.dll
+endif
+
+ifeq ($(TC_VERSION),TC_10)
 DELAYLOAD=/delayload:libuser_exits.dll \
 			/delayload:libict.dll \
 			/delayload:libae.dll \
@@ -174,7 +216,8 @@ DELAYLOAD=/delayload:libuser_exits.dll \
 			/delayload:libnxmgr_im.dll \
 			/delayload:libfoundationbase.dll \
 			/delayload:libmld.dll
-	
+endif
+
 #
 # Link definition for custom Teamcenter libraries
 #

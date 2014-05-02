@@ -30,7 +30,7 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 			if (!find_str(userId, valueVec))
 			{
 				decision = EPM_nogo;
-				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, str_format("Process can only be initiated by user(s) '%s'.", concat_str(valueVec, ',', false).c_str()).get()));
+				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Process can only be initiated by user(s) '%s'.", concat_str(valueVec, ',', false).c_str())));
 			}
 		}
 		// Check if group of current user is defined
@@ -47,7 +47,7 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 			if (!find_str(groupName.get(), valueVec))
 			{
 				decision = EPM_nogo;
-				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, str_format("Process can only be initiated by group(s) '%s'.", concat_str(valueVec, ',', false).c_str()).get()));
+				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Process can only be initiated by group(s) '%s'.", concat_str(valueVec, ',', false).c_str())));
 			}
 		}
 		// Check if role of current user is defined
@@ -64,7 +64,7 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 			if (!find_str(roleName.get(), valueVec))
 			{
 				decision = EPM_nogo;
-				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, str_format("Process can only be initiated by role(s) '%s'.", concat_str(valueVec, ',', false).c_str()).get()));
+				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Process can only be initiated by role(s) '%s'.", concat_str(valueVec, ',', false).c_str())));
 			}
 		}
 		// Check if full group of current user is defined
@@ -81,7 +81,7 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 			if (!find_str(groupName.get(), valueVec))
 			{
 				decision = EPM_nogo;
-				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, str_format("Process can only be initiated by full group(s) '%s'.", concat_str(valueVec, ',', false).c_str()).get()));
+				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Process can only be initiated by full group(s) '%s'.", concat_str(valueVec, ',', false).c_str())));
 			}
 		}
 		// Check if any of users roles are defined
@@ -113,7 +113,7 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 			if (!roleFound)
 			{
 				decision = EPM_nogo;
-				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, str_format("Process can only be initiated by role(s) '%s'.", concat_str(valueVec, ',', false).c_str()).get()));
+				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Process can only be initiated by role(s) '%s'.", concat_str(valueVec, ',', false).c_str())));
 			}
 		}
 	}

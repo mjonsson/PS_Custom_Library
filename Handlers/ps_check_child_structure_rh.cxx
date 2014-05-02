@@ -159,7 +159,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 						itk(AOM_ask_value_string(tChild, "bl_formatted_ancestor_name", lineObjectStr.get_ptr()));
 						itk(AOM_ask_value_string(tTarget, "object_string", targetObjectStr.get_ptr()));
 
-						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, str_format("Structure child line '%s' of target revision '%s' is not valid for this process.", lineObjectStr.get(), targetObjectStr.get()).get()));
+						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Structure child line '%s' of target revision '%s' is not valid for this process.", lineObjectStr.get(), targetObjectStr.get())));
 					}
 				}
 			}
