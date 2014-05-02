@@ -15,13 +15,13 @@ int ps_copy_task_property_ah(EPM_action_message_t msg)
 	static tag_t		classIdOfTask;
 	char				*pszArg = NULL;
 	string				taskProperty,
-		targetProperty,
-		includeType;
+						targetProperty;
+	vector<string>		includeTypes;
 	tag_t				tRootTask;
 	c_ptr<tag_t>		tTargets;
 	int					result = ITK_ok,
-		numElements,
-		x;
+						numElements,
+						x;
 	int					intVal;
 	tag_t				tagVal;
 	c_ptr<char>			stringVal;
@@ -38,6 +38,7 @@ int ps_copy_task_property_ah(EPM_action_message_t msg)
 	c_ptr<int>			srcAttrFail;
 	c_ptr<logical>		isNullArr;
 	c_ptr<logical>		isEmptyArr;
+	h_args				args(msg.arguments);
 	vector<tag_t>		instancesToUpdate;
 
 
@@ -46,39 +47,14 @@ int ps_copy_task_property_ah(EPM_action_message_t msg)
 
 	try
 	{
-		if (msg.arguments->number_of_arguments == 0)
+		if (args.size() == 0)
 			throw psexception("Missing mandatory arguments.");
 
-		while ((pszArg = TC_next_argument(msg.arguments)) != NULL )
-		{
-			c_ptr<char>		flag, value;
-
-			itk(ITK_ask_argument_named_value(pszArg, flag.get_ptr(), value.get_ptr()));
-
-			// Get task property to copy from
-			if (tc_strcasecmp(flag.get(), "task_property") == 0)
-			{
-				taskProperty = value.get();
-			}
-			// Get target property to copy to
-			else if (tc_strcasecmp(flag.get(), "target_property") == 0)
-			{
-				targetProperty = value.get();
-			}
-			// Get types to include in the target list
-			else if (tc_strcasecmp(flag.get(), "include_type") == 0)
-			{
-				includeType = value.get();
-			}
-			else
-			{
-				throw psexception("Illegal argument.");
-			}
-		}
-
-		// Verify that we have all mandatory parameters required
-		if (taskProperty.empty() || targetProperty.empty())
-			throw psexception("Missing mandatory arguments.");
+		if (!args.getStr("task_property", taskProperty))
+			throw psexception("Missing mandatory argument 'task_property'");
+		if (!args.getStr("target_property", targetProperty))
+			throw psexception("Missing mandatory argument 'target_property'");
+		args.getVec("include_types", includeTypes);
 
 		// Fetch class id of EPMTask class if not already done previously
 		if (classIdOfTask == 0)
@@ -162,7 +138,7 @@ int ps_copy_task_property_ah(EPM_action_message_t msg)
 			itk(AOM_ask_value_string(tTarget, "object_type", objectType.get_ptr()));
 
 			// Check if the target attachment is of correct type
-			if (includeType.empty() || tc_strcmp(includeType.c_str(), objectType.get()) == 0)
+			if (find_str(objectType.get(), includeTypes))
 			{
 				itk(POM_attr_id_of_attr(targetProperty.c_str(), objectType.get(), &attrId));
 				itk(POM_class_of_instance(tTarget, &targetClassId));

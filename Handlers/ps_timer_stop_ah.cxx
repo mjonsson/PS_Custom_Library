@@ -10,32 +10,17 @@ int ps_timer_stop_ah(EPM_action_message_t msg)
 	string				marker;
 	int					result = ITK_ok;
 	EPM_decision_t		decision = EPM_go;
+	h_args				args(msg.arguments);
 
 	log_debug("[START] %s", debug_name);
 
 	try
 	{
-		if (msg.arguments->number_of_arguments == 0)
+		if (args.size() == 0)
 			throw psexception("Missing mandatory arguments.");
 
-		while ((pszArg = TC_next_argument(msg.arguments)) != NULL )
-		{
-			c_ptr<char>		flag, value;
-
-			itk(ITK_ask_argument_named_value(pszArg, flag.get_ptr(), value.get_ptr()));
-
-			// Get types to include
-			if (tc_strcasecmp(flag.get(), "marker") == 0)
-			{
-				marker = value.get();
-				trim(marker);
-			}
-		}
-
-		if (marker.empty())
-		{
-			throw psexception("Missing mandatory arguments.");
-		}
+		if (!args.getStr("marker", marker))
+			throw psexception("Missing mandatory argument 'marker'.");
 
 		hr_stop(marker.c_str());
 		hr_print(marker.c_str());

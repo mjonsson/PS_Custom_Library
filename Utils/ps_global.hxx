@@ -13,7 +13,6 @@
 
 #include "ps_global_tc.hxx"
 #include <vector>
-#include <set>
 #include <map>
 #include "ps_exception.hxx"
 #include "ps_hrtimer.hxx"

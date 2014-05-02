@@ -13,6 +13,9 @@
 
 namespace ps
 {
+	typedef map<string, vector<string>> ArgsMap;
+	typedef pair<string, vector<string>> ArgPair;
+
 	//! Class used for constructing formatted, parametrized C-style strings
 	class str_format
 	{
@@ -46,13 +49,12 @@ namespace ps
 				m_ptr = NULL;
 			}
 		}
-
-	public:
 		//! Default constructor
 		str_format()
 		{
 			construct();
 		}
+	public:
 		//! Construct and initialize a formatted, parametrized C-style string
 		str_format(const char *fmt, ...)
 		{
@@ -81,6 +83,33 @@ namespace ps
 		const char* get() { return m_ptr; }
 	};
 
+	class h_args
+	{
+	private:
+		ArgsMap argsMap;
+
+	public:
+		//! Construct the ArgsMap map
+		h_args(TC_argument_list_t *args);
+		//! Default destructor
+		~h_args() { };
+		//! Get and return a string by value
+		string getStr(string flag);
+		//! Get and return a logical by value
+		bool getFlag(string flag);
+		//! Get and return a string by reference
+		bool getStr(string flag, string &value);
+		//! Get and return a vector of string by reference
+		bool getVec(string flag, vector<string> &value);
+		//! Get and return a logical by reference
+		bool getFlag(string flag, logical &value);
+		//! Get and return a logical by reference
+		bool getInt(string flag, int &value);
+		//! Return size of ArgsMap
+		int size();
+	};
+
+
 	//! Check whether \a str is either null or empty
 	bool null_or_empty(const char *str);
 	//! Remove whitespace characters from string \a str
@@ -105,4 +134,6 @@ namespace ps
 	bool find_str(string &find_str, vector<string> &str_vec);
 	//! Find C-style string \a find_str in vector \a str_vec
 	bool find_str(const char *find_str, vector<string> &str_vec);
+	//! Convert vector<string> to char**
+	vector<const char*> vec_string_to_char(vector<string> &str_vec);
 }

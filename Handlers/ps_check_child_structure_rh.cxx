@@ -19,6 +19,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 	vector<tag_t>	targetsToProcess;
 	static tag_t	tItemRevClassId = 0;
 	tag_t			tBomWindow = 0;
+	h_args			args(msg.arguments);
 	EPM_decision_t  decision = EPM_go;
 
 	log_debug("[START] %s", debug_name);
@@ -26,48 +27,16 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 
 	try
 	{
-		if (msg.arguments->number_of_arguments == 0)
+		if (args.size() == 0)
 			throw psexception("Missing mandatory arguments.");
 
-		while ((pszArg = TC_next_argument(msg.arguments)) != NULL )
-		{
-			c_ptr<char>		flag, value;
-
-			itk(ITK_ask_argument_named_value(pszArg, flag.get_ptr(), value.get_ptr()));
-
-			// Get revision rule value
-			if (tc_strcasecmp(flag.get(), "rev_rule") == 0)
-			{
-				revRule = value.get();
-			}
-			// Get allow if target value
-			else if (tc_strcasecmp(flag.get(), "allow_if_target") == 0)
-			{
-				allowIfTarget = true;
-			}
-			// Get included types value
-			else if (tc_strcasecmp(flag.get(), "include_target_types") == 0)
-			{
-				split_str(value.get(), ",;:", true, includeTargetTypes);
-			}
-			// Get included structure types value
-			else if (tc_strcasecmp(flag.get(), "include_structure_types") == 0)
-			{
-				split_str(value.get(), ",;:", true, includeStructureTypes);
-			}
-			// Get included structure types value
-			else if (tc_strcasecmp(flag.get(), "bomview_type") == 0)
-			{
-				bomViewType = value.get();
-			}
-			else
-			{
-				throw psexception("Illegal argument.");
-			}
-		}
-
-		if (revRule.empty() || bomViewType.empty())
-			throw psexception("Missing mandatory arguments.");
+		if (!args.getStr("rev_rule", revRule))
+			throw psexception("Missing mandatory argument 'rev_rule'.");
+		if (!args.getStr("bomview_type", bomViewType))
+			throw psexception("Missing mandatory argument 'bomview_type'.");
+		args.getVec("include_target_types", includeTargetTypes);
+		args.getVec("include_structure_types", includeStructureTypes);
+		args.getFlag("allow_if_target", allowIfTarget);
 
 		if (tRevRule == 0)
 		{

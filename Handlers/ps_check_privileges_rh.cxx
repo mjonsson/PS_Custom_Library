@@ -12,63 +12,33 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 	vector<string>	statuses;
 	logical			owning_user = false,
 					owning_group = false;
+	h_args			args(msg.arguments);
 	EPM_decision_t  decision = EPM_go;
+	tag_t			tRootTask;
+	c_ptr<tag_t>	tTargetAttach;
+	char			*pszUserId = NULL;
+	logical			hasAccess,
+					typeOk = true,
+					statusOk = false;
 
 	log_debug("[START] %s", debug_name);
 	hr_start_debug(debug_name);
 
 	try
 	{
-		if (msg.arguments->number_of_arguments == 0)
+		if (args.size() == 0)
 			throw psexception("Missing mandatory arguments.");
 
-		while ((pszArg = TC_next_argument(msg.arguments)) != NULL )
-		{
-			c_ptr<char>		flag, value;
-
-			itk(ITK_ask_argument_named_value(pszArg, flag.get_ptr(), value.get_ptr()));
-
-			// Get types to include
-			if (tc_strcasecmp(flag.get(), "include_types") == 0)
-			{
-				split_str(value.get(), ",;:", true, objectTypes);
-			}
-			// Get statuses to include
-			else if (tc_strcasecmp(flag.get(), "include_statuses") == 0)
-			{
-				split_str(value.get(), ",;:", true, statuses);
-			}
-			// Get privilege string
-			else if (tc_strcasecmp(flag.get(), "privileges") == 0)
-			{
-				split_str(value.get(), ",;:", true, privileges);
-			}
-			// Get owning_user string
-			else if (tc_strcasecmp(flag.get(), "owning_user") == 0)
-			{
-				owning_user = true;
-			}
-			// Get owning_group string
-			else if (tc_strcasecmp(flag.get(), "owning_group") == 0)
-			{
-				owning_group = true;
-			}
-			else
-			{
-				throw psexception("Illegal argument.");
-			}
-		}
-
+		args.getVec("privileges", privileges);
+		args.getFlag("owning_user", owning_user);
+		args.getFlag("owning_group", owning_group);
+		
 		if (privileges.empty() && !owning_user && !owning_group)
 			throw psexception("Missing mandatory arguments.");
 
-		tag_t			tRootTask;
-		c_ptr<tag_t>	tTargetAttach;
-		char			*pszUserId = NULL;
-		logical			hasAccess,
-						typeOk = true,
-						statusOk = false;
-			
+		args.getVec("object_types", objectTypes);
+		args.getVec("include_statuses", statuses);
+
 		itk(EPM_ask_root_task(msg.task, &tRootTask));
 		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargetAttach.get_len_ptr(), tTargetAttach.get_ptr()));
 				
