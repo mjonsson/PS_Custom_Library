@@ -41,7 +41,6 @@ int ps_copy_task_property_ah(EPM_action_message_t msg)
 	h_args				args(msg.arguments);
 	vector<tag_t>		instancesToUpdate;
 
-
 	log_debug("[START] %s", debug_name);
 	hr_start_debug(debug_name);
 
@@ -71,12 +70,12 @@ int ps_copy_task_property_ah(EPM_action_message_t msg)
 
 		// Fetch source attribute metadata
 		itk(POM_attr_id_of_attr(taskProperty.c_str(), "EPMTask", &attrId))
-			itk(POM_describe_attrs(sourceClassId, 1, &attrId, srcAttrNames.get_pptr(), srcAttrTypes.get_ptr(),
-			srcAttrMaxStrLen.get_ptr(), srcRefClass.get_ptr(), srcAttrLen.get_ptr(), srcAttrDesc.get_ptr(), srcAttrFail.get_ptr()));
+			itk(POM_describe_attrs(sourceClassId, 1, &attrId, srcAttrNames.pptr(), srcAttrTypes.pptr(),
+			srcAttrMaxStrLen.pptr(), srcRefClass.pptr(), srcAttrLen.pptr(), srcAttrDesc.pptr(), srcAttrFail.pptr()));
 		itk(POM_length_of_attr(msg.task, attrId, &numElements));
 
-		attrType = srcAttrTypes.get(0);
-		if (srcAttrLen.get(0) == 1)
+		attrType = srcAttrTypes.val(0);
+		if (srcAttrLen.val(0) == 1)
 			isArray = false;
 		else
 			isArray = true;
@@ -90,18 +89,18 @@ int ps_copy_task_property_ah(EPM_action_message_t msg)
 			}
 			else
 			{
-				itk(POM_ask_attr_ints(msg.task, attrId, 0, numElements, intValArr.get_ptr(), isNullArr.get_ptr(), isEmptyArr.get_ptr()));
+				itk(POM_ask_attr_ints(msg.task, attrId, 0, numElements, intValArr.pptr(), isNullArr.pptr(), isEmptyArr.pptr()));
 			}
 		}
 		else if (attrType == POM_string)
 		{
 			if (!isArray)
 			{
-				itk(POM_ask_attr_string(msg.task, attrId, stringVal.get_ptr(), &isNull, &isEmpty));
+				itk(POM_ask_attr_string(msg.task, attrId, stringVal.pptr(), &isNull, &isEmpty));
 			}
 			else
 			{
-				itk(POM_ask_attr_strings(msg.task, attrId, 0, numElements, stringValArr.get_pptr(), isNullArr.get_ptr(), isEmptyArr.get_ptr()));
+				itk(POM_ask_attr_strings(msg.task, attrId, 0, numElements, stringValArr.pptr(), isNullArr.pptr(), isEmptyArr.pptr()));
 			}
 		}
 		else if (attrType == POM_typed_reference || attrType == POM_untyped_reference)
@@ -112,7 +111,7 @@ int ps_copy_task_property_ah(EPM_action_message_t msg)
 			}
 			else
 			{
-				itk(POM_ask_attr_tags(msg.task, attrId, 0, numElements, tagValArr.get_ptr(), isNullArr.get_ptr(), isEmptyArr.get_ptr()));
+				itk(POM_ask_attr_tags(msg.task, attrId, 0, numElements, tagValArr.pptr(), isNullArr.pptr(), isEmptyArr.pptr()));
 			}
 		}
 		else
@@ -120,11 +119,11 @@ int ps_copy_task_property_ah(EPM_action_message_t msg)
 
 		// Loop over all process target objects
 		itk(EPM_ask_root_task(msg.task, &tRootTask));
-		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargets.get_len_ptr(), tTargets.get_ptr()));
+		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargets.plen(), tTargets.pptr()));
 
-		for (int i = 0; i < tTargets.get_len(); i++)
+		for (int i = 0; i < tTargets.len(); i++)
 		{
-			tag_t			tTarget = tTargets.get(i);
+			tag_t			tTarget = tTargets.val(i);
 			tag_t			targetClassId;
 			c_ptr<char>		objectType;
 			c_pptr<char>	trgAttrNames;
@@ -135,22 +134,22 @@ int ps_copy_task_property_ah(EPM_action_message_t msg)
 			c_ptr<int>		trgAttrDesc;
 			c_ptr<int>		trgAttrFail;
 
-			itk(AOM_ask_value_string(tTarget, "object_type", objectType.get_ptr()));
+			itk(AOM_ask_value_string(tTarget, "object_type", objectType.pptr()));
 
 			// Check if the target attachment is of correct type
-			if (find_str(objectType.get(), includeTypes))
+			if (find_str(objectType.ptr(), includeTypes))
 			{
-				itk(POM_attr_id_of_attr(targetProperty.c_str(), objectType.get(), &attrId));
+				itk(POM_attr_id_of_attr(targetProperty.c_str(), objectType.ptr(), &attrId));
 				itk(POM_class_of_instance(tTarget, &targetClassId));
-				itk(POM_describe_attrs(sourceClassId, 1, &attrId, trgAttrNames.get_pptr(), trgAttrTypes.get_ptr(),
-					trgAttrMaxStrLen.get_ptr(), trgRefClass.get_ptr(), trgAttrLen.get_ptr(), trgAttrDesc.get_ptr(), trgAttrFail.get_ptr()));
+				itk(POM_describe_attrs(sourceClassId, 1, &attrId, trgAttrNames.pptr(), trgAttrTypes.pptr(),
+					trgAttrMaxStrLen.pptr(), trgRefClass.pptr(), trgAttrLen.pptr(), trgAttrDesc.pptr(), trgAttrFail.pptr()));
 
 				// Verify that source and target attribute metadata match
-				if (attrType != trgAttrTypes.get(0))
+				if (attrType != trgAttrTypes.val(0))
 					throw psexception("Source and target attributes are of different type.");
-				else if (srcAttrLen.get(0) != trgAttrLen.get(0))
+				else if (srcAttrLen.val(0) != trgAttrLen.val(0))
 					throw psexception("Source and target attributes have different length declaration.");
-				else if (srcAttrMaxStrLen.get(0) != trgAttrMaxStrLen.get(0))
+				else if (srcAttrMaxStrLen.val(0) != trgAttrMaxStrLen.val(0))
 					throw psexception("Source and target attributes have different have different string length declarations.");
 
 				// Add target to objects that is to be updated
@@ -171,18 +170,18 @@ int ps_copy_task_property_ah(EPM_action_message_t msg)
 				}
 				else
 				{
-					itk(POM_set_attr_ints(instancesToUpdate.size(), &instancesToUpdate[0], attrId, 0, numElements, intValArr.get()));
+					itk(POM_set_attr_ints(instancesToUpdate.size(), &instancesToUpdate[0], attrId, 0, numElements, intValArr.ptr()));
 				}
 			}
 			else if (attrType == POM_string)
 			{
 				if (!isArray)
 				{
-					itk(POM_set_attr_string(instancesToUpdate.size(), &instancesToUpdate[0], attrId, stringVal.get()));
+					itk(POM_set_attr_string(instancesToUpdate.size(), &instancesToUpdate[0], attrId, stringVal.ptr()));
 				}
 				else
 				{
-					itk(POM_set_attr_strings(instancesToUpdate.size(), &instancesToUpdate[0], attrId, 0, numElements, stringValArr.get_ptr()));
+					itk(POM_set_attr_strings(instancesToUpdate.size(), &instancesToUpdate[0], attrId, 0, numElements, stringValArr.ptr()));
 				}
 			}
 			else if (attrType == POM_typed_reference || attrType == POM_untyped_reference)
@@ -193,7 +192,7 @@ int ps_copy_task_property_ah(EPM_action_message_t msg)
 				}
 				else
 				{
-					itk(POM_set_attr_tags(instancesToUpdate.size(), &instancesToUpdate[0], attrId, 0, numElements, tagValArr.get()));
+					itk(POM_set_attr_tags(instancesToUpdate.size(), &instancesToUpdate[0], attrId, 0, numElements, tagValArr.ptr()));
 				}
 			}
 			itk(POM_save_instances(instancesToUpdate.size(), &instancesToUpdate[0], false));

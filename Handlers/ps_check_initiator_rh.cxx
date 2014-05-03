@@ -30,7 +30,7 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 			if (!find_str(userId, valueVec))
 			{
 				decision = EPM_nogo;
-				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Process can only be initiated by user(s) '%s'.", concat_str(valueVec, ',', false).c_str())));
+				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Process can only be initiated by user(s) '%s'.", concat_str(valueVec, ',', false).c_str()).ptr()));
 			}
 		}
 		// Check if group of current user is defined
@@ -43,12 +43,12 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 
 			itk(SA_ask_current_groupmember(&tGroupMember));
 			itk(SA_ask_groupmember_group(tGroupMember, &tGroup));
-			itk(SA_ask_group_name2(tGroup, groupName.get_ptr()));
+			itk(SA_ask_group_name2(tGroup, groupName.pptr()));
 
-			if (!find_str(groupName.get(), valueVec))
+			if (!find_str(groupName.ptr(), valueVec))
 			{
 				decision = EPM_nogo;
-				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Process can only be initiated by group(s) '%s'.", concat_str(valueVec, ',', false).c_str())));
+				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Process can only be initiated by group(s) '%s'.", concat_str(valueVec, ',', false).c_str()).ptr()));
 			}
 		}
 #else
@@ -65,7 +65,7 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 			if (!find_str(groupName, valueVec))
 			{
 				decision = EPM_nogo;
-				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Process can only be initiated by group(s) '%s'.", concat_str(valueVec, ',', false).c_str())));
+				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Process can only be initiated by group(s) '%s'.", concat_str(valueVec, ',', false).c_str()).ptr()));
 			}
 		}
 #endif
@@ -79,12 +79,12 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 
 			itk(SA_ask_current_groupmember(&tGroupMember));
 			itk(SA_ask_groupmember_role(tGroupMember, &tRole));
-			itk(SA_ask_role_name2(tRole, roleName.get_ptr()));
+			itk(SA_ask_role_name2(tRole, roleName.pptr()));
 
-			if (!find_str(roleName.get(), valueVec))
+			if (!find_str(roleName.ptr(), valueVec))
 			{
 				decision = EPM_nogo;
-				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Process can only be initiated by role(s) '%s'.", concat_str(valueVec, ',', false).c_str())));
+				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Process can only be initiated by role(s) '%s'.", concat_str(valueVec, ',', false).c_str()).ptr()));
 			}
 		}
 #else
@@ -101,7 +101,7 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 			if (!find_str(roleName, valueVec))
 			{
 				decision = EPM_nogo;
-				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Process can only be initiated by role(s) '%s'.", concat_str(valueVec, ',', false).c_str())));
+				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Process can only be initiated by role(s) '%s'.", concat_str(valueVec, ',', false).c_str()).ptr()));
 			}
 		}
 #endif
@@ -114,12 +114,12 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 
 			itk(SA_ask_current_groupmember(&tGroupMember));
 			itk(SA_ask_groupmember_group(tGroupMember, &tGroup));
-			itk(SA_ask_group_full_name(tGroup, groupName.get_ptr()));
+			itk(SA_ask_group_full_name(tGroup, groupName.pptr()));
 
-			if (!find_str(groupName.get(), valueVec))
+			if (!find_str(groupName.ptr(), valueVec))
 			{
 				decision = EPM_nogo;
-				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Process can only be initiated by full group(s) '%s'.", concat_str(valueVec, ',', false).c_str())));
+				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Process can only be initiated by full group(s) '%s'.", concat_str(valueVec, ',', false).c_str()).ptr()));
 			}
 		}
 		// Check if any of users roles are defined
@@ -135,14 +135,14 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 
 			itk(POM_get_user_id(&userId));
 			itk(SA_find_user2(userId, &tUser));
-			itk(SA_find_all_groupmember_by_user(tUser, false, groupMembers.get_len_ptr(), groupMembers.get_ptr()));
+			itk(SA_find_all_groupmember_by_user(tUser, false, groupMembers.plen(), groupMembers.pptr()));
 
-			for (int i = 0; i < groupMembers.get_len(); i++)
+			for (int i = 0; i < groupMembers.len(); i++)
 			{
-				itk(SA_ask_groupmember_role(groupMembers.get(i), &tRole));
-				itk(SA_ask_role_name2(tRole, roleName.get_ptr()));
+				itk(SA_ask_groupmember_role(groupMembers.val(i), &tRole));
+				itk(SA_ask_role_name2(tRole, roleName.pptr()));
 
-				if (find_str(roleName.get(), valueVec))
+				if (find_str(roleName.ptr(), valueVec))
 				{
 					roleFound = true;
 					break;
@@ -152,7 +152,7 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 			if (!roleFound)
 			{
 				decision = EPM_nogo;
-				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Process can only be initiated by role(s) '%s'.", concat_str(valueVec, ',', false).c_str())));
+				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Process can only be initiated by role(s) '%s'.", concat_str(valueVec, ',', false).c_str()).ptr()));
 			}
 		}
 #else
@@ -167,11 +167,11 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 
 			itk(POM_get_user_id(&userId));
 			itk(SA_find_user(userId, &tUser));
-			itk(SA_find_groupmember_by_user(tUser, groupMembers.get_len_ptr(), groupMembers.get_ptr()));
+			itk(SA_find_groupmember_by_user(tUser, groupMembers.plen(), groupMembers.pptr()));
 
-			for (int i = 0; i < groupMembers.get_len(); i++)
+			for (int i = 0; i < groupMembers.len(); i++)
 			{
-				itk(SA_ask_groupmember_role(groupMembers.get(i), &tRole));
+				itk(SA_ask_groupmember_role(groupMembers.val(i), &tRole));
 				itk(SA_ask_role_name(tRole, roleName));
 
 				if (find_str(roleName, valueVec))
@@ -184,7 +184,7 @@ int ps_check_initiator_rh(EPM_rule_message_t msg)
 			if (!roleFound)
 			{
 				decision = EPM_nogo;
-				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Process can only be initiated by role(s) '%s'.", concat_str(valueVec, ',', false).c_str())));
+				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Process can only be initiated by role(s) '%s'.", concat_str(valueVec, ',', false).c_str()).ptr()));
 			}
 		}
 #endif

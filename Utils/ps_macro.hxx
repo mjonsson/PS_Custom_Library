@@ -56,7 +56,7 @@
 		EMH_ask_errors(&n_iFails, &iSeverities, &iFails, &pszErrorTexts);															\
 		sprintf(buf, "\nTeamcenter exception detected:\n\n  FUNCTION: %s FILE: %s LINE: %d\n\nError stack:\n\n", #x, __FILE__, __LINE__); \
 		error_msg = string(buf);																									\
-		for (int i = 0; i < n_iFails; i++) {																						\
+		for (int i = n_iFails - 1; i >= 0; i--) {																					\
 			sprintf(buf, "  Code: %d Severity: %d Message: %s\n", iFails[i], iSeverities[i], pszErrorTexts[i]);						\
 			error_msg += string(buf);																								\
 		}																															\

@@ -73,7 +73,7 @@ build_obj_message:
 			
 build_dll_message:
 			@echo -------------------------------------------------------------
-			@echo Building $(PS_HANDLERS).lib and $(PS_HANDLERS).dll dynamic library
+			@echo Building $(EXPIMP).lib and $(EXPIMP).dll dynamic library
 			@echo -------------------------------------------------------------
 			
 copy_message:
@@ -83,5 +83,5 @@ copy_message:
 
 clean_message:
 			@echo -------------------------------------------------------------
-			@echo Cleaning objects and libs for '$(PS_HANDLERS)' dynamic library
+			@echo Cleaning objects and libs for '$(EXPIMP)' dynamic library
 			@echo -------------------------------------------------------------

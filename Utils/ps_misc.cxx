@@ -11,17 +11,17 @@ h_args::h_args(TC_argument_list_t *args)
 		c_ptr<char>		flag, value;
 		vector<string>	argVector;
 
-		itk(ITK_ask_argument_named_value(pszArg, flag.get_ptr(), value.get_ptr()));
+		itk(ITK_ask_argument_named_value(pszArg, flag.pptr(), value.pptr()));
 
 		// Jump to next argument if current already exist in map
 		ArgsMap::iterator it;
-		if ((it = argsMap.find(string(flag.get()))) != argsMap.end())
+		if ((it = argsMap.find(string(flag.ptr()))) != argsMap.end())
 			continue;
 
 		// If separated string, split it and remove whitespace
-		split_str((const char*)value.get(), ",", true, argVector);
+		split_str((const char*)value.ptr(), ",", true, argVector);
 		// Insert vector into map
-		argsMap.insert(ArgPair(string(flag.get()), argVector));
+		argsMap.insert(ArgPair(string(flag.ptr()), argVector));
 	}
 }
 string h_args::getStr(string flag)

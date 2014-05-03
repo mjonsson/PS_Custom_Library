@@ -40,20 +40,20 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 		args.getVec("include_statuses", statuses);
 
 		itk(EPM_ask_root_task(msg.task, &tRootTask));
-		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargetAttach.get_len_ptr(), tTargetAttach.get_ptr()));
+		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargetAttach.plen(), tTargetAttach.pptr()));
 				
-		for (int i = 0; i < tTargetAttach.get_len(); i++)
+		for (int i = 0; i < tTargetAttach.len(); i++)
 		{
 			c_ptr<char>		targetType;
-			tag_t			tTarget = tTargetAttach.get(i);
+			tag_t			tTarget = tTargetAttach.val(i);
 			c_ptr<tag_t>	targetStatuses;
 
-			itk(AOM_ask_value_string(tTarget, "object_type", targetType.get_ptr()));
+			itk(AOM_ask_value_string(tTarget, "object_type", targetType.pptr()));
 
 			// Check if target object is valid type
 			if (!objectTypes.empty())
 			{
-				if (!find_str(targetType.get(), objectTypes))
+				if (!find_str(targetType.ptr(), objectTypes))
 					typeOk = false;
 			}
 
@@ -69,21 +69,21 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 			}
 			if (!statusOk)
 			{
-				itk(AOM_ask_value_tags(tTarget, "release_status_list", targetStatuses.get_len_ptr(), targetStatuses.get_ptr()));
+				itk(AOM_ask_value_tags(tTarget, "release_status_list", targetStatuses.plen(), targetStatuses.pptr()));
 
-				if (targetStatuses.get_len() == 0 && find_str("Working", statuses))
+				if (targetStatuses.len() == 0 && find_str("Working", statuses))
 				{
 					statusOk = true;
 				}
 				else
 				{
-					for (int j = 0; j < targetStatuses.get_len(); j++)
+					for (int j = 0; j < targetStatuses.len(); j++)
 					{
 						c_ptr<char>		statusName;
 
-						itk(AOM_ask_value_string(targetStatuses.get(j), "object_name", statusName.get_ptr()));
+						itk(AOM_ask_value_string(targetStatuses.val(j), "object_name", statusName.pptr()));
 
-						if (find_str(statusName.get(), statuses))
+						if (find_str(statusName.ptr(), statuses))
 						{
 								statusOk = true;
 								break;
@@ -110,8 +110,8 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 						c_ptr<char>		targetDispName;
 
 						decision = EPM_nogo;
-						itk(AOM_ask_value_string(tTargetAttach.get(i), "object_string", targetDispName.get_ptr()));
-						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Required privilege(s) not met on object '%s' (%s).", targetDispName.get(), concat_str(privileges, ',', false).c_str())));
+						itk(AOM_ask_value_string(tTargetAttach.val(i), "object_string", targetDispName.pptr()));
+						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Required privilege(s) not met on object '%s' (%s).", targetDispName.ptr(), concat_str(privileges, ',', false).c_str()).ptr()));
 					}
 				}
 				if (owning_user)
@@ -129,8 +129,8 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 						c_ptr<char>		targetDispName;
 
 						decision = EPM_nogo;
-						itk(AOM_ask_value_string(tTargetAttach.get(i), "object_string", targetDispName.get_ptr()));
-						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Current user is not the owner of object '%s'.", targetDispName.get())));
+						itk(AOM_ask_value_string(tTargetAttach.val(i), "object_string", targetDispName.pptr()));
+						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Current user is not the owner of object '%s'.", targetDispName.ptr()).ptr()));
 					}
 				}
 				if (owning_group)
@@ -148,8 +148,8 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 						c_ptr<char>		targetDispName;
 
 						decision = EPM_nogo;
-						itk(AOM_ask_value_string(tTargetAttach.get(i), "object_string", targetDispName.get_ptr()));
-						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Current group is not the owner of object '%s'.", targetDispName.get())));
+						itk(AOM_ask_value_string(tTargetAttach.val(i), "object_string", targetDispName.pptr()));
+						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Current group is not the owner of object '%s'.", targetDispName.ptr()).ptr()));
 					}
 				}
 			}

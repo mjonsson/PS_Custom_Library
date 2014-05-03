@@ -44,18 +44,18 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 		args.getStr("request_type", request_type);
 
 		itk(EPM_ask_root_task(msg.task, &tRootTask));
-		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargets.get_len_ptr(), tTargets.get_ptr()));
+		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargets.plen(), tTargets.pptr()));
 
-		for (int i = 0; i < tTargets.get_len(); i++)
+		for (int i = 0; i < tTargets.len(); i++)
 		{
-			tag_t			tTarget = tTargets.get(i);
+			tag_t			tTarget = tTargets.val(i);
 			c_ptr<char>		secondaryType;
 			c_ptr<tag_t>	tSecondary;
 
-			itk(AOM_ask_value_string(tTarget, "object_type", secondaryType.get_ptr()));
+			itk(AOM_ask_value_string(tTarget, "object_type", secondaryType.pptr()));
 
 			// Check if the target attachment is of correct type
-			if (tc_strcmp(secondary_type.c_str(), secondaryType.get()) == 0)
+			if (tc_strcmp(secondary_type.c_str(), secondaryType.ptr()) == 0)
 			{
 				logical		objFound = false;
 				secondaryObjects.push_back(tTarget);
@@ -64,17 +64,17 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 				if (!primary_type.empty())
 				{
 
-					itk(GRM_list_secondary_objects_only(tTarget, 0, tSecondary.get_len_ptr(), tSecondary.get_ptr()));
+					itk(GRM_list_secondary_objects_only(tTarget, 0, tSecondary.plen(), tSecondary.pptr()));
 
-					for (int j = 0; j < tSecondary.get_len(); j++)
+					for (int j = 0; j < tSecondary.len(); j++)
 					{
 						c_ptr<char>		primaryType;
 
-						itk(AOM_ask_value_string(tSecondary.get(j), "object_type", primaryType.get_ptr()));
+						itk(AOM_ask_value_string(tSecondary.val(j), "object_type", primaryType.pptr()));
 
-						if (tc_strcmp(primary_type.c_str(), primaryType.get()) == 0)
+						if (primary_type == primaryType.ptr())
 						{
-							primaryObjects.push_back(tSecondary.get(j));
+							primaryObjects.push_back(tSecondary.val(j));
 							objFound = true;
 							break;
 						}

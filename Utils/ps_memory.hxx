@@ -58,6 +58,28 @@ namespace ps
 			construct();
 			m_ptr = ptr;
 		}
+		//! Format a string at construction
+		c_ptr(const char *fmt, ...)
+		{
+			construct();
+
+			va_list args;
+
+
+			int bufsiz = strlen(fmt) + 512;
+			alloc(bufsiz);
+
+			// Make sure we have enough memory to store parameters
+			va_start(args, fmt);
+			int need = vsnprintf(m_ptr, bufsiz, fmt, args) + 1;
+			if (need > bufsiz)
+			{
+				realloc(need);
+				vsnprintf(m_ptr, need, fmt, args);
+			}
+			va_end(args);
+
+		}
 		//! Default destructor
 		~c_ptr()
 		{
@@ -96,44 +118,18 @@ namespace ps
 				m_ptr = NULL;
 			}
 		}
-		const char *format(const char *fmt, ...)
-		{
-			va_list args;
-
-			construct();
-
-			int bufsiz = strlen(fmt) + 512;
-			alloc(bufsiz);
-
-			va_start(args, fmt);
-			int need = vsnprintf(m_ptr, bufsiz, fmt, args) + 1;
-			if (need > bufsiz)
-			{
-				realloc(need);
-				vsnprintf(m_ptr, need, fmt, args);
-			}
-			va_end(args);
-
-			return (const char*) m_ptr;
-		}
-		//! Get element \a i from array
-		T get(const int i) { return m_ptr[i]; }
+		//! Get object in array
+		T val(const int i) { return m_ptr[i]; }
 		//! Get pointer to array
-		T* get() { return m_ptr; }
-		//! Get pointer to element \a i in array
-		T* get_ptr(const int i) { return &(m_ptr[i]); }
-		//! Set array element \a i to value of \a T
-		void set(const int i, const T value) { m_ptr[i] = value; }
-		//! Set pointer to value of pointer of type \a T
-		void set(const T* value) { m_ptr = value; }
+		T* ptr() { return m_ptr; }
+		//! Get pointer address to pointer of \a i element in array
+		T* ptr(const int i) { return &m_ptr[i]; }
 		//! Get pointer address to pointer of first element in array
-		T** get_ptr() { return &m_ptr; }
+		T** pptr() { return &m_ptr; }
 		//! Get size of data in array
-		int get_len() { return m_size; }
-		//! Set size of data in array to \a value
-		void set_len(int value) { m_size = value; }
+		int len() { return m_size; }
 		//! Get pointer to size of data in array
-		int* get_len_ptr() { return &m_size; }
+		int* plen() { return &m_size; }
 		//! Whether to free memory upon destruction
 		void set_free(const bool value) { m_free = value; }
 	};
@@ -252,28 +248,18 @@ namespace ps
 				m_ptr[pos] = NULL;
 			}
 		}
-		//! Get value of type \a T of element \a x and \a y
-		T get(const int y, const int x) { return m_ptr[y][x]; }
-		//! Set value of type \a T of element \a x and \a y
-		void set(const T value, const int y, const int x) { m_ptr[y][x] = value; }
-		//! Get pointer of type \a T at element \a i
-		T* get(const int i) { return m_ptr[i]; }
-		//! Set pointer of type \a T at position \a y
-		void set(const T* value, const int y) { m_ptr[y] = value; }
+		//! Get object in array
+		T val(const int i, const int j) { return m_ptr[i][j]; }
+		//! Get objects in array
+		T* val(const int i) { return m_ptr[i]; }
 		//! Get pointer to first element of array
-		T** get_ptr() { return m_ptr; }
-		//! Get pointer to element \a i of array
-		T** get_ptr(const int i) { return &(m_ptr[i]); }
-		//! Set pointer of type \a T
-		void set(const T** value) { m_ptr = value; }
+		T** ptr() { return m_ptr; }
 		//! Get pointer to pointer of array
-		T*** get_pptr() { return &m_ptr; }
+		T*** pptr() { return &m_ptr; }
 		//! Get length of array
-		int get_len() { return m_size; }
-		//! Set length of array to \a value
-		void set_len(int value) { m_size = value; }
+		int len() { return m_size; }
 		//! Get pointer to length value
-		int* get_len_ptr() { return &m_size; }
+		int* plen() { return &m_size; }
 		//! Whether to free memory upon destruction
 		void set_free(const bool value) { m_free = value; }
 		//! Whether to free only first level of array upon destruction

@@ -51,12 +51,12 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 		}
 
 		itk(EPM_ask_root_task(msg.task, &tRootTask));
-		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargets.get_len_ptr(), tTargets.get_ptr()));
+		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargets.plen(), tTargets.pptr()));
 
 		// Iterate over all targets to pre-populate targets to process and their item ids
-		for (int i = 0; i < tTargets.get_len(); i++)
+		for (int i = 0; i < tTargets.len(); i++)
 		{
-			tag_t			tTarget = tTargets.get(i);
+			tag_t			tTarget = tTargets.val(i);
 			tag_t			tClassOfTarget;
 			tag_t			tItem;
 			c_ptr<char>		itemId;
@@ -68,17 +68,17 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 			
 			if (isDescendant)
 			{
-				itk(AOM_ask_value_string(tTarget, "object_type", objectType.get_ptr()));
+				itk(AOM_ask_value_string(tTarget, "object_type", objectType.pptr()));
 
 				// Skip target if not of valid type
-				if (!find_str(objectType.get(), includeTargetTypes))
+				if (!find_str(objectType.ptr(), includeTargetTypes))
 					continue;
 
 				itk(AOM_ask_value_tag(tTarget, "items_tag", &tItem));
-				itk(AOM_ask_value_string(tItem, "item_id", itemId.get_ptr()));
+				itk(AOM_ask_value_string(tItem, "item_id", itemId.pptr()));
 
 				targetsToProcess.push_back(tTarget);
-				targetItemIds.push_back(string(itemId.get()));
+				targetItemIds.push_back(string(itemId.ptr()));
 			}
 		}
 
@@ -91,20 +91,20 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 			c_ptr<tag_t>	bvRevs;
 			c_ptr<tag_t>	tChildren;
 
-			itk(AOM_ask_value_tags(tTarget, "structure_revisions", bvRevs.get_len_ptr(), bvRevs.get_ptr()));
+			itk(AOM_ask_value_tags(tTarget, "structure_revisions", bvRevs.plen(), bvRevs.pptr()));
 
 			// Skip target if no bom view revisions
-			if (bvRevs.get_len() == 0)
+			if (bvRevs.len() == 0)
 				continue;
 
-			for (int j = 0; j < bvRevs.get_len(); j++)
+			for (int j = 0; j < bvRevs.len(); j++)
 			{
-				tag_t			bvRev = bvRevs.get(j);
+				tag_t			bvRev = bvRevs.val(j);
 				c_ptr<char>		bvType;
 
-				itk(AOM_ask_value_string(bvRev, "object_type", bvType.get_ptr()));
+				itk(AOM_ask_value_string(bvRev, "object_type", bvType.pptr()));
 
-				if (bomViewType == bvType.get())
+				if (bomViewType == bvType.ptr())
 				{
 					tBvr = bvRev;
 					break;
@@ -118,36 +118,36 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 			itk(BOM_create_window(&tBomWindow));
 			itk(BOM_set_window_config_rule(tBomWindow, tRevRule));
 			itk(BOM_set_window_top_line_bvr(tBomWindow, tBvr, &tTopLine));
-			itk(BOM_line_ask_child_lines(tTopLine, tChildren.get_len_ptr(), tChildren.get_ptr()));
+			itk(BOM_line_ask_child_lines(tTopLine, tChildren.plen(), tChildren.pptr()));
 
 			// Loop over all structure children and verify the validity
-			for (int j = 0; j < tChildren.get_len(); j++)
+			for (int j = 0; j < tChildren.len(); j++)
 			{
-				tag_t			tChild = tChildren.get(j);
+				tag_t			tChild = tChildren.val(j);
 				c_ptr<char>		lineConfigured;
 				c_ptr<char>		lineItemId;
 				c_ptr<char>		lineObjectType;
 				c_ptr<char>		lineObjectStr;
 				c_ptr<char>		targetObjectStr;
 
-				itk(AOM_ask_value_string(tChild, "bl_item_object_type", lineObjectType.get_ptr()));
+				itk(AOM_ask_value_string(tChild, "bl_item_object_type", lineObjectType.pptr()));
 
 				// If not valid structure type, jump to next target
-				if (!find_str(lineObjectType.get(), includeStructureTypes))
+				if (!find_str(lineObjectType.ptr(), includeStructureTypes))
 					continue;
 
-				itk(AOM_ask_value_string(tChild, "bl_config_string", lineConfigured.get_ptr()));
+				itk(AOM_ask_value_string(tChild, "bl_config_string", lineConfigured.pptr()));
 
 				// If not configured bom line
-				if (tc_strcmp(lineConfigured.get(), "No configured Revision") == 0)
+				if (tc_strcmp(lineConfigured.ptr(), "No configured Revision") == 0)
 				{
 					logical		allowed = false;
 					
 					if (allowIfTarget)
 					{
-						itk(AOM_ask_value_string(tChild, "bl_item_item_id", lineItemId.get_ptr()));
+						itk(AOM_ask_value_string(tChild, "bl_item_item_id", lineItemId.pptr()));
 
-						if (find_str(lineItemId.get(), targetItemIds))
+						if (find_str(lineItemId.ptr(), targetItemIds))
 							allowed = true;
 					}
 
@@ -156,10 +156,10 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 					{
 						decision = EPM_nogo;
 
-						itk(AOM_ask_value_string(tChild, "bl_formatted_ancestor_name", lineObjectStr.get_ptr()));
-						itk(AOM_ask_value_string(tTarget, "object_string", targetObjectStr.get_ptr()));
+						itk(AOM_ask_value_string(tChild, "bl_formatted_ancestor_name", lineObjectStr.pptr()));
+						itk(AOM_ask_value_string(tTarget, "object_string", targetObjectStr.pptr()));
 
-						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Structure child line '%s' of target revision '%s' is not valid for this process.", lineObjectStr.get(), targetObjectStr.get())));
+						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Structure child line '%s' of target revision '%s' is not valid for this process.", lineObjectStr.ptr(), targetObjectStr.ptr()).ptr()));
 					}
 				}
 			}

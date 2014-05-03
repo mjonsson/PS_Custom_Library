@@ -17,23 +17,23 @@ int ps_check_in_process_rh(EPM_rule_message_t msg)
 	try
 	{
 		itk(EPM_ask_root_task(msg.task, &tRootTask));
-		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargets.get_len_ptr(), tTargets.get_ptr()));
+		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargets.plen(), tTargets.pptr()));
 
 		// Loop over all target attachments
-		for (int i = 0; i < tTargets.get_len(); i++)
+		for (int i = 0; i < tTargets.len(); i++)
 		{
 			c_ptr<tag_t>	processTags;
-			tag_t			tTarget = tTargets.get(i);
+			tag_t			tTarget = tTargets.val(i);
 			int				counter = 0;
 
-			itk(AOM_ask_value_tags(tTarget, "process_stage_list", processTags.get_len_ptr(), processTags.get_ptr()));
+			itk(AOM_ask_value_tags(tTarget, "process_stage_list", processTags.plen(), processTags.pptr()));
 
 			// Iterate over all the tasks that relates to this process target
-			for (int j = 0; j < processTags.get_len(); j++)
+			for (int j = 0; j < processTags.len(); j++)
 			{
 				tag_t	tParentTag;
 
-				itk(AOM_ask_value_tag(processTags.get(j), "parent_task", &tParentTag));
+				itk(AOM_ask_value_tag(processTags.val(j), "parent_task", &tParentTag));
 
 				// If parent tag is not set, this means we have a root task
 				if (tParentTag == NULLTAG)
@@ -59,8 +59,8 @@ int ps_check_in_process_rh(EPM_rule_message_t msg)
 			{
 				c_ptr<char>		targetDispName;
 
-				itk(AOM_ask_value_string(*ptTarget, "object_string", targetDispName.get_ptr()));
-				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>().format("Process target '%s' is already within another process.", targetDispName.get())));
+				itk(AOM_ask_value_string(*ptTarget, "object_string", targetDispName.pptr()));
+				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Process target '%s' is already within another process.", targetDispName.ptr()).ptr()));
 			}
 		}
 	}

@@ -16,6 +16,7 @@ namespace ps
 	typedef map<string, vector<string>> ArgsMap;
 	typedef pair<string, vector<string>> ArgPair;
 
+	//! Convenience class for handling workflow handler arguments
 	class h_args
 	{
 	private:

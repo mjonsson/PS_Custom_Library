@@ -63,10 +63,10 @@ build_obj_message:
 			
 build_dll_message:
 			@echo -------------------------------------------------------------
-			@echo Building $(PS_UTILS).lib and $(PS_UTILS).dll dynamic library
+			@echo Building $(EXPIMP).lib and $(EXPIMP).dll dynamic library
 			@echo -------------------------------------------------------------
 			
 clean_message:
 			@echo -------------------------------------------------------------
-			@echo Cleaning objects and libs for '$(PS_UTILS)' dynamic library
+			@echo Cleaning objects and libs for '$(EXPIMP)' dynamic library
 			@echo -------------------------------------------------------------
