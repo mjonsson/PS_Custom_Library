@@ -9,6 +9,7 @@ using namespace ps;
 
 int ps::ps_validate_name_rule(METHOD_message_t *m, va_list  args)
 {
+	const char		*debug_name = "Validate Name Rule";
 	int				result = ITK_ok;
 	string			propType = m->user_args->arguments[0].val_union.str_value;
 	string			regEx = m->user_args->arguments[1].val_union.str_value;
@@ -17,7 +18,10 @@ int ps::ps_validate_name_rule(METHOD_message_t *m, va_list  args)
 	string			value;
 	c_ptr<char>		propertyName;
 	tag_t			tProp = va_arg(args, tag_t);
-	
+
+	log_debug("[START] %s", debug_name);
+	hr_start_debug(debug_name);
+
 	if (propType == "int")
 	{
 		value = va_arg(args, int);
@@ -59,6 +63,10 @@ int ps::ps_validate_name_rule(METHOD_message_t *m, va_list  args)
 		EMH_store_error_s1(EMH_severity_error, NAME_RULES_DEFAULT_IFAIL, e.what());
 		log_error(e.what());
 	}
+
+	hr_stop_debug(debug_name);
+	hr_print_debug(debug_name);
+	log_debug("[STOP] %s", debug_name);
 
 	return result;
 }

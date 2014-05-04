@@ -6,6 +6,7 @@ using namespace ps;
 
 int ps::ps_find_referencers(METHOD_message_t *m, va_list  args)
 {
+	const char		*debug_name = "Find Referencers";
 	int				result = ITK_ok;
 	string			relationProp = m->user_args->arguments[0].val_union.str_value;
 	string			filterTypes = m->user_args->arguments[1].val_union.str_value;
@@ -20,11 +21,14 @@ int ps::ps_find_referencers(METHOD_message_t *m, va_list  args)
 	tag_t			**referencers = NULL;
 	tag_t			tProp = va_arg(args, tag_t);
 
+	log_debug("[START] %s", debug_name);
+	hr_start_debug(debug_name);
+
+	numReferencers = va_arg(args, int*);
+	referencers = va_arg(args, tag_t**);
+	
 	try
 	{
-		numReferencers = va_arg(args, int*);
-		referencers = va_arg(args, tag_t**);
-
 		itk(GRM_find_relation_type(relationProp.c_str(), &relationType));
 		itk(GRM_list_primary_objects_only(tSource, relationType, c_referencers.plen(), c_referencers.pptr()));
 
@@ -79,6 +83,10 @@ int ps::ps_find_referencers(METHOD_message_t *m, va_list  args)
 		EMH_store_error_s1(EMH_severity_error, FIND_REFERENCERS_DEFAULT_IFAIL, e.what());
 		log_error(e.what());
 	}
+
+	hr_stop_debug(debug_name);
+	hr_print_debug(debug_name);
+	log_debug("[STOP] %s", debug_name);
 
 	return result;
 }

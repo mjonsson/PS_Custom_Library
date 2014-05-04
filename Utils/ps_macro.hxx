@@ -64,26 +64,26 @@
     }																																\
 }
 //! Allocates \a y bytes of type \a x
-#define sm_alloc(x,y,z) {									\
-	if ((x = (y*) MEM_alloc(z * sizeof(y))) == NULL)		\
-		throw psexception("Memory allocation error.");		\
+#define sm_alloc(var,typ,siz) {										\
+	if ((var = (typ*) MEM_alloc((siz) * sizeof(typ))) == NULL)		\
+		throw psexception("Memory allocation error.");				\
 }
 
 //! Reallocates \a z bytes of type \a y to variable \a x
-#define sm_realloc(x,y,z) {									\
-	if ((x = (y*) MEM_realloc(x, z * sizeof(y))) == NULL)	\
-		throw psexception("Memory allocation error.");		\
+#define sm_realloc(var,typ,siz) {										\
+	if ((var = (typ*) MEM_realloc(var, (siz) * sizeof(typ))) == NULL)	\
+		throw psexception("Memory allocation error.");					\
 }
 //! Deallocates memory of \a x
-#define sm_free(x) {																												\
-	SAFE_SM_FREE(x);																												\
+#define sm_free(var) {																												\
+	SAFE_SM_FREE(var);																												\
 }
 //! Deallocates memory of \a y elements of variable \a x
-#define sm_free_arr(x,y) {																											\
+#define sm_free_arr(var,siz) {																										\
 	int i;																															\
-	if (x != NULL) {																												\
-		for (i = 0; i < y; i++) {																									\
-			SAFE_SM_FREE(x[i]);																										\
+	if (var != NULL) {																												\
+		for (i = 0; i < siz; i++) {																									\
+			SAFE_SM_FREE(var[i]);																									\
 		}																															\
 	}																																\
 	SAFE_SM_FREE(x);																												\
