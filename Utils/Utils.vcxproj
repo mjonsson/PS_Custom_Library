@@ -25,6 +25,7 @@
     <ClCompile Include="ps_write_syslog.cxx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ps_defines.hxx" />
     <ClInclude Include="ps_exception.hxx" />
     <ClInclude Include="ps_global.hxx" />
     <ClInclude Include="ps_global_tc.hxx" />

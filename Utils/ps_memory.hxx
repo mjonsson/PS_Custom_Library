@@ -65,7 +65,6 @@ namespace ps
 
 			va_list args;
 
-
 			int bufsiz = strlen(fmt) + 512;
 			alloc(bufsiz);
 
@@ -78,7 +77,21 @@ namespace ps
 				vsnprintf(m_ptr, need, fmt, args);
 			}
 			va_end(args);
+		}
+		c_ptr(const char *fmt, va_list args)
+		{
+			construct();
 
+			int bufsiz = strlen(fmt) + 512;
+			alloc(bufsiz);
+
+			// Make sure we have enough memory to store parameters
+			int need = vsnprintf(m_ptr, bufsiz, fmt, args) + 1;
+			if (need > bufsiz)
+			{
+				realloc(need);
+				vsnprintf(m_ptr, need, fmt, args);
+			}
 		}
 		//! Default destructor
 		~c_ptr()
@@ -88,8 +101,9 @@ namespace ps
 		//! Allocates \a m_alloc_size bytes
 		void alloc()
 		{
-			if ((m_ptr = (T*)MEM_alloc(m_alloc_size * sizeof(T))) == NULL)
-				throw psexception("Memory allocation error.");
+			sm_alloc(m_ptr, T, m_alloc_size);
+			//if ((m_ptr = (T*)MEM_alloc(m_alloc_size * sizeof(T))) == NULL)
+			//	throw psexception("Memory allocation error.");
 		}
 		//! Allocates \a size bytes
 		void alloc(const int size)
@@ -100,8 +114,9 @@ namespace ps
 		//! Reallocates \a m_alloc_size bytes
 		void realloc()
 		{
-			if ((m_ptr = (T*)MEM_realloc(m_ptr, m_alloc_size * sizeof(T))) == NULL)
-				throw psexception("Memory allocation error.");
+			sm_realloc(m_ptr, T, m_alloc_size);
+			//if ((m_ptr = (T*)MEM_realloc(m_ptr, m_alloc_size * sizeof(T))) == NULL)
+			//	throw psexception("Memory allocation error.");
 		}
 		//! Reallocates \a size bytes
 		void realloc(const int size)
@@ -112,11 +127,12 @@ namespace ps
 		//! Deallocates allocated memory
 		void dealloc()
 		{
-			if (m_ptr != NULL)
-			{
-				MEM_free(m_ptr);
-				m_ptr = NULL;
-			}
+			sm_free(m_ptr);
+			//if (m_ptr != NULL)
+			//{
+			//	MEM_free(m_ptr);
+			//	m_ptr = NULL;
+			//}
 		}
 		//! Get object in array
 		T val(const int i) { return m_ptr[i]; }
@@ -185,8 +201,9 @@ namespace ps
 		//! Allocates \a m_alloc_size bytes
 		void alloc()
 		{
-			if ((m_ptr = (T**)MEM_alloc(m_alloc_size * sizeof(T*))) == NULL)
-				throw psexception("Memory allocation error.");
+			sm_alloc(m_ptr, T*, m_alloc_size);
+			//if ((m_ptr = (T**)MEM_alloc(m_alloc_size * sizeof(T*))) == NULL)
+			//	throw psexception("Memory allocation error.");
 			for (int i = 0; i < m_alloc_size; i++) m_ptr[i] = NULL;
 		}
 		//! Allocates \a size bytes
@@ -198,14 +215,16 @@ namespace ps
 		//! Allocates \a size bytes at position \a pos in array
 		void alloc(const int pos, const int size)
 		{
-			if ((m_ptr[pos] = (T*)MEM_alloc(size * sizeof(T))) == NULL)
-				throw psexception("Memory allocation error.");
+			sm_alloc(m_ptr[pos], T, size);
+			//if ((m_ptr[pos] = (T*)MEM_alloc(size * sizeof(T))) == NULL)
+			//	throw psexception("Memory allocation error.");
 		}
 		//! Reallocates \a m_alloc_size bytes
 		void realloc()
 		{
-			if ((m_ptr = (T**)MEM_realloc(m_ptr, m_alloc_size * sizeof(T*))) == NULL)
-				throw psexception("Memory allocation error.");
+			sm_realloc(m_ptr, T*, m_alloc_size);
+			//if ((m_ptr = (T**)MEM_realloc(m_ptr, m_alloc_size * sizeof(T*))) == NULL)
+			//	throw psexception("Memory allocation error.");
 			for (int i = m_size; i < m_alloc_size; i++) m_ptr[i] = NULL;
 		}
 		//! Reallocates \a size bytes
@@ -217,8 +236,9 @@ namespace ps
 		//! Reallocates \a size bytes at position \a pos of array
 		void realloc(const int pos, const int size)
 		{
-			if ((m_ptr = (T*)MEM_realloc(m_ptr, size * sizeof(T))) == NULL)
-				throw psexception("Memory allocation error.");
+			sm_realloc(m_ptr[pos], T, size);
+			//if ((m_ptr = (T*)MEM_realloc(m_ptr, size * sizeof(T))) == NULL)
+			//	throw psexception("Memory allocation error.");
 		}
 		//! Deallocate memory of all elements
 		void dealloc()
@@ -235,18 +255,18 @@ namespace ps
 						dealloc(i);
 					}
 				}
-				MEM_free(m_ptr);
-				m_ptr = NULL;
+				sm_free(m_ptr);
 			}
 		}
 		//! Deallocate memory of element \a pos
 		void dealloc(const int pos)
 		{
-			if (m_ptr[pos] != NULL)
-			{
-				MEM_free(m_ptr[pos]);
-				m_ptr[pos] = NULL;
-			}
+			sm_free(m_ptr[pos]);
+			//if (m_ptr[pos] != NULL)
+			//{
+			//	MEM_free(m_ptr[pos]);
+			//	m_ptr[pos] = NULL;
+			//}
 		}
 		//! Get object in array
 		T val(const int i, const int j) { return m_ptr[i][j]; }

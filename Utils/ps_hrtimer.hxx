@@ -15,8 +15,6 @@
 
 namespace ps
 {
-#define	PS_PERF_TIMER_ENABLED "PS_PerfTimerEnabled"
-
 #undef min
 #undef max
 

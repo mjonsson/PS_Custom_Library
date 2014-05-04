@@ -15,8 +15,6 @@
 
 #include "ps_global.hxx"
 
-#define ACTION_HANDLER_DEFAULT_IFAIL 919100
-
 //! Creates a dispatcher request based on input parameters.
 /*!
  *  \note See exernal documentation for handler usage in Teamcenter.

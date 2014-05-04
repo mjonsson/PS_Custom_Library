@@ -1,4 +1,5 @@
 #include "ps_global.hxx"
+#include "ps_defines.hxx"
 
 using namespace std;
 using namespace ps;
@@ -21,10 +22,18 @@ void ps::HRTimer::getFrequency(void)
 logical ps::HRTimer::init()
 {
 	TC_preference_search_scope_t oldScope;
-	itk(PREF_ask_search_scope(&oldScope));
-	itk(PREF_set_search_scope(TC_preference_site));
-	itk(PREF_ask_logical_value(PS_PERF_TIMER_ENABLED, 0, &enabled));
-	itk(PREF_set_search_scope(oldScope));
+	
+	try
+	{
+		itk(PREF_ask_search_scope(&oldScope));
+		itk(PREF_set_search_scope(TC_preference_site));
+		itk(PREF_ask_logical_value(PS_PERF_TIMER_ENABLED, 0, &enabled));
+		itk(PREF_set_search_scope(oldScope));
+	}
+	catch (tcexception& e)
+	{
+		return false;
+	}
 
 	// Update frequency
 	getFrequency();

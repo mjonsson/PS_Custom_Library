@@ -20,6 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ps_action_handlers.hxx" />
+    <ClInclude Include="ps_find_referencers.hxx" />
+    <ClInclude Include="ps_defines.hxx" />
+    <ClInclude Include="ps_name_rules.hxx" />
     <ClInclude Include="ps_register.hxx" />
     <ClInclude Include="ps_rule_handlers.hxx" />
   </ItemGroup>
@@ -30,6 +33,8 @@
     <ClCompile Include="ps_check_privileges_rh.cxx" />
     <ClCompile Include="ps_copy_task_property_ah.cxx" />
     <ClCompile Include="ps_create_dispatcher_request_ah.cxx" />
+    <ClCompile Include="ps_find_referencers.cxx" />
+    <ClCompile Include="ps_name_rules.cxx" />
     <ClCompile Include="ps_register.cxx" />
     <ClCompile Include="ps_timer_start_ah.cxx" />
     <ClCompile Include="ps_timer_stop_ah.cxx" />

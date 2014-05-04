@@ -64,9 +64,16 @@
     }																																\
 }
 //! Allocates \a y bytes of type \a x
-#define sm_alloc(x,y) ((x*) MEM_alloc((y) * sizeof(x)))
+#define sm_alloc(x,y,z) {									\
+	if ((x = (y*) MEM_alloc(z * sizeof(y))) == NULL)		\
+		throw psexception("Memory allocation error.");		\
+}
+
 //! Reallocates \a z bytes of type \a y to variable \a x
-#define sm_realloc(x,y,z) ((y*) MEM_realloc(x, (z) * sizeof(y)))
+#define sm_realloc(x,y,z) {									\
+	if ((x = (y*) MEM_realloc(x, z * sizeof(y))) == NULL)	\
+		throw psexception("Memory allocation error.");		\
+}
 //! Deallocates memory of \a x
 #define sm_free(x) {																												\
 	SAFE_SM_FREE(x);																												\

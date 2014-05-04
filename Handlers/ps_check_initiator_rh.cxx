@@ -1,4 +1,5 @@
 #include "ps_global.hxx"
+#include "ps_defines.hxx"
 #include "ps_rule_handlers.hxx"
 
 using namespace ps;

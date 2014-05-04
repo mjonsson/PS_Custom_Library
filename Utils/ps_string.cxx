@@ -60,8 +60,8 @@ void ps::split_str(string &split_str, const char *delims, bool remove_whitespace
 		if (remove_whitespace)
 			trim(splitted_str);
 
-		if (splitted_str.length() > 0)
-			str_vector.push_back(splitted_str);
+		str_vector.push_back(splitted_str);
+
 		ptr = strtok(NULL, delims);
 	}
 }
@@ -81,8 +81,8 @@ void ps::split_str(const char *split_str, const char *delims, bool remove_whites
 		if (remove_whitespace)
 			trim(splitted_str);
 
-		if (splitted_str.length() > 0)
-			str_vector.push_back(splitted_str);
+		str_vector.push_back(splitted_str);
+
 		ptr = strtok(NULL, delims);
 	}
 }

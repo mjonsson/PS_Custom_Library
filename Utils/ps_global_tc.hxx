@@ -42,6 +42,7 @@
 #include <user_exits/epm_toolkit_utils.h>
 #include <dispatcher/dispatcher.h>
 #include <dispatcher/dispatcher_itk.h>
+#include <ss/ss_errors.h>
 #endif
 
 #ifdef _TC_10
@@ -75,4 +76,5 @@
 #include <user_exits/epm_toolkit_utils.h>
 #include <dispatcher/dispatcher.h>
 #include <dispatcher/dispatcher_itk.h>
+#include <ss/ss_errors.h>
 #endif

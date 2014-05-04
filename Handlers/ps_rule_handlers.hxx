@@ -15,8 +15,6 @@
 
 #include "ps_global.hxx"
 
-#define RULE_HANDLER_DEFAULT_IFAIL 919100
-
 //! Checks that an object assigned as target to a root task is not already withing another process.
 /*!
  *  \note See exernal documentation for handler usage in Teamcenter.
