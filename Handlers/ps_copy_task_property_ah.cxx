@@ -70,8 +70,8 @@ int ps_copy_task_property_ah(EPM_action_message_t msg)
 		}
 
 		// Fetch source attribute metadata
-		itk(POM_attr_id_of_attr(taskProperty.c_str(), "EPMTask", &attrId))
-			itk(POM_describe_attrs(sourceClassId, 1, &attrId, srcAttrNames.pptr(), srcAttrTypes.pptr(),
+		itk(POM_attr_id_of_attr(taskProperty.c_str(), "EPMTask", &attrId));
+		itk(POM_describe_attrs(sourceClassId, 1, &attrId, srcAttrNames.pptr(), srcAttrTypes.pptr(),
 			srcAttrMaxStrLen.pptr(), srcRefClass.pptr(), srcAttrLen.pptr(), srcAttrDesc.pptr(), srcAttrFail.pptr()));
 		itk(POM_length_of_attr(msg.task, attrId, &numElements));
 

@@ -1,3 +1,14 @@
+/*!
+ * \file ps_defines.hxx
+ * \date 2014/05/05 21:34
+ *
+ * \author Mattias Jonsson (jonssonm)
+ * Contact: jonsson.mattias@siemens.com
+ *
+ * \brief Pre-processor definitions
+ *
+*/
+
 #pragma once
 
 //! Logging definitions

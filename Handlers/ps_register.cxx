@@ -11,15 +11,15 @@ using namespace ps;
 void ps::ps_register_handlers()
 {
 	// Action handlers
-	itk(EPM_register_action_handler("PS-create-dispatcher-request-AH", "Create dispatcher request.", (EPM_action_handler_t) ps_create_dispatcher_request_ah));
-	itk(EPM_register_action_handler("PS-copy-task-property-AH", "Copy properties from task to process target.", (EPM_action_handler_t) ps_copy_task_property_ah));
-	itk(EPM_register_action_handler("PS-timer-start-AH", "Starts a performance timer.", (EPM_action_handler_t) ps_timer_start_ah));
-	itk(EPM_register_action_handler("PS-timer-stop-AH", "Stops a performance timer.", (EPM_action_handler_t) ps_timer_stop_ah));
+	itk(EPM_register_action_handler(AH_CREATE_DISPATCHER_REQUEST, "Create dispatcher request.", (EPM_action_handler_t) ps_create_dispatcher_request_ah));
+	itk(EPM_register_action_handler(AH_COPY_TASK_PROPERTY, "Copy properties from task to process target.", (EPM_action_handler_t) ps_copy_task_property_ah));
+	itk(EPM_register_action_handler(AH_TIMER_START, "Starts a performance timer.", (EPM_action_handler_t) ps_timer_start_ah));
+	itk(EPM_register_action_handler(AH_TIMER_STOP, "Stops a performance timer.", (EPM_action_handler_t) ps_timer_stop_ah));
 	// Rule handlers
-	itk(EPM_register_rule_handler("PS-check-in-process-RH", "Verify that no targets are in other processes.", (EPM_rule_handler_t) ps_check_in_process_rh));
-	itk(EPM_register_rule_handler("PS-check-initiator-RH", "Verify that initiating user is valid.", (EPM_rule_handler_t) ps_check_initiator_rh));
-	itk(EPM_register_rule_handler("PS-check-privileges-RH", "Verify that initiating user has correct privileges.", (EPM_rule_handler_t) ps_check_privileges_rh));
-	itk(EPM_register_rule_handler("PS-check-child-structure-RH", "Verify that child structure have correct status.", (EPM_rule_handler_t) ps_check_child_structure_rh));
+	itk(EPM_register_rule_handler(AH_CHECK_IN_PROCESS, "Verify that no targets are in other processes.", (EPM_rule_handler_t) ps_check_in_process_rh));
+	itk(EPM_register_rule_handler(AH_CHECK_INITIATOR, "Verify that initiating user is valid.", (EPM_rule_handler_t) ps_check_initiator_rh));
+	itk(EPM_register_rule_handler(AH_CHECK_PRIVILEGES, "Verify that initiating user has correct privileges.", (EPM_rule_handler_t) ps_check_privileges_rh));
+	itk(EPM_register_rule_handler(AH_CHECK_CHILD_STRUCTURE, "Verify that child structure have correct status.", (EPM_rule_handler_t) ps_check_child_structure_rh));
 }
 
 void ps::ps_register_name_rules()
@@ -27,7 +27,7 @@ void ps::ps_register_name_rules()
 	c_pptr<char>	nameRuleLines;
 	TC_preference_search_scope_t oldScope;
 
-	nameRuleLines.set_free(false);
+	nameRuleLines.set_free_container_only(true);
 	itk(PREF_ask_search_scope(&oldScope));
 	itk(PREF_set_search_scope(TC_preference_site));
 	try
@@ -107,7 +107,7 @@ void ps::ps_register_referencers()
 	c_pptr<char>	referencerLines;
 	TC_preference_search_scope_t oldScope;
 
-	referencerLines.set_free(false);
+	referencerLines.set_free_container_only(true);
 	itk(PREF_ask_search_scope(&oldScope));
 	itk(PREF_set_search_scope(TC_preference_site));
 	try
@@ -126,7 +126,7 @@ void ps::ps_register_referencers()
 	for (int i = 0; i < referencerLines.len(); i++)
 	{
 		const char			*referencerLine = referencerLines.val(i);
-		vector<string>		referencerLinesSplitted; //!< 0 = Source Type, 1 = Source Property, 3 = Target Relation, (4 = Filter types)
+		vector<string>		referencerLinesSplitted; //!< 0 = Source Type, 1 = Source Property, 2 = Target Relation, 3 = Filter types
 		bool				filterDefined = false;
 		METHOD_id_t 		method;
 		c_ptr<TC_argument_list_t>	argument;
@@ -134,20 +134,23 @@ void ps::ps_register_referencers()
 		split_str(referencerLine, ":", true, referencerLinesSplitted);
 
 		// Don't register if incorrect setting
-		if (referencerLinesSplitted.size() == 3)
-			referencerLinesSplitted.push_back(string(""));
-		else if (referencerLinesSplitted.size() != 4)
+		if (referencerLinesSplitted.size() != 4)
 			continue;
-			
+		if (referencerLinesSplitted[0].empty() || referencerLinesSplitted[1].empty() ||
+			referencerLinesSplitted[2].empty() || referencerLinesSplitted[3].empty())
+			continue;
+
 		// Allocate all memory on the heap
 		argument.set_free(false);
 		argument.alloc(1);
 		argument.ptr()->number_of_arguments = 2;
 		sm_alloc(argument.ptr()->arguments, TC_argument_t, argument.ptr()->number_of_arguments);
+		// Target relation
 		argument.ptr()->arguments[0].type = POM_string;
 		argument.ptr()->arguments[0].array_size = 1;
 		sm_alloc(argument.ptr()->arguments[0].val_union.str_value, char, referencerLinesSplitted[2].length() + 1);
 		tc_strcpy(argument.ptr()->arguments[0].val_union.str_value, referencerLinesSplitted[2].c_str());
+		// Filter types
 		argument.ptr()->arguments[1].type = POM_string;
 		argument.ptr()->arguments[1].array_size = 1;
 		sm_alloc(argument.ptr()->arguments[1].val_union.str_value, char, referencerLinesSplitted[3].length() + 1);

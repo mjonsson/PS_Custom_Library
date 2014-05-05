@@ -8,67 +8,74 @@ int ps::ps_find_referencers(METHOD_message_t *m, va_list  args)
 {
 	const char		*debug_name = "Find Referencers";
 	int				result = ITK_ok;
-	string			relationProp = m->user_args->arguments[0].val_union.str_value;
-	string			filterTypes = m->user_args->arguments[1].val_union.str_value;
-	tag_t			relationType;
-	tag_t			tSource = m->object_tag;
 	c_ptr<tag_t>	c_referencers;
+	c_ptr<int>		c_levels;
+	c_pptr<char>	c_relations;
 	int				activeSeq;
 	bool			applyTypeFilter = false;
-	vector<tag_t>	tmpRefs;
+	bool			applyRelationFilter = false;
+	vector<tag_t>	v_tmpRefs;
 	vector<string>	v_filterTypes;
-	int				*numReferencers = NULL;
-	tag_t			**referencers = NULL;
+	vector<string>	v_relationNames;
+	string			relationProp = m->user_args->arguments[0].val_union.str_value;
+	string			filterTypes = m->user_args->arguments[1].val_union.str_value;
+	tag_t			tSource = m->object_tag;
 	tag_t			tProp = va_arg(args, tag_t);
+	int				*numReferencers = va_arg(args, int*);
+	tag_t			**referencers = va_arg(args, tag_t**);
 
 	log_debug("[START] %s", debug_name);
 	hr_start_debug(debug_name);
 
-	numReferencers = va_arg(args, int*);
-	referencers = va_arg(args, tag_t**);
 	
+	if (relationProp != "*")
+	{
+		applyRelationFilter = true;
+		split_str(relationProp, ";", true, v_relationNames);
+	}
+	
+	if (filterTypes != "*")
+	{
+		applyTypeFilter = true;
+		split_str(filterTypes, ";", true, v_filterTypes);
+	}
+
 	try
 	{
-		itk(GRM_find_relation_type(relationProp.c_str(), &relationType));
-		itk(GRM_list_primary_objects_only(tSource, relationType, c_referencers.plen(), c_referencers.pptr()));
-
-		if (filterTypes.length() > 0)
-		{
-			applyTypeFilter = true;
-			split_str(filterTypes, ";", true, v_filterTypes);
-		}
+		itk(WSOM_where_referenced(tSource, 1, c_referencers.plen(), c_levels.pptr(), c_referencers.pptr(), c_relations.pptr()));
 
 		for (int i = 0; i < c_referencers.len(); i++)
 		{
 			tag_t	otherObj = c_referencers.val(i);
+			char	*relation = c_relations.val(i);
 
 			// Only get the last version of the wso
 			itk(AOM_ask_value_int(otherObj, "active_seq", &activeSeq));
-
 			if (activeSeq == 0)
 				continue;
 
-			if (!applyTypeFilter)
+			if (applyRelationFilter)
 			{
-				tmpRefs.push_back(otherObj);
+				if (!find_str(relation, v_relationNames))
+					continue;
 			}
-			else
+			if (applyTypeFilter)
 			{
 				c_ptr<char>		objectType;
 
 				itk(AOM_ask_value_string(otherObj, "object_type", objectType.pptr()));
 
-				if (find_str(objectType.ptr(), v_filterTypes))
-				{
-					tmpRefs.push_back(otherObj);
-				}
+				if (!find_str(objectType.ptr(), v_filterTypes))
+					continue;
 			}
+			v_tmpRefs.push_back(otherObj);
 		}
-		if (tmpRefs.size() > 0)
+
+		if (v_tmpRefs.size() > 0)
 		{
-			*numReferencers = tmpRefs.size();
+			*numReferencers = v_tmpRefs.size();
 			sm_alloc(*referencers, tag_t, *numReferencers);
-			memcpy(*referencers, &tmpRefs[0], *numReferencers * sizeof(tag_t));
+			memcpy(*referencers, &v_tmpRefs[0], *numReferencers * sizeof(tag_t));
 		}
 	}
 	catch (tcexception& e)

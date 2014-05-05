@@ -92,22 +92,25 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 			}
 		}
 
-		DISPATCHER_create_request(provider.c_str(),
-									service.c_str(),
-									priority,
-									NULL,
-									NULL,
-									0,
-									secondaryObjects.size(),
-									&primaryObjects[0],
-									&secondaryObjects[0],
-									arguments.size(),
-									&vec_string_to_char(arguments)[0],
-									request_type.c_str(),
-									0,
-									NULL,
-									NULL,
-									&tRequest);
+		DISPATCHER_create_request(provider.c_str(),							//< Service provider
+									service.c_str(),						//< Service name
+									priority,								//< Request priority
+									NULL,									//< Start time (not currently used)
+									NULL,									//< End time (not currently used)
+									0,										//< Interval (not currently used)
+									secondaryObjects.size(),				//< Number of primary and secondary objects
+									&primaryObjects[0],						//< Primary objects (Note that dataset to be translated is primary)
+									&secondaryObjects[0],					//< Secondary objects (Secondary object that relates to dataset that is to be translated)
+									arguments.size(),						//< Number of arguments
+									&vec_string_to_char(arguments)[0],		//< Arguments
+									request_type.c_str(),					//< Request type string
+									0,										//< Number of datafiles (not currently used)
+									NULL,									//< Datafile keys (not currently used)
+									NULL,									//< Datafiles (not currently used)
+									&tRequest);								//< The dispatcher request
+
+		if (tRequest == 0)
+			throw psexception("Dispatcher request was not created successfully.");
 	}
 	catch (tcexception& e)
 	{
