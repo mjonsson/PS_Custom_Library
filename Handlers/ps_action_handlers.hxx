@@ -25,7 +25,13 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg);
 /*!
  *  \note See exernal documentation for handler usage in Teamcenter.
  */
-int ps_copy_task_property_ah(EPM_action_message_t msg);
+int ps_copy_task_properties_ah(EPM_action_message_t msg);
+
+//! Moves attachments from target to reference or vice versa.
+/*!
+ *  \note See exernal documentation for handler usage in Teamcenter.
+ */
+int ps_move_attachments_ah(EPM_action_message_t msg);
 
 //! Starts a timer with identity.
 /*!

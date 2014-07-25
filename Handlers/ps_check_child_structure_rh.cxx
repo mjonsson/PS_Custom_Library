@@ -72,7 +72,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 				itk(AOM_ask_value_string(tTarget, "object_type", objectType.pptr()));
 
 				// Skip target if not of valid type
-				if (!find_str(objectType.ptr(), includeTargetTypes))
+				if (!find_string(objectType.ptr(), includeTargetTypes))
 					continue;
 
 				itk(AOM_ask_value_tag(tTarget, "items_tag", &tItem));
@@ -134,7 +134,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 				itk(AOM_ask_value_string(tChild, "bl_item_object_type", lineObjectType.pptr()));
 
 				// If not valid structure type, jump to next target
-				if (!find_str(lineObjectType.ptr(), includeStructureTypes))
+				if (!find_string(lineObjectType.ptr(), includeStructureTypes))
 					continue;
 
 				itk(AOM_ask_value_string(tChild, "bl_config_string", lineConfigured.pptr()));
@@ -148,7 +148,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 					{
 						itk(AOM_ask_value_string(tChild, "bl_item_item_id", lineItemId.pptr()));
 
-						if (find_str(lineItemId.ptr(), targetItemIds))
+						if (find_string(lineItemId.ptr(), targetItemIds))
 							allowed = true;
 					}
 

@@ -19,7 +19,7 @@ h_args::h_args(TC_argument_list_t *args)
 			continue;
 
 		// If separated string, split it and remove whitespace
-		split_str((const char*)value.ptr(), ",", true, argVector);
+		split_string((const char*)value.ptr(), ",", true, argVector);
 		// Insert vector into map
 		argsMap.insert(ArgPair(string(flag.ptr()), argVector));
 	}

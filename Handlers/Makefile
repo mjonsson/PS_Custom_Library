@@ -22,7 +22,8 @@ OBJS = ps_check_in_process_rh.$(OBJ_EXT) \
 		ps_check_privileges_rh.$(OBJ_EXT) \
 		ps_check_child_structure_rh.$(OBJ_EXT) \
 		ps_create_dispatcher_request_ah.$(OBJ_EXT) \
-		ps_copy_task_property_ah.$(OBJ_EXT) \
+		ps_copy_task_properties_ah.$(OBJ_EXT) \
+		ps_move_attachments_ah.$(OBJ_EXT) \
 		ps_timer_start_ah.$(OBJ_EXT) \
 		ps_timer_stop_ah.$(OBJ_EXT) \
 		ps_name_rules.$(OBJ_EXT) \

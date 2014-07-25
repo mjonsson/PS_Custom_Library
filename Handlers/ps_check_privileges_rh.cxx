@@ -54,7 +54,7 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 			// Check if target object is valid type
 			if (!objectTypes.empty())
 			{
-				if (!find_str(targetType.ptr(), objectTypes))
+				if (!find_string(targetType.ptr(), objectTypes))
 					typeOk = false;
 			}
 
@@ -72,7 +72,7 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 			{
 				itk(AOM_ask_value_tags(tTarget, "release_status_list", targetStatuses.plen(), targetStatuses.pptr()));
 
-				if (targetStatuses.len() == 0 && find_str("Working", statuses))
+				if (targetStatuses.len() == 0 && find_string("Working", statuses))
 				{
 					statusOk = true;
 				}
@@ -84,7 +84,7 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 
 						itk(AOM_ask_value_string(targetStatuses.val(j), "object_name", statusName.pptr()));
 
-						if (find_str(statusName.ptr(), statuses))
+						if (find_string(statusName.ptr(), statuses))
 						{
 								statusOk = true;
 								break;
@@ -112,7 +112,7 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 
 						decision = EPM_nogo;
 						itk(AOM_ask_value_string(tTargetAttach.val(i), "object_string", targetDispName.pptr()));
-						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Required privilege(s) not met on object '%s' (%s).", targetDispName.ptr(), concat_str(privileges, ',', false).c_str()).ptr()));
+						itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Required privilege(s) not met on object '%s' (%s).", targetDispName.ptr(), concat_string(privileges, ',', false).c_str()).ptr()));
 					}
 				}
 				if (owning_user)

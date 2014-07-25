@@ -12,7 +12,8 @@ void ps::ps_register_handlers()
 {
 	// Action handlers
 	itk(EPM_register_action_handler(AH_CREATE_DISPATCHER_REQUEST, "Create dispatcher request.", (EPM_action_handler_t) ps_create_dispatcher_request_ah));
-	itk(EPM_register_action_handler(AH_COPY_TASK_PROPERTY, "Copy properties from task to process target.", (EPM_action_handler_t) ps_copy_task_property_ah));
+	itk(EPM_register_action_handler(AH_COPY_TASK_PROPERTIES, "Copy properties from task to process target.", (EPM_action_handler_t) ps_copy_task_properties_ah));
+	itk(EPM_register_action_handler(AH_MOVE_ATTACHMENTS, "Move attachments from target to reference or vice versa.", (EPM_action_handler_t) ps_move_attachments_ah));
 	itk(EPM_register_action_handler(AH_TIMER_START, "Starts a performance timer.", (EPM_action_handler_t) ps_timer_start_ah));
 	itk(EPM_register_action_handler(AH_TIMER_STOP, "Stops a performance timer.", (EPM_action_handler_t) ps_timer_stop_ah));
 	// Rule handlers
@@ -51,7 +52,7 @@ void ps::ps_register_name_rules()
 		METHOD_id_t 		method;
 		c_ptr<TC_argument_list_t>	argument;
 
-		split_str(nameRuleLine, ":", true, nameRuleLinesSplitted);
+		split_string(nameRuleLine, ":", true, nameRuleLinesSplitted);
 
 		// Don't register if incorrect setting
 		if (nameRuleLinesSplitted.size() != 6)
@@ -131,7 +132,7 @@ void ps::ps_register_referencers()
 		METHOD_id_t 		method;
 		c_ptr<TC_argument_list_t>	argument;
 
-		split_str(referencerLine, ":", true, referencerLinesSplitted);
+		split_string(referencerLine, ":", true, referencerLinesSplitted);
 
 		// Don't register if incorrect setting
 		if (referencerLinesSplitted.size() != 4)

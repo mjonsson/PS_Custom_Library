@@ -31,13 +31,13 @@ int ps::ps_find_referencers(METHOD_message_t *m, va_list  args)
 	if (relationProp != "*")
 	{
 		applyRelationFilter = true;
-		split_str(relationProp, ";", true, v_relationNames);
+		split_string(relationProp, ";", true, v_relationNames);
 	}
 	
 	if (filterTypes != "*")
 	{
 		applyTypeFilter = true;
-		split_str(filterTypes, ";", true, v_filterTypes);
+		split_string(filterTypes, ";", true, v_filterTypes);
 	}
 
 	try
@@ -56,7 +56,7 @@ int ps::ps_find_referencers(METHOD_message_t *m, va_list  args)
 
 			if (applyRelationFilter)
 			{
-				if (!find_str(relation, v_relationNames))
+				if (!find_string(relation, v_relationNames))
 					continue;
 			}
 			if (applyTypeFilter)
@@ -65,7 +65,7 @@ int ps::ps_find_referencers(METHOD_message_t *m, va_list  args)
 
 				itk(AOM_ask_value_string(otherObj, "object_type", objectType.pptr()));
 
-				if (!find_str(objectType.ptr(), v_filterTypes))
+				if (!find_string(objectType.ptr(), v_filterTypes))
 					continue;
 			}
 			v_tmpRefs.push_back(otherObj);
