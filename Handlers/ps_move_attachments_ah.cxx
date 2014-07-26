@@ -10,7 +10,6 @@ int ps_move_attachments_ah(EPM_action_message_t msg)
 	int					result = ITK_ok;
 	string				sOperation;
 	vector<string>		vTargetTypes;
-	bool				bCopy = false;
 	tag_t				tRootTask = 0;
 	c_ptr<tag_t>		tTargets;
 	vector<tag_t>		vAttachmentsToMove;
@@ -29,7 +28,6 @@ int ps_move_attachments_ah(EPM_action_message_t msg)
 			throw psexception("Missing mandatory argument 'operation'");
 		if (!args.getVec("include_types", vTargetTypes))
 			throw psexception("Missing mandatory argument 'include_types'");
-		args.getFlag("copy", bCopy);
 
 		// Get target objects
 		itk(EPM_ask_root_task(msg.task, &tRootTask));
@@ -64,13 +62,12 @@ int ps_move_attachments_ah(EPM_action_message_t msg)
 					vAttachmentsToMoveTypes.push_back(EPM_target_attachment);
 				}
 			}
-
-			if (vAttachmentsToMove.size() > 0)
-			{
-				if (!bCopy)
-					itk(EPM_remove_attachments(tRootTask, vAttachmentsToMove.size(), &vAttachmentsToMove[0]));
-				itk(EPM_add_attachments(tRootTask, vAttachmentsToMove.size(), &vAttachmentsToMove[0], &vAttachmentsToMoveTypes[0]));
-			}
+		}
+		// Move included attachments
+		if (vAttachmentsToMove.size() > 0)
+		{
+			itk(EPM_remove_attachments(tRootTask, vAttachmentsToMove.size(), &vAttachmentsToMove[0]));
+			itk(EPM_add_attachments(tRootTask, vAttachmentsToMove.size(), &vAttachmentsToMove[0], &vAttachmentsToMoveTypes[0]));
 		}
 	}
 	catch (tcexception& e)

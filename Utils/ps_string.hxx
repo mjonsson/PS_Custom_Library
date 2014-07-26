@@ -25,6 +25,14 @@ namespace ps
 	void to_lower(string &str);
 	//! Return to upper version of string
 	void to_upper(string &str);
+	
+	bool match_string(const char *find_str, const char *str);
+	bool match_string(const char *find_str, string &str);
+	bool match_string(string &find_str, const char *str);
+	bool match_string(string &find_str, string &str);
+	bool match_string(const char *find_str, const char *str, bool reg_ex);
+	bool match_string(string &find_str, const char *str, bool reg_ex);
+
 	//! Match string either exact or by regex
 	bool match_string(const char *find_str, string &str, bool reg_ex);
 	//! Match string either exact or by regex

@@ -56,7 +56,7 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 			itk(AOM_ask_value_string(tTarget, "object_type", secondaryType.pptr()));
 
 			// Check if the target attachment is of correct type
-			if (tc_strcmp(secondary_type.c_str(), secondaryType.ptr()) == 0)
+			if (match_string(secondary_type, secondaryType.ptr()) == 0)
 			{
 				logical		objFound = false;
 				secondaryObjects.push_back(tTarget);

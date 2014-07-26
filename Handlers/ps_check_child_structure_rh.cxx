@@ -140,7 +140,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 				itk(AOM_ask_value_string(tChild, "bl_config_string", lineConfigured.pptr()));
 
 				// If not configured bom line
-				if (tc_strcmp(lineConfigured.ptr(), "No configured Revision") == 0)
+				if (match_string(lineConfigured.ptr(), "No configured Revision"))
 				{
 					logical		allowed = false;
 					

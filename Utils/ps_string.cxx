@@ -124,11 +124,76 @@ string ps::concat_string(vector<string> &str_vec, const char delim, bool remove_
 	return concStr;
 }
 
+bool ps::match_string(const char *find_str, const char *str)
+{
+	return match_string(find_str, str, false);
+}
+
+bool ps::match_string(const char *find_str, string &str)
+{
+	return match_string(find_str, str, false);
+}
+
+bool ps::match_string(string &find_str, string &str)
+{
+	return match_string(find_str, str, false);
+}
+
+bool ps::match_string(string &find_str, const char *str)
+{
+	return match_string(find_str, str, false);
+}
+
+bool ps::match_string(const char *find_str, const char *str, bool reg_ex)
+{
+	if (!reg_ex)
+	{
+		if (tc_strcmp(find_str, str) == 0)
+			return true;
+		else
+			return false;
+	}
+	else
+	{
+		string fi_str(find_str);
+		string fu_str(str);
+	
+		return match_string(fi_str, fu_str, reg_ex);
+	}
+}
+
 bool ps::match_string(const char *find_str, string &str, bool reg_ex)
 {
-	string f_str(find_str);
+	if (!reg_ex)
+	{
+		if (tc_strcmp(find_str, str.c_str()) == 0)
+			return true;
+		else
+			return false;
+	}
+	else
+	{
+		string f_str(find_str);
 	
-	return match_string(f_str, str, reg_ex);
+		return match_string(f_str, str, reg_ex);
+	}
+}
+
+bool ps::match_string(string &find_str, const char *str, bool reg_ex)
+{
+	if (!reg_ex)
+	{
+		if (tc_strcmp(find_str.c_str(), str) == 0)
+			return true;
+		else
+			return false;
+	}
+	else
+	{
+		string fu_str(str);
+	
+		return match_string(find_str, fu_str, reg_ex);
+	}
 }
 
 bool ps::match_string(string &find_str, string &str, bool reg_ex)
