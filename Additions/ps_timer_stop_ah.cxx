@@ -10,7 +10,6 @@ int ps_timer_stop_ah(EPM_action_message_t msg)
 	char				*pszArg = NULL;
 	string				marker;
 	int					result = ITK_ok;
-	EPM_decision_t		decision = EPM_go;
 	h_args				args(msg.arguments);
 
 	log_debug("[START] %s", debug_name);
@@ -28,7 +27,6 @@ int ps_timer_stop_ah(EPM_action_message_t msg)
 	}
 	catch (tcexception& e)
 	{
-		decision = EPM_nogo;
 		EMH_store_error_s1(EMH_severity_error, ACTION_HANDLER_DEFAULT_IFAIL, e.what());
 		log_error(e.what());
 	}

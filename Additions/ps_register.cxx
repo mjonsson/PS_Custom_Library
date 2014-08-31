@@ -221,14 +221,14 @@ int ps::libps_onexit(int *decision, va_list args)
 	return ITK_ok;
 }
 
-int libpshandlers_register_callbacks()
+int libpsadds_register_callbacks()
 { 
 	printf("Installing PS User Exits Library - libps v1.0, "__DATE__" "__TIME__".\n");
 	
 	try
 	{
-		itk(CUSTOM_register_exit("libpshandlers", "USER_init_module", (CUSTOM_EXIT_ftn_t) libps_oninit));
-		itk(CUSTOM_register_exit("libpshandlers", "USER_exit_module", (CUSTOM_EXIT_ftn_t) libps_onexit));
+		itk(CUSTOM_register_exit("libpsadds", "USER_init_module", (CUSTOM_EXIT_ftn_t) libps_oninit));
+		itk(CUSTOM_register_exit("libpsadds", "USER_exit_module", (CUSTOM_EXIT_ftn_t) libps_onexit));
 	}
 	catch (tcexception& e)
 	{

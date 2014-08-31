@@ -24,7 +24,7 @@ namespace ps
 extern "C" {
 #endif
 
-	extern DLLAPI int libpshandlers_register_callbacks();
+	extern DLLAPI int libpsadds_register_callbacks();
 
 #ifdef __cplusplus
 }

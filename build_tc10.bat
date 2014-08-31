@@ -14,6 +14,7 @@ set MSDEV_HOME=C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC
 set TC_ROOT=D:\App\Teamcenter_10_1
 set TC_DATA=D:\Data\Teamcenter_10_1\tcdata
 
+:: DO NOT EDIT BELOW THIS LINE
 :: Set to target platform (x86 or x64)
 set TC_PLATFORM=x64
 set TC_VERSION=TC_10
@@ -25,7 +26,7 @@ set BINARIES=%~dp0\Binaries
 if not exist "%BINARIES%\make.exe" goto nognubin
 if not exist "%MSDEV_HOME%\vcvarsall.bat" goto nomsdev
 if not exist "%TC_ROOT%\bin\tcserver.exe" goto notcroot
-if not exist "%TC_DATA%\tc_profilevars.bat" goto +notcdata
+if not exist "%TC_DATA%\tc_profilevars.bat" goto notcdata
 
 echo Build Environment is OK!
 echo.

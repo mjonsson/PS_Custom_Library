@@ -3,14 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utils", "Utils\Utils.vcxproj", "{AD64F538-B96B-4E92-A348-F70020F899EA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Handlers", "Handlers\Handlers.vcxproj", "{85D99C26-E0C2-4956-A182-7F5DAA58675F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Additions", "Additions\Additions.vcxproj", "{85D99C26-E0C2-4956-A182-7F5DAA58675F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{AD64F538-B96B-4E92-A348-F70020F899EA} = {AD64F538-B96B-4E92-A348-F70020F899EA}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5C903745-E94A-417C-BE41-FD1CC9CAAA4F}"
 	ProjectSection(SolutionItems) = preProject
-		build.bat = build.bat
 		Makefile = Makefile
 		Makefile.nt = Makefile.nt
 	EndProjectSection

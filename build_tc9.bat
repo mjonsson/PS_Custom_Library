@@ -14,6 +14,7 @@ set MSDEV_HOME=C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC
 set TC_ROOT=D:\App\Teamcenter_9_1
 set TC_DATA=D:\Data\Teamcenter_9_1\tcdata
 
+:: DO NOT EDIT BELOW THIS LINE
 :: Set to target platform (x86 or x64)
 set TC_PLATFORM=x64
 set TC_VERSION=TC_9

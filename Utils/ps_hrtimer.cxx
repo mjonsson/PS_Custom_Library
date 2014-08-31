@@ -51,7 +51,6 @@ void ps::HRTimer::start(const char *marker_name)
 	if ((iter = perfMap.find(str_marker_name)) == perfMap.end()) {
 		PerfData perfData;
 		iter = perfMap.insert(PerfPair(str_marker_name, perfData)).first;
-		//iter = perfMap.find(str_marker_name);
 	}
 
 	DWORD_PTR oldmask = SetThreadAffinityMask(GetCurrentThread(), 0);

@@ -43,7 +43,7 @@ all: 	build_obj_message $(OBJS)
 debug:	all
 
 clean: 	clean_message 	
-		-$(RM) $(OBJS) $(NT_LINK_EXT) $(GEN_OBJS)
+		-$(RM) $(NT_LINK_EXT) $(GEN_OBJS)
 
 rebuild: clean all
 

@@ -55,7 +55,7 @@ MT=mt
 MKDIR=mkdir
 DOXYGEN=doxygen
 DOXYGEN_CONFIG=./Doxygen
-GEN_OBJS=Debug obj Win32 x64 Utils.log Handlers.log
+GEN_OBJS=*.obj *.filters *.user Debug obj Win32 x64 Utils.log Additions.log
 		
 #
 # DEFINES and CFLAGS to compile the source code
@@ -75,12 +75,13 @@ DEFINES=-DSTEP -DAP203 -DAP214 -DWIN32_LEAN_AND_MEAN -DWNT \
 endif
 
 ## Determine release- or debug build
-ifeq (,$(findstring debug,$(MAKECMDGOALS)))
-CFLAGS=-c -nologo -EHsc -W1 -Ox -Oy- -MD
-DEFINES+=-DNDEBUG
-else
+##ifeq (,$(findstring debug,$(MAKECMDGOALS)))
+ifeq ($(MAKECMDGOALS),debug)
 CFLAGS=-c -nologo -EHsc -W1 -Od -Z7 -MDd
 DEFINES+=-D_DEBUG
+else
+CFLAGS=-c -nologo -EHsc -W1 -Ox -Oy- -MD
+DEFINES+=-DNDEBUG
 endif
 
 #
@@ -110,17 +111,18 @@ endif
 # Platform dependent libraries
 #
 ## Determine of release- or debug build
-ifeq (,$(findstring debug,$(MAKECMDGOALS)))
+##ifeq (,$(findstring debug,$(MAKECMDGOALS)))
+ifeq ($(MAKECMDGOALS),debug)
 SYSLIBS = wsock32.lib \
           advapi32.lib \
-          msvcrt.lib \
+          msvcrtd.lib \
           oldnames.lib \
           kernel32.lib \
           winmm.lib
 else
 SYSLIBS = wsock32.lib \
           advapi32.lib \
-          msvcrtd.lib \
+          msvcrt.lib \
           oldnames.lib \
           kernel32.lib \
           winmm.lib

@@ -33,7 +33,7 @@ OBJS = ps_check_in_process_rh.$(OBJ_EXT) \
 #
 # Define the DIBLIP option, lib name will be defined in Makefile.nt
 #
-EXPIMP = libpshandlers
+EXPIMP = libpsadds
 
 #
 # Define additional library dependencies
@@ -50,7 +50,7 @@ all:  	build_obj_message $(OBJS) build_dll_message
 		$(LINK_LINE)
 		$(MANIFEST_LINE)
 
-debug:	all
+debug: 	all
 
 rebuild: clean all
 
@@ -59,7 +59,7 @@ debug_rebuild: clean debug
 install: copy_message copy
 
 clean: 	clean_message
-		-$(RM) $(OBJS) $(NT_LINK_EXT) $(GEN_OBJS)
+		-$(RM) $(NT_LINK_EXT) $(GEN_OBJS)
 
 copy:
 		-$(CHMOD) 777 $(EXPIMP).dll

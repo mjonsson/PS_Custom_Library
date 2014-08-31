@@ -80,7 +80,7 @@
     <NMakeBuildCommandLine>make debug</NMakeBuildCommandLine>
     <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>make debug_rebuild</NMakeReBuildCommandLine>
-    <NMakePreprocessorDefinitions>IPLIB=libpshandlers;_TC_10;WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>IPLIB=libpsadds;_TC_10;WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath>.;$(TC_INCLUDE);$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <NMakeForcedIncludes>
     </NMakeForcedIncludes>
@@ -90,7 +90,7 @@
     <NMakeBuildCommandLine>make debug</NMakeBuildCommandLine>
     <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>make debug_rebuild</NMakeReBuildCommandLine>
-    <NMakePreprocessorDefinitions>IPLIB=libpshandlers;_TC_10;WIN64;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>IPLIB=libpsadds;_TC_10;WIN64;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath>.;$(TC_INCLUDE);$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <NMakeForcedIncludes>
     </NMakeForcedIncludes>
@@ -100,7 +100,7 @@
     <NMakeBuildCommandLine>make all</NMakeBuildCommandLine>
     <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>make rebuild</NMakeReBuildCommandLine>
-    <NMakePreprocessorDefinitions>IPLIB=libpshandlers;_TC_10;WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>IPLIB=libpsadds;_TC_10;WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath>.;$(TC_INCLUDE);$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <NMakeForcedIncludes>
     </NMakeForcedIncludes>
@@ -110,7 +110,7 @@
     <NMakeBuildCommandLine>make all</NMakeBuildCommandLine>
     <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>make rebuild</NMakeReBuildCommandLine>
-    <NMakePreprocessorDefinitions>IPLIB=libpshandlers;_TC_10;WIN64;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>IPLIB=libpsadds;_TC_10;WIN64;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath>.;$(TC_INCLUDE);$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <NMakeForcedIncludes>
     </NMakeForcedIncludes>

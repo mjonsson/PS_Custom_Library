@@ -14,16 +14,16 @@
 #
 include ./Makefile.nt
 
-DIRS = Utils Handlers
+DIRS = Utils Additions
 
 all: 
 				$(foreach dir,$(DIRS),make -C $(dir)$(NEWLINE))
 
 debug:
-				$(foreach dir,$(DIRS),make -C $(dir)$(NEWLINE))
+				$(foreach dir,$(DIRS),make -C $(dir) debug$(NEWLINE))
 
 clean:
-				-$(RM) journal_file system_log Debug x64 Docs
+				-$(RM) *.sdf journal_file system_log Debug x64 Docs
 				$(foreach dir,$(DIRS),make -C $(dir) clean$(NEWLINE))
 
 rebuild: 
@@ -49,11 +49,7 @@ install_message:
 				@echo -------------------------------------------------------------
 				@echo !!! IMPORTANT MESSAGE !!!
 				@echo -------------------------------------------------------------
-				@echo After installing handlers make sure to add the line:
-				@echo .
-				@echo   "<error id="100">%1$</error>"
-				@echo .
-				@echo to the file:
-				@echo .
-				@echo   "TC_ROOT\lang\textserver\en_US\ue_errors.xml"
+				@echo Don't forget to follow the steps provided in the README.
+				@echo There are a couple of manual steps that needs to be performed
+				@echo after the installation of the binaries.
 				@echo -------------------------------------------------------------

@@ -2,15 +2,24 @@
 <preferences version="10.0">
   <category name="PS Value Additions">
     <category_description></category_description>
+    <preference name="TC_customization_libraries" type="String" array="true" disabled="false" protectionScope="Site" envEnabled="false">
+      <preference_description>Custom libraries</preference_description>
+      <context name="Teamcenter">
+        <value>libpsadds</value>
+      </context>
+    </preference>
+  </category>
+  <category name="PS Value Additions">
+    <category_description></category_description>
     <preference name="PS2_Log_Mask" type="Integer" array="false" disabled="false" protectionScope="Site" envEnabled="false">
       <preference_description>Defines what output to log:
 
 1 = Error
 2 = Warning
-3 = Info
-4 = Debug</preference_description>
+4 = Info
+8 = Debug</preference_description>
       <context name="Teamcenter">
-        <value>15</value>
+        <value>3</value>
       </context>
     </preference>
     <preference name="PS2_Log_Streams" type="Integer" array="false" disabled="false" protectionScope="Site" envEnabled="false">
@@ -18,9 +27,9 @@
 
 1 = Standard error stream
 2 = Standard output stream
-3 = Teamcenter syslog</preference_description>
+4 = Teamcenter syslog</preference_description>
       <context name="Teamcenter">
-        <value>7</value>
+        <value>3</value>
       </context>
     </preference>
     <preference name="PS2_Naming_Rules" type="String" array="true" disabled="false" protectionScope="Site" envEnabled="false">
@@ -28,8 +37,6 @@
 
 Format is:&lt;object_type&gt;:&lt;property_type&gt;:&lt;property_name&gt;:&lt;reg_ex&gt;:&lt;max_length&gt;:&lt;error_message&gt;</preference_description>
       <context name="Teamcenter">
-        <value>ItemRevision:string:object_name:^[0-9][0-9][0-9][0-9]$:0:Attribute must consist of a 4-digit number.</value>
-        <value>BOMLine:string:bl_ref_designator:^[0-9]+$:20:Reference Designator must only contain numbers and have a maximum length of 20 characters.</value>
       </context>
     </preference>
     <preference name="PS2_PerfTimer_Enabled" type="Logical" array="false" disabled="false" protectionScope="Site" envEnabled="false">
@@ -43,8 +50,6 @@ Format is:&lt;object_type&gt;:&lt;property_type&gt;:&lt;property_name&gt;:&lt;re
 
 Format is:&lt;source_type&gt;:&lt;source_property&gt;:&lt;relation_type&gt;:&lt;type_filder[;&lt;type_filter&gt;...]</preference_description>
       <context name="Teamcenter">
-        <value>PS4RelationForm:ps4specificationFor:IMAN_specification:ItemRevision</value>
-        <value>PS4RelationForm:ps4untypedArrFor:*:*</value>
       </context>
     </preference>
   </category>

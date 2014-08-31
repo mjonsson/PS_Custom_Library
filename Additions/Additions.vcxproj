@@ -37,6 +37,7 @@
     <ClCompile Include="ps_move_attachments_ah.cxx" />
     <ClCompile Include="ps_name_rules.cxx" />
     <ClCompile Include="ps_register.cxx" />
+    <ClCompile Include="ps_timer_print_ah.cxx" />
     <ClCompile Include="ps_timer_start_ah.cxx" />
     <ClCompile Include="ps_timer_stop_ah.cxx" />
   </ItemGroup>
