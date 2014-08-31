@@ -56,7 +56,7 @@ int ps_check_in_process_rh(EPM_rule_message_t msg)
 			decision = EPM_nogo;
 
 			// Loop over targets to generate error message
-			for (vector<tag_t>::iterator ptTarget = tObjInProcess.begin(); ptTarget < tObjInProcess.end(); ++ptTarget)
+			for (vector<tag_t>::iterator ptTarget = tObjInProcess.begin(); ptTarget != tObjInProcess.end(); ++ptTarget)
 			{
 				c_ptr<char>		targetDispName;
 

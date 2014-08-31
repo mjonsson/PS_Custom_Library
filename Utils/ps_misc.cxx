@@ -13,14 +13,15 @@ h_args::h_args(TC_argument_list_t *args)
 
 		itk(ITK_ask_argument_named_value(pszArg, flag.pptr(), value.pptr()));
 
+		string flagStr(flag.ptr());
 		// Jump to next argument if current already exist in map
-		if (argsMap.find(string(flag.ptr())) != argsMap.end())
+		if (argsMap.find(flagStr) != argsMap.end())
 			continue;
 
 		// If separated string, split it and remove whitespace
 		split_string((const char*)value.ptr(), ",", true, argVector);
 		// Insert vector into map
-		argsMap.insert(ArgPair(string(flag.ptr()), argVector));
+		argsMap.insert(ArgPair(flagStr, argVector));
 	}
 }
 string h_args::getStr(string flag)

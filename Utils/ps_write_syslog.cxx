@@ -43,10 +43,20 @@ void ps::log_error(const char *fmt, ...)
 	if (!g_logMasksInitialized) return;
 
 	if ((g_logMask & LOGMASK_ERROR) == LOGMASK_ERROR) {
+		c_ptr<char>	log_message;
 		va_list		ap;
-		
+
+		int bufsiz = strlen(fmt) + 512;
+		log_message.alloc(bufsiz);
+
 		va_start(ap, fmt);
-		c_ptr<char> log_message(fmt, ap);
+		// Make sure we have enough memory to store parameters
+		int need = vsnprintf(log_message.ptr(), bufsiz, fmt, ap) + 1;
+		if (need > bufsiz)
+		{
+			log_message.realloc(need);
+			vsnprintf(log_message.ptr(), need, fmt, ap);
+		}
 		va_end(ap);
 
 		if ((g_logStreams & LOGSTREAMS_ERR) == LOGSTREAMS_ERR) {
@@ -68,10 +78,20 @@ void ps::log_warn(const char *fmt, ...)
 	if (!g_logMasksInitialized) return;
 
 	if ((g_logMask & LOGMASK_WARNING) == LOGMASK_WARNING) {
+		c_ptr<char>	log_message;
 		va_list		ap;
 
+		int bufsiz = strlen(fmt) + 512;
+		log_message.alloc(bufsiz);
+
 		va_start(ap, fmt);
-		c_ptr<char> log_message(fmt, ap);
+		// Make sure we have enough memory to store parameters
+		int need = vsnprintf(log_message.ptr(), bufsiz, fmt, ap) + 1;
+		if (need > bufsiz)
+		{
+			log_message.realloc(need);
+			vsnprintf(log_message.ptr(), need, fmt, ap);
+		}
 		va_end(ap);
 
 		if ((g_logStreams & LOGSTREAMS_OUT) == LOGSTREAMS_OUT) {
@@ -89,10 +109,20 @@ void ps::log_info(const char *fmt, ...)
 	if (!g_logMasksInitialized) return;
 
 	if ((g_logMask & LOGMASK_INFO) == LOGMASK_INFO) {
+		c_ptr<char>	log_message;
 		va_list		ap;
 
+		int bufsiz = strlen(fmt) + 512;
+		log_message.alloc(bufsiz);
+
 		va_start(ap, fmt);
-		c_ptr<char> log_message(fmt, ap);
+		// Make sure we have enough memory to store parameters
+		int need = vsnprintf(log_message.ptr(), bufsiz, fmt, ap) + 1;
+		if (need > bufsiz)
+		{
+			log_message.realloc(need);
+			vsnprintf(log_message.ptr(), need, fmt, ap);
+		}
 		va_end(ap);
 
 		if ((g_logStreams & LOGSTREAMS_OUT) == LOGSTREAMS_OUT) {
@@ -110,10 +140,20 @@ void ps::log_debug(const char *fmt, ...)
 	if (!g_logMasksInitialized) return;
 
 	if ((g_logMask & LOGMASK_DEBUG) == LOGMASK_DEBUG) {
+		c_ptr<char>	log_message;
 		va_list		ap;
 
+		int bufsiz = strlen(fmt) + 512;
+		log_message.alloc(bufsiz);
+
 		va_start(ap, fmt);
-		c_ptr<char> log_message(fmt, ap);
+		// Make sure we have enough memory to store parameters
+		int need = vsnprintf(log_message.ptr(), bufsiz, fmt, ap) + 1;
+		if (need > bufsiz)
+		{
+			log_message.realloc(need);
+			vsnprintf(log_message.ptr(), need, fmt, ap);
+		}
 		va_end(ap);
 
 		if ((g_logStreams & LOGSTREAMS_OUT) == LOGSTREAMS_OUT) {

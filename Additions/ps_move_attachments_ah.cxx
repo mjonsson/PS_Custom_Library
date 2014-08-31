@@ -26,8 +26,7 @@ int ps_move_attachments_ah(EPM_action_message_t msg)
 
 		if (!args.getStr("operation", sOperation))
 			throw psexception("Missing mandatory argument 'operation'");
-		if (!args.getVec("include_types", vTargetTypes))
-			throw psexception("Missing mandatory argument 'include_types'");
+		args.getVec("include_types", vTargetTypes);
 
 		// Get target objects
 		itk(EPM_ask_root_task(msg.task, &tRootTask));
