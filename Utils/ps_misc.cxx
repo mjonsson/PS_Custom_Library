@@ -14,8 +14,7 @@ h_args::h_args(TC_argument_list_t *args)
 		itk(ITK_ask_argument_named_value(pszArg, flag.pptr(), value.pptr()));
 
 		// Jump to next argument if current already exist in map
-		ArgsMap::iterator it;
-		if ((it = argsMap.find(string(flag.ptr()))) != argsMap.end())
+		if (argsMap.find(string(flag.ptr())) != argsMap.end())
 			continue;
 
 		// If separated string, split it and remove whitespace

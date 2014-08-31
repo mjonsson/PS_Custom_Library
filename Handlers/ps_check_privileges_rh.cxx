@@ -18,9 +18,6 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 	tag_t			tRootTask;
 	c_ptr<tag_t>	tTargetAttach;
 	char			*pszUserId = NULL;
-	logical			hasAccess,
-					typeOk = true,
-					statusOk = false;
 
 	log_debug("[START] %s", debug_name);
 	hr_start_debug(debug_name);
@@ -45,6 +42,9 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 				
 		for (int i = 0; i < tTargetAttach.len(); i++)
 		{
+			logical			typeOk = true;
+			logical			statusOk = true;
+			logical			hasAccess;
 			c_ptr<char>		targetType;
 			tag_t			tTarget = tTargetAttach.val(i);
 			c_ptr<tag_t>	targetStatuses;
@@ -54,22 +54,17 @@ int ps_check_privileges_rh(EPM_rule_message_t msg)
 			// Check if target object is valid type
 			if (!objectTypes.empty())
 			{
-				if (!find_string(targetType.ptr(), objectTypes))
-					typeOk = false;
+				typeOk = false;
+
+				if (find_string(targetType.ptr(), objectTypes))
+					typeOk = true;
 			}
 
 			// Check if target object has valid status
 			if (!statuses.empty())
 			{
-				int numStatus;
-
-				itk(AOM_ask_num_elements(tTarget, "release_status_list", &numStatus));
-
-				if (numStatus == 0)
-					statusOk = true;
-			}
-			if (!statusOk)
-			{
+				statusOk = false;
+				
 				itk(AOM_ask_value_tags(tTarget, "release_status_list", targetStatuses.plen(), targetStatuses.pptr()));
 
 				if (targetStatuses.len() == 0 && find_string("Working", statuses))

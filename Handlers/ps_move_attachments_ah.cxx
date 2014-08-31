@@ -44,13 +44,9 @@ int ps_move_attachments_ah(EPM_action_message_t msg)
 			throw psexception("Illegal operation entered.");
 
 		// Find included types
-		for (int i = 0; i < tTargets.len(); i++)
+		if (vTargetTypes.empty())
 		{
-			char	szObjectType[WSO_object_type_size_c+1];
-
-			itk(WSOM_ask_object_type(tTargets.val(i), szObjectType));
-
-			if (find_string(szObjectType, vTargetTypes))
+			for (int i = 0; i < tTargets.len(); i++)
 			{
 				vAttachmentsToMove.push_back(tTargets.val(i));
 				if (sOperation == "target_to_reference")
@@ -60,6 +56,28 @@ int ps_move_attachments_ah(EPM_action_message_t msg)
 				else
 				{
 					vAttachmentsToMoveTypes.push_back(EPM_target_attachment);
+				}
+			}
+		}
+		else
+		{
+			for (int i = 0; i < tTargets.len(); i++)
+			{
+				char	szObjectType[WSO_object_type_size_c+1];
+
+				itk(WSOM_ask_object_type(tTargets.val(i), szObjectType));
+
+				if (find_string(szObjectType, vTargetTypes))
+				{
+					vAttachmentsToMove.push_back(tTargets.val(i));
+					if (sOperation == "target_to_reference")
+					{
+						vAttachmentsToMoveTypes.push_back(EPM_reference_attachment);
+					}
+					else
+					{
+						vAttachmentsToMoveTypes.push_back(EPM_target_attachment);
+					}
 				}
 			}
 		}

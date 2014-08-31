@@ -12,7 +12,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 	c_ptr<tag_t>	tTargets;
 	string			revRule;
 	vector<string>	includeTargetTypes;
-	vector<string>	includeStructureTypes;
+	vector<string>	includeChildTypes;
 	string			bomViewType;
 	logical			allowIfTarget = false;
 	static tag_t	tRevRule = 0;
@@ -36,7 +36,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 		if (!args.getStr("bomview_type", bomViewType))
 			throw psexception("Missing mandatory argument 'bomview_type'.");
 		args.getVec("include_target_types", includeTargetTypes);
-		args.getVec("include_structure_types", includeStructureTypes);
+		args.getVec("include_child_types", includeChildTypes);
 		args.getFlag("allow_if_target", allowIfTarget);
 
 		if (tRevRule == 0)
@@ -131,10 +131,10 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 				c_ptr<char>		lineObjectStr;
 				c_ptr<char>		targetObjectStr;
 
-				itk(AOM_ask_value_string(tChild, "bl_item_object_type", lineObjectType.pptr()));
+				itk(AOM_ask_value_string(tChild, "bl_rev_object_type", lineObjectType.pptr()));
 
 				// If not valid structure type, jump to next target
-				if (!find_string(lineObjectType.ptr(), includeStructureTypes))
+				if (!find_string(lineObjectType.ptr(), includeChildTypes))
 					continue;
 
 				itk(AOM_ask_value_string(tChild, "bl_config_string", lineConfigured.pptr()));

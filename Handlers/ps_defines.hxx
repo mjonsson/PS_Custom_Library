@@ -13,7 +13,7 @@
 
 //! Action handler definitions
 #define AH_CREATE_DISPATCHER_REQUEST "PS2-create-dispatcher-request-AH"
-#define AH_COPY_TASK_PROPERTIES "PS2-copy-task-property-AH"
+#define AH_COPY_TASK_PROPERTIES "PS2-copy-task-properties-AH"
 #define AH_MOVE_ATTACHMENTS "PS2-move-attachments-AH"
 #define AH_TIMER_START "PS2-timer-start-AH"
 #define AH_TIMER_STOP "PS2-timer-stop-AH"
