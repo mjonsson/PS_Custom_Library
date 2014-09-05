@@ -9,7 +9,7 @@ using namespace ps;
 
 int ps::ps_validate_name_rule(METHOD_message_t *m, va_list  args)
 {
-	const char		*debug_name = "Validate Name Rule";
+	const char		*debug_name = "PS2 Validate Name Rule";
 	int				result = ITK_ok;
 	string			value;
 	c_ptr<char>		propertyName;

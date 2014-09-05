@@ -6,15 +6,16 @@ using namespace ps;
 
 int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 {
-	const char			*debug_name = "PS-create-dispatcher-request-AH";
+	const char			*debug_name = "PS2-create-dispatcher-request-AH";
 	char				*pszArg = NULL;
 	string				provider,
 						service,
 						primary_type,
 						secondary_type,
 						request_type = "ON_DEMAND";
-	logical				owning_user = false,
-						owning_group = false;
+	logical				owning_user = false;
+	logical				owning_group = false;
+	logical				lMultipleRequests = false;
 	vector<string>		arguments;
 	vector<tag_t>		primaryObjects,
 						secondaryObjects;
@@ -43,6 +44,7 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 		args.getInt("priority", priority);
 		args.getVec("arguments", arguments);
 		args.getStr("request_type", request_type);
+		args.getFlag("multiple_requests", lMultipleRequests);
 
 		itk(EPM_ask_root_task(msg.task, &tRootTask));
 		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargets.plen(), tTargets.pptr()));
@@ -53,10 +55,10 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 			c_ptr<char>		secondaryType;
 			c_ptr<tag_t>	tSecondary;
 
-			itk(AOM_ask_value_string(tTarget, "object_type", secondaryType.pptr()));
+			itk(WSOM_ask_object_type2(tTarget, secondaryType.pptr()));
 
 			// Check if the target attachment is of correct type
-			if (match_string(secondary_type, secondaryType.ptr()) == 0)
+			if (match_string(secondary_type, secondaryType.ptr()))
 			{
 				logical		objFound = false;
 				secondaryObjects.push_back(tTarget);
@@ -71,7 +73,7 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 					{
 						c_ptr<char>		primaryType;
 
-						itk(AOM_ask_value_string(tSecondary.val(j), "object_type", primaryType.pptr()));
+						itk(WSOM_ask_object_type2(tSecondary.val(j), primaryType.pptr()));
 
 						if (primary_type == primaryType.ptr())
 						{
@@ -92,25 +94,53 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 			}
 		}
 
-		DISPATCHER_create_request(provider.c_str(),							//< Service provider
-									service.c_str(),						//< Service name
-									priority,								//< Request priority
-									NULL,									//< Start time (not currently used)
-									NULL,									//< End time (not currently used)
-									0,										//< Interval (not currently used)
-									secondaryObjects.size(),				//< Number of primary and secondary objects
-									&primaryObjects[0],						//< Primary objects (Note that dataset to be translated is primary)
-									&secondaryObjects[0],					//< Secondary objects (Secondary object that relates to dataset that is to be translated)
-									arguments.size(),						//< Number of arguments
-									&vec_string_to_char(arguments)[0],		//< Arguments
-									request_type.c_str(),					//< Request type string
-									0,										//< Number of datafiles (not currently used)
-									NULL,									//< Datafile keys (not currently used)
-									NULL,									//< Datafiles (not currently used)
-									&tRequest);								//< The dispatcher request
+		if (lMultipleRequests)
+		{
+			for (int i = 0; i < secondaryObjects.size(); i++)
+			{
+				DISPATCHER_create_request(provider.c_str(),							//< Service provider
+											service.c_str(),						//< Service name
+											priority,								//< Request priority
+											NULL,									//< Start time (not currently used)
+											NULL,									//< End time (not currently used)
+											0,										//< Interval (not currently used)
+											1,										//< Number of primary and secondary objects
+											&primaryObjects[i],						//< Primary objects (Note that dataset to be translated is primary)
+											&secondaryObjects[i],					//< Secondary objects (Secondary object that relates to dataset that is to be translated)
+											arguments.size(),						//< Number of arguments
+											&vec_string_to_char(arguments)[0],		//< Arguments
+											request_type.c_str(),					//< Request type string
+											0,										//< Number of datafiles (not currently used)
+											NULL,									//< Datafile keys (not currently used)
+											NULL,									//< Datafiles (not currently used)
+											&tRequest);								//< The dispatcher request
 
-		if (tRequest == 0)
-			throw psexception("Dispatcher request was not created successfully.");
+				if (tRequest == 0)
+					throw psexception("Dispatcher request was not created successfully.");
+			}
+		}
+		else
+		{
+			DISPATCHER_create_request(provider.c_str(),							//< Service provider
+										service.c_str(),						//< Service name
+										priority,								//< Request priority
+										NULL,									//< Start time (not currently used)
+										NULL,									//< End time (not currently used)
+										0,										//< Interval (not currently used)
+										secondaryObjects.size(),				//< Number of primary and secondary objects
+										&primaryObjects[0],						//< Primary objects (Note that dataset to be translated is primary)
+										&secondaryObjects[0],					//< Secondary objects (Secondary object that relates to dataset that is to be translated)
+										arguments.size(),						//< Number of arguments
+										&vec_string_to_char(arguments)[0],		//< Arguments
+										request_type.c_str(),					//< Request type string
+										0,										//< Number of datafiles (not currently used)
+										NULL,									//< Datafile keys (not currently used)
+										NULL,									//< Datafiles (not currently used)
+										&tRequest);								//< The dispatcher request
+
+			if (tRequest == 0)
+				throw psexception("Dispatcher request was not created successfully.");
+		}
 	}
 	catch (tcexception& e)
 	{

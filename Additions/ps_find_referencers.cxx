@@ -6,7 +6,7 @@ using namespace ps;
 
 int ps::ps_find_referencers(METHOD_message_t *m, va_list  args)
 {
-	const char		*debug_name = "Find Referencers";
+	const char		*debug_name = "PS2 Find Referencers";
 	int				result = ITK_ok;
 	c_ptr<tag_t>	c_referencers;
 	c_ptr<int>		c_levels;

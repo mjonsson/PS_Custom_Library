@@ -26,6 +26,7 @@ OBJS = ps_check_in_process_rh.$(OBJ_EXT) \
 		ps_move_attachments_ah.$(OBJ_EXT) \
 		ps_timer_start_ah.$(OBJ_EXT) \
 		ps_timer_stop_ah.$(OBJ_EXT) \
+		ps_set_status_ah.$(OBJ_EXT) \
 		ps_name_rules.$(OBJ_EXT) \
 		ps_find_referencers.$(OBJ_EXT) \
 		ps_register.$(OBJ_EXT)

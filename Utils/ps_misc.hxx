@@ -42,4 +42,13 @@ namespace ps
 		//! Return size of ArgsMap
 		int size();
 	};
+
+	template<typename T>
+	void array_to_vector(T *anArray, int size, vector<T> &aVector)
+	{
+		for (int i = 0; i < size; i++)
+		{
+			aVector.push_back(anArray[i]);
+		}
+	}
 }

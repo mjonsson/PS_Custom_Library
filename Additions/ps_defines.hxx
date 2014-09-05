@@ -17,6 +17,7 @@
 #define AH_MOVE_ATTACHMENTS "PS2-move-attachments-AH"
 #define AH_TIMER_START "PS2-timer-start-AH"
 #define AH_TIMER_STOP "PS2-timer-stop-AH"
+#define AH_SET_STATUS "PS2-set-status-AH"
 
 //! Rule handler definitions
 #define AH_CHECK_IN_PROCESS "PS2-check-in-process-RH"

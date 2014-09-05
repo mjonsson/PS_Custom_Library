@@ -6,7 +6,7 @@ using namespace ps;
 
 int ps_check_privileges_rh(EPM_rule_message_t msg)
 {
-	const char		*debug_name = "PS-check-privileges-RH";
+	const char		*debug_name = "PS2-check-privileges-RH";
 	char			*pszArg = NULL;
 	vector<string>	privileges;
 	vector<string>	objectTypes;

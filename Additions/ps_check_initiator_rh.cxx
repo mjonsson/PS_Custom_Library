@@ -6,7 +6,7 @@ using namespace ps;
 
 int ps_check_initiator_rh(EPM_rule_message_t msg)
 {
-	const char		*debug_name = "PS-check-initiator-RH";
+	const char		*debug_name = "PS2-check-initiator-RH";
 	char			*pszArg = NULL;
 	h_args			args(msg.arguments);
 	string			valueStr;

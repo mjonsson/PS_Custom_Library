@@ -6,7 +6,7 @@ using namespace ps;
 
 int ps_check_child_structure_rh(EPM_rule_message_t msg)
 {
-	const char		*debug_name = "PS-check-child-structure-RH";
+	const char		*debug_name = "PS2-check-child-structure-RH";
 	char			*pszArg = NULL;
 	tag_t           tRootTask;
 	c_ptr<tag_t>	tTargets;

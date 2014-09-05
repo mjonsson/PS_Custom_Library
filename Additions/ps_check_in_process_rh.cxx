@@ -6,7 +6,7 @@ using namespace ps;
 
 int ps_check_in_process_rh(EPM_rule_message_t msg)
 {
-	const char *debug_name = "PS-check-in-process-RH";
+	const char *debug_name = "PS2-check-in-process-RH";
     tag_t           tRootTask;
 	c_ptr<tag_t>	tTargets;
 	vector<tag_t>	tObjInProcess;

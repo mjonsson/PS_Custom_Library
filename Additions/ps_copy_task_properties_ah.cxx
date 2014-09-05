@@ -6,7 +6,7 @@ using namespace ps;
 
 int ps_copy_task_properties_ah(EPM_action_message_t msg)
 {
-	const char			*debug_name = "PS-copy-task-properties-AH";
+	const char			*debug_name = "PS2-copy-task-properties-AH";
 	string				taskProperties;
 	string				targetProperties;
 	vector<string>		vTaskProperties;

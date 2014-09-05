@@ -6,7 +6,7 @@ using namespace ps;
 
 int ps_timer_start_ah(EPM_action_message_t msg)
 {
-	const char			*debug_name = "PS-timer-start-AH";
+	const char			*debug_name = "PS2-timer-start-AH";
 	char				*pszArg = NULL;
 	string				marker;
 	int					result = ITK_ok;

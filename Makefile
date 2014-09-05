@@ -49,7 +49,7 @@ install_message:
 				@echo -------------------------------------------------------------
 				@echo !!! IMPORTANT MESSAGE !!!
 				@echo -------------------------------------------------------------
-				@echo Don't forget to follow the steps provided in the README.
+				@echo Don't forget to follow the steps provided in the README.docx.
 				@echo There are a couple of manual steps that needs to be performed
 				@echo after the installation of the binaries.
 				@echo -------------------------------------------------------------

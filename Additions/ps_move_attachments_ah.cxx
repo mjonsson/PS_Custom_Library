@@ -6,7 +6,7 @@ using namespace ps;
 
 int ps_move_attachments_ah(EPM_action_message_t msg)
 {
-	const char			*debug_name = "PS-move-attachments-AH";
+	const char			*debug_name = "PS2-move-attachments-AH";
 	int					result = ITK_ok;
 	string				sOperation;
 	vector<string>		vTargetTypes;
