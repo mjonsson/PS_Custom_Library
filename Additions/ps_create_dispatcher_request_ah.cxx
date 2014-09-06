@@ -16,6 +16,7 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 	logical				owning_user = false;
 	logical				owning_group = false;
 	logical				lMultipleRequests = false;
+	logical				lFillOutPrimaryIfNull = false;
 	vector<string>		arguments;
 	vector<tag_t>		primaryObjects,
 						secondaryObjects;
@@ -45,6 +46,7 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 		args.getVec("arguments", arguments);
 		args.getStr("request_type", request_type);
 		args.getFlag("multiple_requests", lMultipleRequests);
+		args.getFlag("fill_out_primary", lFillOutPrimaryIfNull);
 
 		itk(EPM_ask_root_task(msg.task, &tRootTask));
 		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tTargets.plen(), tTargets.pptr()));
@@ -61,7 +63,6 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 			if (match_string(secondary_type, secondaryType.ptr()))
 			{
 				logical		objFound = false;
-				secondaryObjects.push_back(tTarget);
 
 				// If primary type is set, try to find it
 				if (!primary_type.empty())
@@ -75,22 +76,30 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 
 						itk(WSOM_ask_object_type2(tSecondary.val(j), primaryType.pptr()));
 
-						if (primary_type == primaryType.ptr())
+						if (match_string(primary_type, primaryType.ptr()))
 						{
 							primaryObjects.push_back(tSecondary.val(j));
 							objFound = true;
 							break;
 						}
 					}
-					// If no object of primary type found there is nothing to process, so exit
+					// If no object of primary type found there is nothing to process, so continue to next target
 					if (!objFound)
-						return result;
+						continue;
 				}
 				// If primary type is not set or it was not found push NULLTAG into vector
-				else if (primary_type.empty())
+				else
 				{
-					primaryObjects.push_back(NULLTAG);
+					if (lFillOutPrimaryIfNull)
+					{
+						primaryObjects.push_back(tTarget);
+					}
+					else
+					{
+						primaryObjects.push_back(0);
+					}
 				}
+				secondaryObjects.push_back(tTarget);
 			}
 		}
 

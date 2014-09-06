@@ -44,12 +44,19 @@ namespace ps
 		{
 			construct();
 		}
-		//! Constructor that also sets the initial array size to size of \a chunk
-		c_ptr(int chunk)
+		//! Constructor that sets the initial array size and chunk size
+		c_ptr(int initial)
+		{
+			construct();
+			m_alloc_size = initial;
+			alloc();
+		}
+		//! Constructor that sets the initial array size and chunk size
+		c_ptr(int initial, int chunk)
 		{
 			construct();
 			m_alloc_chunk = chunk;
-			m_alloc_size = m_alloc_chunk;
+			m_alloc_size = initial;
 			alloc();
 		}
 		//! Constructor that sets the pointer to point to \a ptr
@@ -164,12 +171,19 @@ namespace ps
 		{
 			construct();
 		}
-		//! Constructor that also sets the initial array size
-		c_pptr(int chunk)
+		//! Constructor that sets the initial array size and chunk size
+		c_pptr(int initial)
+		{
+			construct();
+			m_alloc_size = initial;
+			alloc();
+		}
+		//! Constructor that sets the initial array size and chunk size
+		c_pptr(int initial, int chunk)
 		{
 			construct();
 			m_alloc_chunk = chunk;
-			m_alloc_size = m_alloc_chunk;
+			m_alloc_size = initial;
 			alloc();
 		}
 		//! Constructor that sets the pointer to point to \a ptr
