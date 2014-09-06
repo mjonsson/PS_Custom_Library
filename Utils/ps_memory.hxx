@@ -126,6 +126,24 @@ namespace ps
 			//	m_ptr = NULL;
 			//}
 		}
+		//! Add am object to this array
+		void add(T anObject)
+		{
+			if (m_size == m_alloc_size - 1)
+			{
+				realloc(m_alloc_size + m_alloc_chunk);
+			}
+			m_ptr[m_size] = anObject;
+			m_size++;
+		}
+		//! Append an array to this array
+		void add(int size, T *anArray)
+		{
+			for (int i = 0; i < size; i++)
+			{
+				add(anArray[i]);
+			}
+		}
 		//! Get object in array
 		T val(const int i) { return m_ptr[i]; }
 		//! Get pointer to array
