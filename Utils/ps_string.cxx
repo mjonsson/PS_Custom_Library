@@ -70,18 +70,7 @@ void ps::split_string(string &split_str, const char *delims, bool remove_whitesp
 	if (split_str.empty() || null_or_empty(delims))
 		return;
 
-	ptr = strtok((char*) split_str.c_str(), delims);
-	while (ptr != NULL)
-	{
-		string		splitted_str(ptr);
-
-		if (remove_whitespace)
-			trim(splitted_str);
-
-		str_vector.push_back(splitted_str);
-
-		ptr = strtok(NULL, delims);
-	}
+	split_string(split_str.c_str(), delims, remove_whitespace, str_vector);
 }
 
 void ps::split_string(const char *split_str, const char *delims, bool remove_whitespace, vector<string> &str_vector)
@@ -124,164 +113,131 @@ string ps::concat_string(vector<string> &str_vec, const char delim, bool remove_
 	return concStr;
 }
 
-bool ps::match_string(const char *find_str, const char *str)
-{
-	return match_string(find_str, str, false);
-}
-
+// Match string without reg_ex
 bool ps::match_string(const char *find_str, string &str)
 {
-	return match_string(find_str, str, false);
-}
-
-bool ps::match_string(string &find_str, string &str)
-{
-	return match_string(find_str, str, false);
+	return match_string(find_str, str.c_str());
 }
 
 bool ps::match_string(string &find_str, const char *str)
 {
-	return match_string(find_str, str, false);
+	return match_string(find_str.c_str(), str);
 }
 
-bool ps::match_string(const char *find_str, const char *str, bool reg_ex)
+bool ps::match_string(string &find_str, string &str)
 {
-	if (!reg_ex)
-	{
+	return match_string(find_str.c_str(), str.c_str());
+}
+
+bool ps::match_string(const char *find_str, const char *str)
+{
 		if (tc_strcmp(find_str, str) == 0)
 			return true;
 		else
 			return false;
-	}
-	else
-	{
-		string fi_str(find_str);
-		string fu_str(str);
-	
-		return match_string(fi_str, fu_str, reg_ex);
-	}
 }
 
-bool ps::match_string(const char *find_str, string &str, bool reg_ex)
+// Match string with reg_ex
+bool ps::match_string_rx(const char *find_str, const char *str)
 {
-	if (!reg_ex)
-	{
-		if (tc_strcmp(find_str, str.c_str()) == 0)
-			return true;
-		else
-			return false;
-	}
-	else
-	{
-		string f_str(find_str);
-	
-		return match_string(f_str, str, reg_ex);
-	}
+	return match_string_rx(string(find_str), string(str));
 }
 
-bool ps::match_string(string &find_str, const char *str, bool reg_ex)
+bool ps::match_string_rx(const char *find_str, string &str)
 {
-	if (!reg_ex)
-	{
-		if (tc_strcmp(find_str.c_str(), str) == 0)
-			return true;
-		else
-			return false;
-	}
-	else
-	{
-		string fu_str(str);
-	
-		return match_string(find_str, fu_str, reg_ex);
-	}
+	return match_string_rx(string(find_str), str);
 }
 
-bool ps::match_string(string &find_str, string &str, bool reg_ex)
+bool ps::match_string_rx(string &find_str, const char *str)
 {
-	if (reg_ex)
-	{
+	return match_string_rx(find_str, string(str));
+}
+
+bool ps::match_string_rx(string &find_str, string &str)
+{
 		regex rx(find_str);
+		
 		return regex_match(str.begin(), str.end(), rx);
-	}
-	else
-	{
-		if (find_str == str)
-			return true;
-		else
-			return false;
-	}
 }
 
-bool ps::find_string(const char *find_str, const char *full_str)
+// Find string in string without regex
+bool ps::find_string(const char *find_str, const char *full_str, bool remove_whitespace)
 {
-	return find_string(find_str, full_str, ",", false, false);
+	return find_string(find_str, full_str, ",", remove_whitespace);
 }
 
-bool ps::find_string(const char *find_str, string &full_str)
+bool ps::find_string(const char *find_str, string &full_str, bool remove_whitespace)
 {
-	return find_string(find_str, full_str, ",", false, false);
+	return find_string(find_str, full_str.c_str(), ",", remove_whitespace);
 }
 
-bool ps::find_string(string &find_str, string &full_str)
+bool ps::find_string(string &find_str, string &full_str, bool remove_whitespace)
 {
-	return find_string(find_str, full_str, ",", false, false);
+	return find_string(find_str.c_str(), full_str.c_str(), ",", remove_whitespace);
 }
 
-bool ps::find_string(const char *find_str, const char *full_str, const char *delims, bool remove_whitespace, bool reg_ex)
-{
-	string fi_str(find_str);
-	string fu_str(full_str);
-
-	return find_string(fi_str, fu_str, delims, remove_whitespace, reg_ex);
-}
-
-bool ps::find_string(const char *find_str, string &full_str, const char *delims, bool remove_whitespace, bool reg_ex)
-{
-	string f_str(find_str);
-
-	return find_string(f_str, full_str, delims, remove_whitespace, reg_ex);
-}
-
-bool ps::find_string(string &find_str, string &full_str, const char *delims, bool remove_whitespace, bool reg_ex)
+bool ps::find_string(const char *find_str, const char *full_str, const char *delims, bool remove_whitespace)
 {
 	vector<string>		strVector;
-	regex ex;
 
 	split_string(full_str, delims, remove_whitespace, strVector);
 
-	for (vector<string>::iterator i = strVector.begin(); i != strVector.end(); ++i)
+	return find_string(find_str, strVector);
+}
+
+// Find string without reg_ex in vector
+bool ps::find_string(string &find_str, vector<string> &str_vec)
+{
+	return find_string(find_str.c_str(), str_vec);
+}
+
+bool ps::find_string(const char *find_str, vector<string> &str_vec)
+{
+	for (vector<string>::iterator i = str_vec.begin(); i != str_vec.end(); ++i)
 	{
-		if (match_string(find_str, *i, reg_ex))
+		if (match_string(find_str, *i))
 			return true;
 	}
 
 	return false;
 }
 
-bool ps::find_string(const char *find_str, vector<string> &str_vec)
+// Find string in string with reg_ex
+bool ps::find_string_rx(const char *find_str, const char *full_str, const char *delims, bool remove_whitespace)
 {
-	string f_str(find_str);
-
-	return find_string(f_str, str_vec);
+	return find_string_rx(string(find_str), full_str, delims, remove_whitespace);
 }
 
-bool ps::find_string(string &find_str, vector<string> &str_vec)
+bool ps::find_string_rx(string &find_str, string &full_str, const char *delims, bool remove_whitespace)
 {
-	return find_string(find_str, str_vec, false);
+	return find_string_rx(find_str, full_str.c_str(), delims, remove_whitespace);
 }
 
-bool ps::find_string(const char *find_str, vector<string> &str_vec, bool reg_ex)
+bool ps::find_string_rx(const char *find_str, string &full_str, const char *delims, bool remove_whitespace)
 {
-	string f_str(find_str);
-
-	return find_string(f_str, str_vec, reg_ex);
+	return find_string_rx(string(find_str), full_str.c_str(), delims, remove_whitespace);
 }
 
-bool ps::find_string(string &find_str, vector<string> &str_vec, bool reg_ex)
+bool ps::find_string_rx(string &find_str, const char *full_str, const char *delims, bool remove_whitespace)
+{
+	vector<string>		strVector;
+
+	split_string(full_str, delims, remove_whitespace, strVector);
+
+	return find_string_rx(find_str, strVector);
+}
+
+// Find string with reg_ex in vector
+bool ps::find_string_rx(const char *find_str, vector<string> &str_vec)
+{
+	return find_string_rx(string(find_str), str_vec);
+}
+
+bool ps::find_string_rx(string &find_str, vector<string> &str_vec)
 {
 	for (vector<string>::iterator i = str_vec.begin(); i != str_vec.end(); ++i)
 	{
-		if (match_string(find_str, *i, reg_ex))
+		if (match_string_rx(find_str, *i))
 			return true;
 	}
 
