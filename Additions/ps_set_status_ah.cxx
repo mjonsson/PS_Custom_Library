@@ -66,7 +66,7 @@ int ps_set_status_ah(EPM_action_message_t msg)
 			{
 				c_ptr<char>		objectType;
 
-				itk(WSOM_ask_object_type2(tRootTarget, objectType.pptr()));
+				itk(AOM_ask_value_string(tRootTarget, "object_type", objectType.pptr()));
 
 				if (!find_string(objectType.ptr(), vTypesToInclude))
 				{
@@ -90,8 +90,13 @@ int ps_set_status_ah(EPM_action_message_t msg)
 			}
 
 			// Create and assign release status
+#ifdef _TC_10
 			itk(RELSTAT_create_release_status(sStatusType.c_str(), &tStatus));
 			itk(RELSTAT_add_release_status(tStatus, vObjectsToStatus.size(), &vObjectsToStatus[0], lRetainReleasedDate));
+#else
+			itk(CR_create_release_status(sStatusType.c_str(), &tStatus));
+			itk(EPM_add_release_status(tStatus, vObjectsToStatus.size(), &vObjectsToStatus[0], lRetainReleasedDate));
+#endif
 
 			// Set the effectivity
 			if (lSetEffectivity)

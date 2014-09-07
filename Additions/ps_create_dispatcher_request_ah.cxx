@@ -57,7 +57,7 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 			c_ptr<char>		secondaryType;
 			c_ptr<tag_t>	tSecondary;
 
-			itk(WSOM_ask_object_type2(tTarget, secondaryType.pptr()));
+			itk(AOM_ask_value_string(tTarget, "object_type", secondaryType.pptr()));
 
 			// Check if the target attachment is of correct type
 			if (match_string(secondary_type, secondaryType.ptr()))
@@ -74,7 +74,7 @@ int ps_create_dispatcher_request_ah(EPM_action_message_t msg)
 					{
 						c_ptr<char>		primaryType;
 
-						itk(WSOM_ask_object_type2(tSecondary.val(j), primaryType.pptr()));
+						itk(AOM_ask_value_string(tSecondary.val(j), "object_type", primaryType.pptr()));
 
 						if (match_string(primary_type, primaryType.ptr()))
 						{
