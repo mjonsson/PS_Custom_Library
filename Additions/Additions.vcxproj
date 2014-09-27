@@ -43,6 +43,7 @@
     <ClCompile Include="ps_timer_stop_ah.cxx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="Makefile" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
