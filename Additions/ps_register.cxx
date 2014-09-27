@@ -16,11 +16,12 @@ void ps::ps_register_handlers()
 	itk(EPM_register_action_handler(AH_MOVE_ATTACHMENTS, "Move attachments from target to reference or vice versa.", (EPM_action_handler_t) ps_move_attachments_ah));
 	itk(EPM_register_action_handler(AH_TIMER_START, "Starts a performance timer.", (EPM_action_handler_t) ps_timer_start_ah));
 	itk(EPM_register_action_handler(AH_TIMER_STOP, "Stops a performance timer.", (EPM_action_handler_t) ps_timer_stop_ah));
-	itk(EPM_register_action_handler(AH_SET_STATUS, "Creates and assigns release statuses.", (EPM_action_handler_t) ps_set_status_ah));
+	itk(EPM_register_action_handler(AH_SET_STATUS, "Creates and assigns release statuses.", (EPM_action_handler_t) ps_set_statuses_ah));
 	// Rule handlers
 	itk(EPM_register_rule_handler(AH_CHECK_IN_PROCESS, "Verify that no targets are in other processes.", (EPM_rule_handler_t) ps_check_in_process_rh));
 	itk(EPM_register_rule_handler(AH_CHECK_INITIATOR, "Verify that initiating user is valid.", (EPM_rule_handler_t) ps_check_initiator_rh));
 	itk(EPM_register_rule_handler(AH_CHECK_PRIVILEGES, "Verify that initiating user has correct privileges.", (EPM_rule_handler_t) ps_check_privileges_rh));
+	itk(EPM_register_rule_handler(AH_CHECK_PROPERTIES, "Verify that mandatory properties are set.", (EPM_rule_handler_t) ps_check_properties_rh));
 	itk(EPM_register_rule_handler(AH_CHECK_CHILD_STRUCTURE, "Verify that child structure have correct status.", (EPM_rule_handler_t) ps_check_child_structure_rh));
 }
 
@@ -224,7 +225,7 @@ int ps::libps_onexit(int *decision, va_list args)
 
 int libpsadds_register_callbacks()
 { 
-	printf("Installing PS User Exits Library - libpsadds v1.0, "__DATE__" "__TIME__".\n");
+	printf("Installing PS User Exits Library - libpsadds GIT:293e747, "__DATE__" "__TIME__".\n");
 	
 	try
 	{

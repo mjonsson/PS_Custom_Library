@@ -21,6 +21,10 @@ namespace ps
 	void trim_left(string &str);
 	//! Remove ending whitespace characters from string \a str
 	void trim_right(string &str);
+	//! Remove starting \a ch character from string \a str
+	void trim_left(string &str, char ch);
+	//! Remove ending \a ch character from string \a str
+	void trim_right(string &str, char ch);
 	//! Return to lower version of string
 	void to_lower(string &str);
 	//! Return to upper version of string

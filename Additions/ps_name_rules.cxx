@@ -12,6 +12,10 @@ int ps::ps_validate_name_rule(METHOD_message_t *m, va_list  args)
 	const char		*debug_name = "PS2 Validate Name Rule";
 	int				result = ITK_ok;
 	string			value;
+	int				intValue;
+	float			floatValue;
+	double			doubleValue;
+	c_ptr<char>		charValue;
 	c_ptr<char>		propertyName;
 	string			propType = m->user_args->arguments[0].val_union.str_value;
 	string			regEx = m->user_args->arguments[1].val_union.str_value;
@@ -24,19 +28,22 @@ int ps::ps_validate_name_rule(METHOD_message_t *m, va_list  args)
 
 	if (propType == "int")
 	{
-		value = va_arg(args, int);
+		charValue.format("%d", va_arg(args, int));
 	}
-	else if (propType == "float")
+	else if (propType == "float" || propType == "double")
 	{
-		value = va_arg(args, float);
-	}
-	else if (propType == "double")
-	{
-		value = va_arg(args, double);
+		charValue.format("%f", va_arg(args, double));
 	}
 	else if (propType == "string")
 	{
-		value = va_arg(args, char*);
+		charValue.format("%s", va_arg(args, char*));
+	}
+
+	value = charValue.ptr();
+
+	if (propType == "float" || propType == "double")
+	{
+		trim_right(value, '0');
 	}
 
 	try

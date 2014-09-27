@@ -4,7 +4,7 @@
 
 using namespace ps;
 
-int ps_set_status_ah(EPM_action_message_t msg)
+int ps_set_statuses_ah(EPM_action_message_t msg)
 {
 	const char			*debug_name = "PS2-set-statuses-AH";
 	int					result = ITK_ok;
@@ -14,7 +14,7 @@ int ps_set_status_ah(EPM_action_message_t msg)
 	string				sStatusType;
 	vector<string>		vPropsToTraverse;
 	vector<string>		vTypesToInclude;
-	logical				lSetEffectivity = false;;
+	//logical				lSetEffectivity = false;;
 	logical				lRetainReleasedDate = false;
 	date_t				today;
 	h_args				args(msg.arguments);
@@ -32,25 +32,25 @@ int ps_set_status_ah(EPM_action_message_t msg)
 			throw psexception("Missing mandatory argument 'status'");
 		args.getVec("include_types", vTypesToInclude);
 		args.getVec("include_relations", vPropsToTraverse);
-		args.getFlag("set_effectivity", lSetEffectivity);
+		//args.getFlag("set_effectivity", lSetEffectivity);
 		args.getFlag("retain_release_date", lRetainReleasedDate);
 
-		if (lSetEffectivity)
+		/*		if (lSetEffectivity)
 		{
-			time_t		ctime;
-			struct		tm tm_ptr;
+		time_t		ctime;
+		struct		tm tm_ptr;
 
-			time(&ctime);
-			localtime_s(&tm_ptr, &ctime);
+		time(&ctime);
+		localtime_s(&tm_ptr, &ctime);
 
-			today.year		= (short)tm_ptr.tm_year+1900;
-			today.month		= (byte)tm_ptr.tm_mon;
-			today.day		= (byte)tm_ptr.tm_mday;
-			today.hour		= (byte)tm_ptr.tm_hour;
-			today.minute	= (byte)tm_ptr.tm_min;
-			today.second	= (byte)tm_ptr.tm_sec;
+		today.year		= (short)tm_ptr.tm_year+1900;
+		today.month		= (byte)tm_ptr.tm_mon;
+		today.day		= (byte)tm_ptr.tm_mday;
+		today.hour		= (byte)tm_ptr.tm_hour;
+		today.minute	= (byte)tm_ptr.tm_min;
+		today.second	= (byte)tm_ptr.tm_sec;
 		}
-
+		*/
 		// Get target objects
 		itk(EPM_ask_root_task(msg.task, &tRootTask));
 		itk(EPM_ask_attachments(tRootTask, EPM_target_attachment, tRootTargets.plen(), tRootTargets.pptr()));
@@ -90,6 +90,26 @@ int ps_set_status_ah(EPM_action_message_t msg)
 			}
 
 			// Create and assign release status
+			//if (sAction == "replace")
+			//{
+			//	itk(POM_refresh_instances_any_class(vObjectsToStatus.size(), &vObjectsToStatus[0], POM_modify_lock));
+			//	for (int j = 0; j < vObjectsToStatus.size(); j++)
+			//	{
+			//		tag_t	tClassId;
+			//		tag_t	tAttrId;
+			//		char	*pszClassName = NULL;
+
+			//		itk(POM_class_of_instance(vObjectsToStatus[j], &tClassId));
+			//		itk(POM_name_of_class(tClassId, &pszClassName));
+			//		itk(POM_attr_id_of_attr("release_status_list", pszClassName, &tAttrId));
+			//		
+			//		itk(POM_set_attr_nulls(1, &vObjectsToStatus[j], tAttrId, 0, 1));
+			//		//itk(POM_set_attr_null(1, &vObjectsToStatus[j], tAttrId));
+			//	}
+			//	itk(POM_save_instances(vObjectsToStatus.size(), &vObjectsToStatus[0], false));
+			//	itk(POM_refresh_instances_any_class(vObjectsToStatus.size(), &vObjectsToStatus[0], POM_read_lock));
+			//}
+
 #ifdef _TC_10
 			itk(RELSTAT_create_release_status(sStatusType.c_str(), &tStatus));
 			itk(RELSTAT_add_release_status(tStatus, vObjectsToStatus.size(), &vObjectsToStatus[0], lRetainReleasedDate));
@@ -99,15 +119,15 @@ int ps_set_status_ah(EPM_action_message_t msg)
 #endif
 
 			// Set the effectivity
-			if (lSetEffectivity)
-			{
-				tag_t		tEffectivity;
+			//if (lSetEffectivity)
+			//{
+			//	tag_t		tEffectivity;
 
-				itk(WSOM_effectivity_create_with_dates(tStatus, NULLTAG, 1, &today, EFFECTIVITY_open_ended, &tEffectivity));
-				itk(AOM_save(tEffectivity));
-			}
+			//	itk(WSOM_effectivity_create_with_dates(tStatus, NULLTAG, 1, &today, EFFECTIVITY_open_ended, &tEffectivity));
+			//	itk(AOM_save(tEffectivity));
+			//}
 
-			itk(AOM_refresh(tStatus, false));
+			//itk(AOM_refresh(tStatus, false));
 		}
 	}
 	catch (tcexception& e)

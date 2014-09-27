@@ -33,6 +33,12 @@ int ps_check_initiator_rh(EPM_rule_message_t msg);
  */
 int ps_check_privileges_rh(EPM_rule_message_t msg);
 
+//! Checks that mandatory properties are set correctly.
+/*!
+ *  \note See exernal documentation for handler usage in Teamcenter.
+ */
+int ps_check_properties_rh(EPM_rule_message_t msg);
+
 //! Verifies the structure maturity of a target attached to the root task.
 /*!
  *  \note See exernal documentation for handler usage in Teamcenter.

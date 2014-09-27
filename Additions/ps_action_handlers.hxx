@@ -49,4 +49,4 @@ int ps_timer_stop_ah(EPM_action_message_t msg);
 /*!
  *  \note See exernal documentation for handler usage in Teamcenter.
  */
-int ps_set_status_ah(EPM_action_message_t msg);
+int ps_set_statuses_ah(EPM_action_message_t msg);

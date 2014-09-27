@@ -23,6 +23,7 @@
 #define AH_CHECK_IN_PROCESS "PS2-check-in-process-RH"
 #define AH_CHECK_INITIATOR "PS2-check-initiator-RH"
 #define AH_CHECK_PRIVILEGES "PS2-check-privileges-RH"
+#define AH_CHECK_PROPERTIES "PS2-check-properties-RH"
 #define AH_CHECK_CHILD_STRUCTURE "PS2-check-child-structure-RH"
 
 //! Teamcenter iFail definitions

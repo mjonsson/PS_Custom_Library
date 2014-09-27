@@ -20,13 +20,14 @@ include ../Makefile.nt
 OBJS = ps_check_in_process_rh.$(OBJ_EXT) \
 		ps_check_initiator_rh.$(OBJ_EXT) \
 		ps_check_privileges_rh.$(OBJ_EXT) \
+		ps_check_properties_rh.$(OBJ_EXT) \
 		ps_check_child_structure_rh.$(OBJ_EXT) \
 		ps_create_dispatcher_request_ah.$(OBJ_EXT) \
 		ps_copy_task_properties_ah.$(OBJ_EXT) \
 		ps_move_attachments_ah.$(OBJ_EXT) \
 		ps_timer_start_ah.$(OBJ_EXT) \
 		ps_timer_stop_ah.$(OBJ_EXT) \
-		ps_set_status_ah.$(OBJ_EXT) \
+		ps_set_statuses_ah.$(OBJ_EXT) \
 		ps_name_rules.$(OBJ_EXT) \
 		ps_find_referencers.$(OBJ_EXT) \
 		ps_register.$(OBJ_EXT)

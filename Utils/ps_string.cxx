@@ -41,6 +41,36 @@ void ps::trim_right(string &str)
 	}
 }
 
+void ps::trim_left(string &str, char ch)
+{
+	string::iterator i = str.begin();
+
+	while (i != str.end())
+	{
+		if (*i == ch)
+		{
+			i = str.erase(i);
+		}
+		else
+			break;
+	}
+}
+
+void ps::trim_right(string &str, char ch)
+{
+	string::iterator i = --str.end();
+
+	while (i != str.end())
+	{
+		if (*i == ch)
+		{
+			i = --str.erase(i);
+		}
+		else
+			break;
+	}
+}
+
 void ps::trim(string &str)
 {
 	trim_left(str);

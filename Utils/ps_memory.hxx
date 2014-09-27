@@ -85,6 +85,26 @@ namespace ps
 			}
 			va_end(args);
 		}
+		//! Format a string
+		void format(const char *fmt, ...)
+		{
+			construct();
+
+			va_list args;
+
+			int bufsiz = strlen(fmt) + 512;
+			alloc(bufsiz);
+
+			// Make sure we have enough memory to store parameters
+			va_start(args, fmt);
+			int need = vsnprintf(m_ptr, bufsiz, fmt, args) + 1;
+			if (need > bufsiz)
+			{
+				realloc(need);
+				vsnprintf(m_ptr, need, fmt, args);
+			}
+			va_end(args);
+		}
 		//! Default destructor
 		~c_ptr()
 		{

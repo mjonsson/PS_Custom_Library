@@ -29,7 +29,7 @@
 2 = Standard output stream
 4 = Teamcenter syslog</preference_description>
       <context name="Teamcenter">
-        <value>3</value>
+        <value>7</value>
       </context>
     </preference>
     <preference name="PS2_Naming_Rules" type="String" array="true" disabled="false" protectionScope="Site" envEnabled="false">
