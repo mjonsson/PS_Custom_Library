@@ -13,7 +13,6 @@ int ps_check_where_used_rh(EPM_rule_message_t msg)
 	vector<string>	vincludeTargetTypes;
 	vector<string>	vincludeParentTypes;
 	static tag_t	tRevRule = 0;
-	vector<tag_t>	targetsToProcess;
 	static tag_t	tItemRevClassId = 0;
 	h_args			args(msg.arguments);
 	EPM_decision_t  decision = EPM_go;
@@ -51,10 +50,11 @@ int ps_check_where_used_rh(EPM_rule_message_t msg)
 		{
 			tag_t			tTarget = tTargets.val(i);
 			tag_t			tClassOfTarget;
-			//tag_t			tItem;
 			c_ptr<char>		itemId;
 			c_ptr<char>		objectType;
 			logical			isDescendant = false;
+			c_ptr<tag_t>	tParents;
+			c_ptr<int>		iLevels;
 
 			itk(POM_class_of_instance(tTarget, &tClassOfTarget));
 			itk(POM_is_descendant(tItemRevClassId, tClassOfTarget, &isDescendant));
@@ -70,50 +70,33 @@ int ps_check_where_used_rh(EPM_rule_message_t msg)
 						continue;
 				}
 
-				//itk(AOM_ask_value_tag(tTarget, "items_tag", &tItem));
-				//itk(AOM_ask_value_string(tItem, "item_id", itemId.pptr()));
+				itk(PS_where_used_configured(tTarget, tRevRule, 1, tParents.plen(), iLevels.pptr(), tParents.pptr()));
 
-				targetsToProcess.push_back(tTarget);
-				//targetItemIds.push_back(string(itemId.ptr()));
-			}
-		}
-
-		// Loop over all target attachments
-		for (vector<tag_t>::iterator i = targetsToProcess.begin(); i != targetsToProcess.end(); ++i)
-		{
-			tag_t			tTarget = *i;
-			tag_t			tBvr = 0;
-			tag_t			tTopLine;
-			c_ptr<tag_t>	tParents;
-			c_ptr<int>		iLevels;
-
-			itk(PS_where_used_configured(tTarget, tRevRule, 1, tParents.plen(), iLevels.pptr(), tParents.pptr()));
-
-			if (!vincludeParentTypes.empty())
-			{
-				// Loop over all structure children and verify the validity
-				for (int j = 0; j < tParents.len(); j++)
+				if (!vincludeParentTypes.empty())
 				{
-					tag_t			tParent = tParents.val(j);
-					c_ptr<char>		parentObjectType;
+					// Loop over all structure children and verify the validity
+					for (int j = 0; j < tParents.len(); j++)
+					{
+						tag_t			tParent = tParents.val(j);
+						c_ptr<char>		parentObjectType;
 
-					itk(AOM_ask_value_string(tParent, "object_type", parentObjectType.pptr()));
+						itk(AOM_ask_value_string(tParent, "object_type", parentObjectType.pptr()));
 
-					// If not valid structure type, jump to next target
-					if (!find_string(parentObjectType.ptr(), vincludeParentTypes))
-						continue;
+						// If not valid structure type, jump to next target
+						if (!find_string(parentObjectType.ptr(), vincludeParentTypes))
+							continue;
+					}
 				}
-			}
 
-			if (tParents.len() > 0)
-			{
-				c_ptr<char>		targetObjectStr;
+				if (tParents.len() > 0)
+				{
+					c_ptr<char>		targetObjectStr;
 
-				decision = EPM_nogo;
+					decision = EPM_nogo;
 
-				itk(AOM_ask_value_string(tTarget, "object_string", targetObjectStr.pptr()));
-
-				itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Process target '%s' is referenced by one or several structure parents which is not valid for this process.", targetObjectStr.ptr()).ptr()));
+					itk(AOM_ask_value_string(tTarget, "object_string", targetObjectStr.pptr()));
+					itk(EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, c_ptr<char>("Process target '%s' is referenced by one or several structure parents which is not valid for this process.", targetObjectStr.ptr()).ptr()));
+				}
 			}
 		}
 	}
