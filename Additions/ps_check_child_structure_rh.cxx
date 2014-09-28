@@ -7,17 +7,15 @@ using namespace ps;
 int ps_check_child_structure_rh(EPM_rule_message_t msg)
 {
 	const char		*debug_name = "PS2-check-child-structure-RH";
-	char			*pszArg = NULL;
 	tag_t           tRootTask;
 	c_ptr<tag_t>	tTargets;
 	string			revRule;
-	vector<string>	includeTargetTypes;
+	vector<string>	vincludeTargetTypes;
 	vector<string>	includeChildTypes;
 	vector<string>	vBannedStatuses;
 	string			bomViewType;
 	logical			allowIfTarget = false;
 	static tag_t	tRevRule = 0;
-	//vector<string>	targetItemIds;
 	vector<tag_t>	targetsToProcess;
 	static tag_t	tItemRevClassId = 0;
 	tag_t			tBomWindow = 0;
@@ -36,7 +34,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 			throw psexception("Missing mandatory argument 'rev_rule'.");
 		if (!args.getStr("bomview_type", bomViewType))
 			throw psexception("Missing mandatory argument 'bomview_type'.");
-		args.getVec("include_target_types", includeTargetTypes);
+		args.getVec("include_target_types", vincludeTargetTypes);
 		args.getVec("include_child_types", includeChildTypes);
 		args.getVec("banned_statuses", vBannedStatuses);
 		args.getFlag("allow_if_target", allowIfTarget);
@@ -61,7 +59,6 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 		{
 			tag_t			tTarget = tTargets.val(i);
 			tag_t			tClassOfTarget;
-			tag_t			tItem;
 			c_ptr<char>		itemId;
 			c_ptr<char>		objectType;
 			logical			isDescendant = false;
@@ -71,17 +68,16 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 
 			if (isDescendant)
 			{
-				itk(AOM_ask_value_string(tTarget, "object_type", objectType.pptr()));
+				if (!vincludeTargetTypes.empty())
+				{
+					itk(AOM_ask_value_string(tTarget, "object_type", objectType.pptr()));
 
-				// Skip target if not of valid type
-				if (!find_string(objectType.ptr(), includeTargetTypes))
-					continue;
-
-				itk(AOM_ask_value_tag(tTarget, "items_tag", &tItem));
-				//itk(AOM_ask_value_string(tItem, "item_id", itemId.pptr()));
+					// Skip target if not of valid type
+					if (!find_string(objectType.ptr(), vincludeTargetTypes))
+						continue;
+				}
 
 				targetsToProcess.push_back(tTarget);
-				//targetItemIds.push_back(string(itemId.ptr()));
 			}
 		}
 

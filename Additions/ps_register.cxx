@@ -23,6 +23,7 @@ void ps::ps_register_handlers()
 	itk(EPM_register_rule_handler(AH_CHECK_PRIVILEGES, "Verify that initiating user has correct privileges.", (EPM_rule_handler_t) ps_check_privileges_rh));
 	itk(EPM_register_rule_handler(AH_CHECK_PROPERTIES, "Verify that mandatory properties are set.", (EPM_rule_handler_t) ps_check_properties_rh));
 	itk(EPM_register_rule_handler(AH_CHECK_CHILD_STRUCTURE, "Verify that child structure have correct status.", (EPM_rule_handler_t) ps_check_child_structure_rh));
+	itk(EPM_register_rule_handler(AH_CHECK_WHERE_USED, "Verify that target does not have an invalid structure parent.", (EPM_rule_handler_t) ps_check_where_used_rh));
 }
 
 void ps::ps_register_name_rules()

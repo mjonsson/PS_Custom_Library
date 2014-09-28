@@ -25,6 +25,8 @@
 #define AH_CHECK_PRIVILEGES "PS2-check-privileges-RH"
 #define AH_CHECK_PROPERTIES "PS2-check-properties-RH"
 #define AH_CHECK_CHILD_STRUCTURE "PS2-check-child-structure-RH"
+#define AH_CHECK_WHERE_USED "PS2-check-where-used-RH"
+
 
 //! Teamcenter iFail definitions
 #define RULE_HANDLER_DEFAULT_IFAIL 919100

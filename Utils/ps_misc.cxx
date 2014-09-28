@@ -24,6 +24,7 @@ h_args::h_args(TC_argument_list_t *args)
 		argsMap.insert(ArgPair(flagStr, argVector));
 	}
 }
+
 string h_args::getStr(string flag)
 {
 	string	arg;
@@ -36,6 +37,7 @@ string h_args::getStr(string flag)
 
 	return arg;
 }
+
 bool h_args::getFlag(string flag)
 {
 	if (argsMap.find(flag) != argsMap.end())
@@ -47,6 +49,7 @@ bool h_args::getFlag(string flag)
 		return false;
 	}
 }
+
 bool h_args::getStr(string flag, string &value)
 {
 	ArgsMap::iterator it;
@@ -59,6 +62,7 @@ bool h_args::getStr(string flag, string &value)
 	}
 	return false;
 }
+
 bool h_args::getVec(string flag, vector<string> &value)
 {
 	ArgsMap::iterator it;
@@ -71,6 +75,7 @@ bool h_args::getVec(string flag, vector<string> &value)
 	}
 	return false;
 }
+
 bool h_args::getFlag(string flag, logical &value)
 {
 	if (argsMap.find(flag) != argsMap.end())
@@ -84,6 +89,7 @@ bool h_args::getFlag(string flag, logical &value)
 		return false;
 	}
 }
+
 bool h_args::getInt(string flag, int &value)
 {
 	ArgsMap::iterator it;
@@ -95,6 +101,7 @@ bool h_args::getInt(string flag, int &value)
 	}
 	return false;
 }
+
 int h_args::size()
 {
 	return argsMap.size();

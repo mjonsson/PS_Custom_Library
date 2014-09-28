@@ -41,9 +41,9 @@
     <ClCompile Include="ps_set_statuses_ah.cxx" />
     <ClCompile Include="ps_timer_start_ah.cxx" />
     <ClCompile Include="ps_timer_stop_ah.cxx" />
+    <ClCompile Include="ps_check_where_used_rh.cxx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Makefile" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

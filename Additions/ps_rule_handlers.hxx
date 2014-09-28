@@ -44,3 +44,9 @@ int ps_check_properties_rh(EPM_rule_message_t msg);
  *  \note See exernal documentation for handler usage in Teamcenter.
  */
 int ps_check_child_structure_rh(EPM_rule_message_t msg);
+
+//! Verify that target does not have an invalid structure parent.
+/*!
+ *  \note See exernal documentation for handler usage in Teamcenter.
+ */
+int ps_check_where_used_rh(EPM_rule_message_t msg);
