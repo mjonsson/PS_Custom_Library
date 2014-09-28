@@ -122,7 +122,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 
 					itk(AOM_ask_value_string(tChild, "bl_rev_object_type", lineObjectType.pptr()));
 
-					// If not valid structure type, jump to next target
+					// If not valid child type, jump to next target
 					if (!find_string(lineObjectType.ptr(), includeChildTypes))
 						continue;
 
@@ -133,26 +133,34 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 					{
 						logical		allowed = false;
 
+						// Allow if child in process target list
 						if (allowIfTarget)
 						{
-							itk(AOM_ask_value_tag(tChild, "bl_revision", &tLineItemRev));
-
-							if (find_tag(tLineItemRev, tTargets.len(), tTargets.ptr()))
+							if (vBannedStatuses.empty())
 							{
-								c_ptr<tag_t>	cReleaseStatuses;
+								allowed = true;
+							}
+							// Disallow if target status specifically banned
+							else
+							{
+								itk(AOM_ask_value_tag(tChild, "bl_revision", &tLineItemRev));
 
-								// Check for banned statuses
-								itk(AOM_ask_value_tags(tLineItemRev, "release_status_list", cReleaseStatuses.plen(), cReleaseStatuses.pptr()));
-
-								for (int k = 0; k < cReleaseStatuses.len(); k++)
+								if (find_tag(tLineItemRev, tTargets.len(), tTargets.ptr()))
 								{
-									c_ptr<char>		cReleaseStatusName;
+									c_ptr<tag_t>	cReleaseStatuses;
 
-									itk(AOM_ask_value_string(cReleaseStatuses.val(k), "object_name", cReleaseStatusName.pptr()));
+									itk(AOM_ask_value_tags(tLineItemRev, "release_status_list", cReleaseStatuses.plen(), cReleaseStatuses.pptr()));
 
-									if (!find_string(cReleaseStatusName.ptr(), vBannedStatuses))
+									for (int k = 0; k < cReleaseStatuses.len(); k++)
 									{
-										allowed = true;
+										c_ptr<char>		cReleaseStatusName;
+
+										itk(AOM_ask_value_string(cReleaseStatuses.val(k), "object_name", cReleaseStatusName.pptr()));
+
+										if (!find_string(cReleaseStatusName.ptr(), vBannedStatuses))
+										{
+											allowed = true;
+										}
 									}
 								}
 							}
