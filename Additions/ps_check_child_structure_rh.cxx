@@ -133,19 +133,17 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 					{
 						logical		allowed = false;
 
-						// Allow if child in process target list
 						if (allowIfTarget)
 						{
-							if (vBannedStatuses.empty())
+							itk(AOM_ask_value_tag(tChild, "bl_revision", &tLineItemRev));
+
+							// Allow if child in process target list
+							if (find_tag(tLineItemRev, tTargets.len(), tTargets.ptr()))
 							{
 								allowed = true;
-							}
-							// Disallow if target status specifically banned
-							else
-							{
-								itk(AOM_ask_value_tag(tChild, "bl_revision", &tLineItemRev));
 
-								if (find_tag(tLineItemRev, tTargets.len(), tTargets.ptr()))
+								// Disallow if target status specifically banned
+								if (vBannedStatuses.empty())
 								{
 									c_ptr<tag_t>	cReleaseStatuses;
 
@@ -157,9 +155,9 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 
 										itk(AOM_ask_value_string(cReleaseStatuses.val(k), "object_name", cReleaseStatusName.pptr()));
 
-										if (!find_string(cReleaseStatusName.ptr(), vBannedStatuses))
+										if (find_string(cReleaseStatusName.ptr(), vBannedStatuses))
 										{
-											allowed = true;
+											allowed = false;
 										}
 									}
 								}
@@ -177,30 +175,31 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 						}
 					}
 				}
-				itk(BOM_close_window(tBomWindow));
 			}
+			itk(BOM_close_window(tBomWindow));
 		}
 	}
-	catch (tcexception& e)
-	{
-		if (tBomWindow != 0)
-			BOM_close_window(tBomWindow);
-		decision = EPM_nogo;
-		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
-		log_error(e.what());
-	}
-	catch (psexception& e)
-	{
-		if (tBomWindow != 0)
-			BOM_close_window(tBomWindow);
-		decision = EPM_nogo;
-		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
-		log_error(e.what());
-	}
+}
+catch (tcexception& e)
+{
+	if (tBomWindow != 0)
+		BOM_close_window(tBomWindow);
+	decision = EPM_nogo;
+	EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
+	log_error(e.what());
+}
+catch (psexception& e)
+{
+	if (tBomWindow != 0)
+		BOM_close_window(tBomWindow);
+	decision = EPM_nogo;
+	EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
+	log_error(e.what());
+}
 
-	hr_stop_debug(debug_name);
-	hr_print_debug(debug_name);
-	log_debug("[STOP] %s", debug_name);
+hr_stop_debug(debug_name);
+hr_print_debug(debug_name);
+log_debug("[STOP] %s", debug_name);
 
-	return decision;
+return decision;
 }
