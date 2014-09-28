@@ -99,3 +99,21 @@ int h_args::size()
 {
 	return argsMap.size();
 }
+
+bool ps::find_tag(tag_t find_tag, int tag_list_len, tag_t *tag_list)
+{
+	for (int i = 0; i < tag_list_len; i++)
+	{
+		if (find_tag = tag_list[i]) return true;
+	}
+	return false;
+}
+
+bool ps::find_tag(tag_t find_tag, vector<tag_t> tag_list)
+{
+	for (vector<tag_t>::iterator i = tag_list.begin(); i != tag_list.end(); ++i)
+	{
+		if (find_tag = *i) return true;
+	}
+	return false;
+}

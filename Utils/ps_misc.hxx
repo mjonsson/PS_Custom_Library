@@ -51,4 +51,7 @@ namespace ps
 			aVector.push_back(anArray[i]);
 		}
 	}
+
+	bool find_tag(tag_t find_tag, int tag_list_len, tag_t *tag_list);
+	bool find_tag(tag_t find_tag, vector<tag_t> tag_list);
 }

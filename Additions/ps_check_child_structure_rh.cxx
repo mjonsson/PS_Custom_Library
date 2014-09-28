@@ -13,10 +13,11 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 	string			revRule;
 	vector<string>	includeTargetTypes;
 	vector<string>	includeChildTypes;
+	vector<string>	vBannedStatuses;
 	string			bomViewType;
 	logical			allowIfTarget = false;
 	static tag_t	tRevRule = 0;
-	vector<string>	targetItemIds;
+	//vector<string>	targetItemIds;
 	vector<tag_t>	targetsToProcess;
 	static tag_t	tItemRevClassId = 0;
 	tag_t			tBomWindow = 0;
@@ -37,6 +38,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 			throw psexception("Missing mandatory argument 'bomview_type'.");
 		args.getVec("include_target_types", includeTargetTypes);
 		args.getVec("include_child_types", includeChildTypes);
+		args.getVec("banned_statuses", vBannedStatuses);
 		args.getFlag("allow_if_target", allowIfTarget);
 
 		if (tRevRule == 0)
@@ -66,7 +68,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 
 			itk(POM_class_of_instance(tTarget, &tClassOfTarget));
 			itk(POM_is_descendant(tItemRevClassId, tClassOfTarget, &isDescendant));
-			
+
 			if (isDescendant)
 			{
 				itk(AOM_ask_value_string(tTarget, "object_type", objectType.pptr()));
@@ -76,10 +78,10 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 					continue;
 
 				itk(AOM_ask_value_tag(tTarget, "items_tag", &tItem));
-				itk(AOM_ask_value_string(tItem, "item_id", itemId.pptr()));
+				//itk(AOM_ask_value_string(tItem, "item_id", itemId.pptr()));
 
 				targetsToProcess.push_back(tTarget);
-				targetItemIds.push_back(string(itemId.ptr()));
+				//targetItemIds.push_back(string(itemId.ptr()));
 			}
 		}
 
@@ -126,7 +128,7 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 			{
 				tag_t			tChild = tChildren.val(j);
 				c_ptr<char>		lineConfigured;
-				c_ptr<char>		lineItemId;
+				tag_t			tLineItemRev;
 				c_ptr<char>		lineObjectType;
 				c_ptr<char>		lineObjectStr;
 				c_ptr<char>		targetObjectStr;
@@ -143,15 +145,31 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 				if (match_string(lineConfigured.ptr(), "No configured Revision"))
 				{
 					logical		allowed = false;
-					
+
 					if (allowIfTarget)
 					{
-						itk(AOM_ask_value_string(tChild, "bl_item_item_id", lineItemId.pptr()));
+						itk(AOM_ask_value_tag(tChild, "bl_revision", &tLineItemRev));
 
-						if (find_string(lineItemId.ptr(), targetItemIds))
-							allowed = true;
+						if (find_tag(tLineItemRev, tTargets.len(), tTargets.ptr()))
+						{
+							c_ptr<tag_t>	cReleaseStatuses;
+
+							// Check for banned statuses
+							itk(AOM_ask_value_tags(tLineItemRev, "release_status_list", cReleaseStatuses.plen(), cReleaseStatuses.pptr()));
+
+							for (int k = 0; k < cReleaseStatuses.len(); k++)
+							{
+								c_ptr<char>		cReleaseStatusName;
+
+								itk(AOM_ask_value_string(cReleaseStatuses.val(k), "object_name", cReleaseStatusName.pptr()));
+
+								if (!find_string(cReleaseStatusName.ptr(), vBannedStatuses))
+								{
+									allowed = true;
+								}
+							}
+						}
 					}
-
 					// If non valid child in structure
 					if (!allowed)
 					{
