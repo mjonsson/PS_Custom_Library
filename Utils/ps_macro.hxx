@@ -86,5 +86,5 @@
 			SAFE_SM_FREE(var[i]);																									\
 		}																															\
 	}																																\
-	SAFE_SM_FREE(x);																												\
+	SAFE_SM_FREE(var);																												\
 }

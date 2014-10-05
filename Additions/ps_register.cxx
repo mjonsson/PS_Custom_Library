@@ -60,7 +60,7 @@ void ps::ps_register_name_rules()
 		// Don't register if incorrect setting
 		if (nameRuleLinesSplitted.size() != 6)
 			continue;
-		
+
 		if (nameRuleLinesSplitted[1] == "int")
 		{
 			propertyTypeMsg = PROP_set_value_int_msg;
@@ -175,15 +175,38 @@ int ps::libps_oninit(int *decision, va_list args)
 		if (hr_init())
 			printf("HRTimer module is enabled.\n");
 
-		
+		//char ch;
+		//ch = getchar();
+
 		// Register handlers
-		ps_register_handlers();
+		try
+		{
+			ps_register_handlers();
+		}
+		catch (exception &e)
+		{
+			TC_write_syslog("%s\n", e.what());
+		}
 
 		// Register naming rules
-		ps_register_name_rules();
+		try
+		{
+			ps_register_name_rules();
+		}
+		catch (exception &e)
+		{
+			TC_write_syslog("%s\n", e.what());
+		}
 
 		// Register referencer properties
-		ps_register_referencers();
+		try
+		{
+			ps_register_referencers();
+		}
+		catch (exception &e)
+		{
+			TC_write_syslog("%s\n", e.what());
+		}
 	}
 	catch (tcexception& e)
 	{
@@ -226,8 +249,8 @@ int ps::libps_onexit(int *decision, va_list args)
 
 int libpsadds_register_callbacks()
 { 
-	printf("Installing PS User Exits Library - libpsadds GIT:293e747, "__DATE__" "__TIME__".\n");
-	
+	printf("Installing PS User Exits Library - libpsadds, "__DATE__" "__TIME__".\n");
+
 	try
 	{
 		itk(CUSTOM_register_exit("libpsadds", "USER_init_module", (CUSTOM_EXIT_ftn_t) libps_oninit));

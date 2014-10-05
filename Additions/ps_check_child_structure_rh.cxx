@@ -175,31 +175,30 @@ int ps_check_child_structure_rh(EPM_rule_message_t msg)
 						}
 					}
 				}
+				itk(BOM_close_window(tBomWindow));
 			}
-			itk(BOM_close_window(tBomWindow));
 		}
 	}
-}
-catch (tcexception& e)
-{
-	if (tBomWindow != 0)
-		BOM_close_window(tBomWindow);
-	decision = EPM_nogo;
-	EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
-	log_error(e.what());
-}
-catch (psexception& e)
-{
-	if (tBomWindow != 0)
-		BOM_close_window(tBomWindow);
-	decision = EPM_nogo;
-	EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
-	log_error(e.what());
-}
+	catch (tcexception& e)
+	{
+		if (tBomWindow != 0)
+			BOM_close_window(tBomWindow);
+		decision = EPM_nogo;
+		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
+		log_error(e.what());
+	}
+	catch (psexception& e)
+	{
+		if (tBomWindow != 0)
+			BOM_close_window(tBomWindow);
+		decision = EPM_nogo;
+		EMH_store_error_s1(EMH_severity_error, RULE_HANDLER_DEFAULT_IFAIL, e.what());
+		log_error(e.what());
+	}
 
-hr_stop_debug(debug_name);
-hr_print_debug(debug_name);
-log_debug("[STOP] %s", debug_name);
+	hr_stop_debug(debug_name);
+	hr_print_debug(debug_name);
+	log_debug("[STOP] %s", debug_name);
 
-return decision;
+	return decision;
 }
