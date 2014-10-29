@@ -5,6 +5,7 @@
 #include "ps_register.hxx"
 #include "ps_name_rules.hxx"
 #include "ps_find_referencers.hxx"
+#include "ps_dynamic_folders.hxx"
 
 using namespace ps;
 
@@ -164,6 +165,28 @@ void ps::ps_register_referencers()
 	}
 }
 
+void ps::ps_register_dynamic_folders()
+{
+	METHOD_id_t 		method;
+
+	if (get_preference(PREF_DYNAMIC_FOLDER_TYPE, TC_preference_site, ps2_dynamic_folder_type.pptr()) &&
+		get_preference(PREF_DYNAMIC_FOLDER_RUNTIME_PROP, TC_preference_site, ps2_dynamic_folder_runtime_prop.pptr()) &&
+		get_preference(PREF_DYNAMIC_FOLDER_QUERY_PROP, TC_preference_site, ps2_dynamic_folder_query_prop.pptr()) &&
+		get_preference(PREF_DYNAMIC_FOLDER_ACTIVE_PROP, TC_preference_site, ps2_dynamic_folder_active_prop.pptr()) &&
+		get_preference(PREF_DYNAMIC_FOLDER_ENTRIES_PROP, TC_preference_site, ps2_dynamic_folder_entries_prop.pptr()) &&
+		get_preference(PREF_DYNAMIC_FOLDER_VALUES_PROP, TC_preference_site, ps2_dynamic_folder_values_prop.pptr()) &&
+		get_preference(PREF_DYNAMIC_FOLDER_SORT_KEYS_PROP, TC_preference_site, ps2_dynamic_folder_sortkeys_prop.pptr()) &&
+		get_preference(PREF_DYNAMIC_FOLDER_SORT_ORDER_PROP, TC_preference_site, ps2_dynamic_folder_sortorder_prop.pptr()) &&
+		get_preference(PREF_DYNAMIC_FOLDER_MAX_HITS_PROP, TC_preference_site, ps2_dynamic_folder_maxhits_prop.pptr()) &&
+		get_preference(PREF_DYNAMIC_FOLDER_DELAY_PROP, TC_preference_site, &ps2_dynamic_folder_delay_prop))
+	{
+		printf("Dynamic folders enabled.\n");
+
+		itk(METHOD_register_prop_method(ps2_dynamic_folder_type.ptr(), ps2_dynamic_folder_runtime_prop.ptr(),
+			PROP_ask_value_tags_msg, ps_dynamic_folders, NULL, &method));
+	}
+}
+
 int ps::libps_oninit(int *decision, va_list args)
 {
 	try
@@ -173,7 +196,7 @@ int ps::libps_oninit(int *decision, va_list args)
 			printf("Logging module enabled.\n");
 		// If enabled, initialize HRTimer class
 		if (hr_init())
-			printf("HRTimer module is enabled.\n");
+			printf("HRTimer module enabled.\n");
 
 		//char ch;
 		//ch = getchar();
@@ -202,6 +225,15 @@ int ps::libps_oninit(int *decision, va_list args)
 		try
 		{
 			ps_register_referencers();
+		}
+		catch (exception &e)
+		{
+			TC_write_syslog("%s\n", e.what());
+		}
+		// Register dynamic folders
+		try
+		{
+			ps_register_dynamic_folders();
 		}
 		catch (exception &e)
 		{

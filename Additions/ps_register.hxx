@@ -16,6 +16,7 @@ namespace ps
 	void ps_register_handlers();
 	void ps_register_name_rules();
 	void ps_register_referencers();
+	void ps_register_dynamic_folders();
 	int libps_oninit(int *decision, va_list args);
 	int libps_onexit(int *decision, va_list args);
 }

@@ -52,5 +52,65 @@ Format is:&lt;source_type&gt;:&lt;source_property&gt;:&lt;relation_type&gt;:&lt;
       <context name="Teamcenter">
       </context>
     </preference>
+    <preference name="PS2_Dynamic_Folder_Type" type="String" array="false" disabled="false" protectionScope="Site" envEnabled="false">
+      <preference_description>Dynamic Folder object type</preference_description>
+      <context name="Teamcenter">
+        <value>PS2SmartFolder2</value>
+      </context>
+    </preference>
+    <preference name="PS2_Dynamic_Folder_Runtime_Prop" type="String" array="false" disabled="false" protectionScope="Site" envEnabled="false">
+      <preference_description>Dynamic Folder runtime property</preference_description>
+      <context name="Teamcenter">
+        <value>ps2contents</value>
+      </context>
+    </preference>
+    <preference name="PS2_Dynamic_Folder_Active_Prop" type="String" array="false" disabled="false" protectionScope="Site" envEnabled="false">
+      <preference_description>Dynamic Folder active</preference_description>
+      <context name="Teamcenter">
+        <value>ps2active</value>
+      </context>
+    </preference>
+    <preference name="PS2_Dynamic_Folder_Query_Prop" type="String" array="false" disabled="false" protectionScope="Site" envEnabled="false">
+      <preference_description>Dynamic Folder query</preference_description>
+      <context name="Teamcenter">
+        <value>ps2query</value>
+      </context>
+    </preference>
+    <preference name="PS2_Dynamic_Folder_Entries_Prop" type="String" array="false" disabled="false" protectionScope="Site" envEnabled="false">
+      <preference_description>Dynamic Folder entries</preference_description>
+      <context name="Teamcenter">
+        <value>ps2entries</value>
+      </context>
+    </preference>
+    <preference name="PS2_Dynamic_Folder_Values_Prop" type="String" array="false" disabled="false" protectionScope="Site" envEnabled="false">
+      <preference_description>Dynamic Folder values</preference_description>
+      <context name="Teamcenter">
+        <value>ps2values</value>
+      </context>
+    </preference>
+    <preference name="PS2_Dynamic_Folder_Sort_Keys_Prop" type="String" array="false" disabled="false" protectionScope="Site" envEnabled="false">
+      <preference_description>Dynamic Folder sort keys</preference_description>
+      <context name="Teamcenter">
+        <value>ps2sortKeys</value>
+      </context>
+    </preference>
+    <preference name="PS2_Dynamic_Folder_Sort_Order_Prop" type="String" array="false" disabled="false" protectionScope="Site" envEnabled="false">
+      <preference_description>Dynamic Folder sort order</preference_description>
+      <context name="Teamcenter">
+        <value>ps2sortOrder</value>
+      </context>
+    </preference>
+    <preference name="PS2_Dynamic_Folder_Max_Hits_Prop" type="String" array="false" disabled="false" protectionScope="Site" envEnabled="false">
+      <preference_description>Dynamic Folder max hits</preference_description>
+      <context name="Teamcenter">
+        <value>ps2maxHits</value>
+      </context>
+    </preference>
+    <preference name="PS2_Dynamic_Folder_Delay_Prop" type="String" array="false" disabled="false" protectionScope="Site" envEnabled="false">
+      <preference_description>Dynamic Folder delay</preference_description>
+      <context name="Teamcenter">
+        <value>ps2delay</value>
+      </context>
+    </preference>
   </category>
 </preferences>

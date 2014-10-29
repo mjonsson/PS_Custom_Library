@@ -54,4 +54,7 @@ namespace ps
 
 	bool find_tag(tag_t find_tag, int tag_list_len, tag_t *tag_list);
 	bool find_tag(tag_t find_tag, vector<tag_t> tag_list);
+	bool get_preference(const char *pref_name, TC_preference_search_scope_t scope, int *num_prefs, char ***prefs);
+	bool get_preference(const char *pref_name, TC_preference_search_scope_t scope, char **pref);
+	bool get_preference(const char *pref_name, TC_preference_search_scope_t scope, int *pref);
 }

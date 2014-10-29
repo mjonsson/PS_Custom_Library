@@ -31,6 +31,7 @@ OBJS = ps_check_in_process_rh.$(OBJ_EXT) \
 		ps_set_statuses_ah.$(OBJ_EXT) \
 		ps_name_rules.$(OBJ_EXT) \
 		ps_find_referencers.$(OBJ_EXT) \
+		ps_dynamic_folders.$(OBJ_EXT) \
 		ps_register.$(OBJ_EXT)
 		
 #

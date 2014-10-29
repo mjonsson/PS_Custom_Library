@@ -124,3 +124,69 @@ bool ps::find_tag(tag_t find_tag, vector<tag_t> tag_list)
 	}
 	return false;
 }
+
+bool ps::get_preference(const char *pref_name, TC_preference_search_scope_t scope, int *num_prefs, char ***prefs)
+{
+	logical result = true;
+	TC_preference_search_scope_t oldScope;
+
+	itk(PREF_ask_search_scope(&oldScope));
+	itk(PREF_set_search_scope(TC_preference_site));
+	try
+	{
+		itk(PREF_ask_char_values(pref_name, num_prefs, prefs));
+	}
+	catch (tcexception& e)
+	{
+		if (e.getstat() == PF_NOTFOUND)
+		{
+			result = false;
+		}
+	}
+	itk(PREF_set_search_scope(oldScope));
+	return result;
+}
+
+bool ps::get_preference(const char *pref_name, TC_preference_search_scope_t scope, char **pref)
+{
+	logical result = true;
+	TC_preference_search_scope_t oldScope;
+
+	itk(PREF_ask_search_scope(&oldScope));
+	itk(PREF_set_search_scope(TC_preference_site));
+	try
+	{
+		itk(PREF_ask_char_value(pref_name, 0, pref));
+	}
+	catch (tcexception& e)
+	{
+		if (e.getstat() == PF_NOTFOUND)
+		{
+			result = false;
+		}
+	}
+	itk(PREF_set_search_scope(oldScope));
+	return result;
+}
+
+bool ps::get_preference(const char *pref_name, TC_preference_search_scope_t scope, int *pref)
+{
+	logical result = true;
+	TC_preference_search_scope_t oldScope;
+
+	itk(PREF_ask_search_scope(&oldScope));
+	itk(PREF_set_search_scope(TC_preference_site));
+	try
+	{
+		itk(PREF_ask_int_value(pref_name, 0, pref));
+	}
+	catch (tcexception& e)
+	{
+		if (e.getstat() == PF_NOTFOUND)
+		{
+			result = false;
+		}
+	}
+	itk(PREF_set_search_scope(oldScope));
+	return result;
+}

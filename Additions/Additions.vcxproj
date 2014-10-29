@@ -25,6 +25,7 @@
     <ClInclude Include="ps_name_rules.hxx" />
     <ClInclude Include="ps_register.hxx" />
     <ClInclude Include="ps_rule_handlers.hxx" />
+    <ClInclude Include="ps_dynamic_folders.hxx" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ps_check_child_structure_rh.cxx" />
@@ -39,6 +40,7 @@
     <ClCompile Include="ps_name_rules.cxx" />
     <ClCompile Include="ps_register.cxx" />
     <ClCompile Include="ps_set_statuses_ah.cxx" />
+    <ClCompile Include="ps_dynamic_folders.cxx" />
     <ClCompile Include="ps_timer_start_ah.cxx" />
     <ClCompile Include="ps_timer_stop_ah.cxx" />
     <ClCompile Include="ps_check_where_used_rh.cxx" />
